@@ -6,7 +6,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://esyfilms.github.io',
-	base: 'thehansang',
+	site: 'https://thehansang.sg',
 	integrations: [mdx(), sitemap()],
 });

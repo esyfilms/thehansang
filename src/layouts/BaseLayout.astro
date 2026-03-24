@@ -7,17 +7,17 @@ interface Props {
 
 const { title, description = "Everything Korea, for Singapore.", image } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const logo = "/thehansang/logo-soban-leg.svg";
+const logo = "/logo-soban-leg.svg";
 const links = {
-  home: "/thehansang/",
-  eat: "/thehansang/eat/",
-  cook: "/thehansang/cook/",
-  travel: "/thehansang/travel/",
-  culture: "/thehansang/culture/",
-  events: "/thehansang/events/",
-  pantry: "/thehansang/my-pantry/",
-  about: "/thehansang/about/",
-  contact: "/thehansang/contact/",
+  home: "/",
+  eat: "/eat/",
+  cook: "/cook/",
+  travel: "/travel/",
+  culture: "/culture/",
+  events: "/events/",
+  pantry: "/my-pantry/",
+  about: "/about/",
+  contact: "/contact/",
 };
 
 import '../styles/global.css';
