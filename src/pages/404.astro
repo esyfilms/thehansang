@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404" description="Page not found — The Hansang.">
+
+  <section class="error-page">
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page not found</h1>
+    <p class="error-desc">The table has been cleared. Let's find you something else.</p>
+    <a href="/" class="error-btn">Back to homepage</a>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .error-page { max-width: 680px; margin: 0 auto; padding: 120px 48px 160px; text-align: center; animation: fadeUp 0.6s ease-out 0.1s both; }
+  .error-code { font-family: 'Source Serif 4', serif; font-size: 120px; font-weight: 700; line-height: 1; color: var(--stone); margin-bottom: 16px; }
+  .error-title { font-family: 'Source Serif 4', serif; font-size: 28px; font-weight: 600; margin-bottom: 16px; color: var(--ink); }
+  .error-desc { font-family: 'Source Serif 4', serif; font-size: 18px; line-height: 1.7; color: var(--gray-500); margin-bottom: 40px; }
+  .error-btn { display: inline-block; padding: 14px 36px; background: var(--ember); color: var(--cream); text-decoration: none; font-family: 'Outfit', sans-serif; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: background 0.2s; }
+  .error-btn:hover { background: #9c3823; }
+
+  @media (max-width: 768px) {
+    .error-page { padding: 80px 24px 120px; }
+    .error-code { font-size: 80px; }
+    .error-title { font-size: 24px; }
+    .error-desc { font-size: 17px; }
+  }
+  @media (max-width: 480px) {
+    .error-code { font-size: 64px; }
+    .error-title { font-size: 22px; }
+  }
+</style>

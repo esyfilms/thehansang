@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Events" description="Events — Korean festivals, pop-ups, markets, and workshops happening in Singapore. The Hansang.">
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="page-header-korean" lang="ko" aria-hidden="true">행사</div>
+      <h1>Events</h1>
+      <p class="page-header-desc">Korean festivals, pop-ups, markets, and workshops happening in Singapore. We keep this updated so you never miss a thing.</p>
+      <p class="page-header-count">3 events</p>
+    </div>
+  </header>
+
+  <div class="filter-bar" role="toolbar" aria-label="Filter events by type">
+    <div class="filter-bar-inner">
+      <span class="filter-label">Filter</span>
+      <ul class="filter-tags" role="list">
+        <li><button type="button" class="active" aria-pressed="true">All</button></li>
+        <li><button type="button" aria-pressed="false">Festival</button></li>
+        <li><button type="button" aria-pressed="false">Pop-Up</button></li>
+        <li><button type="button" aria-pressed="false">Market</button></li>
+        <li><button type="button" aria-pressed="false">Workshop</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="timeline-section" aria-label="Upcoming events">
+    <div class="timeline-section-label">Upcoming</div>
+    <div class="timeline">
+      <a href="/events/korean-food-festival-2026" class="timeline-event">
+        <div class="timeline-date"><div class="timeline-date-day">12</div><div class="timeline-date-month">Apr 2026</div></div>
+        <div class="timeline-event-type">Festival</div>
+        <h2 class="timeline-event-title">Korean Food Festival Singapore 2026</h2>
+        <div class="timeline-event-details"><strong>Suntec Convention Centre</strong> &middot; 11am&ndash;9pm &middot; Free entry</div>
+        <p class="timeline-event-desc">The annual Korean food festival returns with over 40 food stalls, live cooking demos from Seoul chefs, K-pop performances, and a soju garden. Organised by the Korea Tourism Organization.</p>
+        <span class="timeline-event-link">Learn more &rarr;</span>
+      </a>
+      <a href="/events/kimchi-making-workshop" class="timeline-event">
+        <div class="timeline-date"><div class="timeline-date-day">28</div><div class="timeline-date-month">Apr 2026</div></div>
+        <div class="timeline-event-type">Workshop</div>
+        <h2 class="timeline-event-title">Kimchi Making Workshop with Chef Park</h2>
+        <div class="timeline-event-details"><strong>ToTT Store, Suntec City</strong> &middot; 2pm&ndash;5pm &middot; S$68/pax</div>
+        <p class="timeline-event-desc">Hands-on kimchi workshop led by Chef Park from Seoul. Learn to make napa cabbage kimchi, kkakdugi (radish kimchi), and a quick cucumber kimchi. Take home your own jar.</p>
+        <span class="timeline-event-link">Learn more &rarr;</span>
+      </a>
+      <a href="/events/korean-street-food-popup" class="timeline-event">
+        <div class="timeline-date"><div class="timeline-date-day">10</div><div class="timeline-date-month">May 2026</div></div>
+        <div class="timeline-event-type">Pop-Up</div>
+        <h2 class="timeline-event-title">Seoul Street Food Pop-Up at Kampong Gelam</h2>
+        <div class="timeline-event-details"><strong>Kampong Gelam, Haji Lane</strong> &middot; 5pm&ndash;10pm &middot; Fri&ndash;Sun only</div>
+        <p class="timeline-event-desc">A weekend pop-up featuring Korean street food vendors. Expect tteokbokki, hotteok, tornado potato, and Korean corn dogs. Running for three consecutive weekends.</p>
+        <span class="timeline-event-link">Learn more &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="ad-slot-inline" role="complementary" aria-label="Advertisement">
+    <span class="ad-slot-label">Supported by</span>
+    <div class="ad-slot-placeholder">[ ad placement &middot; 728 &times; 90 ]</div>
+  </div>
+
+  <section class="timeline-section" aria-label="Past events">
+    <div class="timeline-section-label">Past</div>
+    <div class="timeline">
+      <a href="/events/korean-bbq-masterclass" class="timeline-event past">
+        <div class="timeline-date"><div class="timeline-date-day">15</div><div class="timeline-date-month">Mar 2026</div></div>
+        <div class="timeline-event-type">Workshop</div>
+        <h2 class="timeline-event-title">Korean BBQ Masterclass: Cuts, Grilling, and Ssamjang</h2>
+        <div class="timeline-event-details"><strong>Bornga Beauty World</strong> &middot; 11am&ndash;2pm</div>
+        <p class="timeline-event-desc">A sold-out masterclass on Korean BBQ techniques. Participants learned about meat cuts, grilling temperatures, and how to make ssamjang from scratch.</p>
+        <span class="timeline-event-link">View recap &rarr;</span>
+      </a>
+      <a href="/events/lunar-new-year-market" class="timeline-event past">
+        <div class="timeline-date"><div class="timeline-date-day">25</div><div class="timeline-date-month">Jan 2026</div></div>
+        <div class="timeline-event-type">Market</div>
+        <h2 class="timeline-event-title">Seollal Market: Korean Lunar New Year Pop-Up</h2>
+        <div class="timeline-event-details"><strong>Chinatown Point</strong> &middot; 10am&ndash;8pm</div>
+        <p class="timeline-event-desc">A two-day market celebrating Korean Lunar New Year with tteokguk, songpyeon, traditional games, and hanbok photo booths.</p>
+        <span class="timeline-event-link">View recap &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .page-header { padding: 64px 48px 48px; border-bottom: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.1s both; }
+  .page-header-inner { max-width: 640px; }
+  .page-header-korean { font-family: 'Noto Serif KR', serif; font-size: 56px; font-weight: 200; line-height: 1; color: var(--stone); margin-bottom: 4px; }
+  .page-header h1 { font-family: 'Source Serif 4', serif; font-size: 44px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; }
+  .page-header-desc { font-size: 16px; color: var(--gray-500); line-height: 1.7; max-width: 520px; margin-bottom: 20px; }
+  .page-header-count { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); }
+  .filter-bar { padding: 0 48px; border-bottom: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.15s both; }
+  .filter-bar-inner { display: flex; align-items: center; gap: 32px; padding: 20px 0; }
+  .filter-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); flex-shrink: 0; }
+  .filter-tags { display: flex; gap: 0; list-style: none; }
+  .filter-tags button { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 0.04em; color: var(--gray-500); background: none; border: none; padding: 6px 16px; cursor: pointer; position: relative; transition: color 0.2s; }
+  .filter-tags button:hover { color: var(--ink); }
+  .filter-tags button.active { color: var(--ink); font-weight: 500; }
+  .filter-tags button.active::after { content: ''; position: absolute; bottom: -1px; left: 16px; right: 16px; height: 2px; background: var(--ink); }
+  .timeline-section { max-width: 800px; margin: 0 auto; padding: 48px 48px 64px; animation: fadeUp 0.6s ease-out 0.2s both; }
+  .timeline-section-label { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 32px; }
+  .timeline { position: relative; padding-left: 140px; }
+  .timeline::before { content: ''; position: absolute; left: 120px; top: 0; bottom: 0; width: 1px; background: var(--stone); }
+  .timeline-event { position: relative; padding: 0 0 48px 32px; display: block; text-decoration: none; color: var(--ink); transition: opacity 0.2s; }
+  .timeline-event:last-child { padding-bottom: 0; }
+  .timeline-event:hover { opacity: 0.75; }
+  .timeline-date { position: absolute; left: -140px; top: 0; width: 108px; text-align: right; }
+  .timeline-date-day { font-family: 'Source Serif 4', serif; font-size: 36px; font-weight: 700; line-height: 1; color: var(--ink); }
+  .timeline-date-month { font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-top: 4px; }
+  .timeline-event::before { content: ''; position: absolute; left: -6px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--ember); border: 2px solid var(--cream); }
+  .timeline-event-type { font-family: 'Outfit', sans-serif; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); margin-bottom: 6px; }
+  .timeline-event-title { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; line-height: 1.3; margin-bottom: 8px; }
+  .timeline-event-details { font-size: 14px; color: var(--gray-500); margin-bottom: 8px; line-height: 1.6; }
+  .timeline-event-details strong { color: var(--ink); font-weight: 500; }
+  .timeline-event-desc { font-size: 16px; color: var(--gray-500); line-height: 1.65; margin-bottom: 12px; }
+  .timeline-event-link { font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ember); transition: color 0.2s; }
+  .timeline-event:hover .timeline-event-link { color: var(--ink); }
+  .timeline-event.past { opacity: 0.45; }
+  .timeline-event.past::before { background: var(--stone); }
+  .timeline-event.past:hover { opacity: 0.6; }
+  .ad-slot-inline { max-width: 800px; margin: 0 auto; padding: 40px 48px; border-top: 1px solid var(--stone); border-bottom: 1px solid var(--stone); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .ad-slot-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); border: 1px solid var(--stone); padding: 2px 8px; }
+  .ad-slot-placeholder { width: 100%; max-width: 728px; height: 120px; background: var(--linen); border: 1px dashed var(--stone); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--gray-400); letter-spacing: 0.08em; }
+  @media (max-width: 768px) {
+    .page-header { padding: 40px 24px 36px; }
+    .page-header-korean { font-size: 40px; }
+    .page-header h1 { font-size: 32px; }
+    .filter-bar { padding: 0 24px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .filter-bar-inner { gap: 16px; min-width: max-content; }
+    .filter-label { display: none; }
+    .timeline-section { padding: 36px 24px 48px; }
+    .timeline { padding-left: 0; }
+    .timeline::before { left: 4px; }
+    .timeline-event { padding-left: 28px; }
+    .timeline-event::before { left: 0; }
+    .timeline-date { position: static; width: auto; text-align: left; display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .timeline-date-day { font-size: 28px; }
+    .timeline-event-title { font-size: 20px; }
+    .ad-slot-inline { padding: 32px 24px; }
+    .ad-slot-placeholder { height: 100px; }
+  }
+  @media (max-width: 480px) {
+    .page-header-korean { font-size: 32px; }
+    .page-header h1 { font-size: 26px; }
+    .timeline-date-day { font-size: 24px; }
+    .timeline-event-title { font-size: 18px; }
+  }
+</style>

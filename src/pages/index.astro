@@ -1,49 +1,289 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title="Everything Korea, for Singapore" description="The Hansang — Everything Korea, for Singapore. Korean food reviews, recipes, travel guides, and culture.">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-label">Featured &middot; Eat</div>
+        <h1>The 7 Best Korean BBQ Restaurants in Singapore, Ranked</h1>
+        <p class="hero-excerpt">We spent three months eating our way through every serious Korean BBQ joint on the island. From Tanjong Pagar stalwarts to the hidden gem in Beauty World nobody talks about.</p>
+        <div class="hero-meta">March 2026 &middot; 12 min read</div>
+      </div>
+      <div class="hero-image">
+        [ hero photograph ]
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPLORE INLINE ===== -->
+  <nav class="explore-inline" aria-label="Content categories">
+    <span class="explore-inline-label">Explore</span>
+    <ul class="explore-inline-links">
+      <li><a href="/eat/">Eat <span class="count">(24)</span></a></li>
+      <li><a href="/cook/">Cook <span class="count">(12)</span></a></li>
+      <li><a href="/travel/">Travel <span class="count">(8)</span></a></li>
+      <li><a href="/culture/">Culture <span class="count">(6)</span></a></li>
+      <li><a href="/events/">Events <span class="count">(3)</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== LATEST FROM EAT (asymmetric grid) ===== -->
+  <section class="articles" aria-label="Latest restaurant reviews">
+    <div class="section-header">
+      <h2 class="section-title">Latest from Eat</h2>
+      <a href="/eat/" class="view-all">View all</a>
+    </div>
+    <div class="carousel-wrap">
+      <div class="articles-grid">
+        <a href="/eat/bornga-beauty-world" class="article-card">
+          <div class="article-image">[ photo ]</div>
+          <div class="article-pillar">Eat &middot; Review</div>
+          <div class="article-title">Bornga Beauty World: The KBBQ Spot Worth the MRT Ride</div>
+          <div class="article-excerpt">Hidden on the second floor above the hawker centre, this is the kind of place only regulars know about.</div>
+          <div class="article-meta">Mar 21, 2026</div>
+        </a>
+        <a href="/eat/halal-korean-guide" class="article-card">
+          <div class="article-image">[ photo ]</div>
+          <div class="badge-sponsored">Partner</div>
+          <div class="article-pillar">Eat &middot; Guide</div>
+          <div class="article-title">Halal Korean Food: The Complete Guide</div>
+          <div class="article-excerpt">Every halal-certified Korean restaurant, from budget tteokbokki to premium BBQ.</div>
+          <div class="article-meta">Mar 18, 2026</div>
+        </a>
+        <a href="/eat/obba-vs-wangdaebak" class="article-card">
+          <div class="article-image">[ photo ]</div>
+          <div class="article-pillar">Eat &middot; Versus</div>
+          <div class="article-title">O.BBa vs Wang Dae Bak</div>
+          <div class="article-excerpt">The Tanjong Pagar showdown. Same street, same price range, very different experiences.</div>
+          <div class="article-meta">Mar 15, 2026</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VIDEO ROW ===== -->
+  <section class="video-row" aria-label="Latest videos">
+    <div class="section-header">
+      <h2 class="section-title">On Video</h2>
+      <a href="https://www.instagram.com/thehansang.sg" class="view-all" target="_blank" rel="noopener">More videos</a>
+    </div>
+    <div class="video-grid">
+      <a href="https://www.instagram.com/thehansang.sg" class="video-card" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          [ thumbnail ]
+          <div class="video-play"></div>
+        </div>
+        <div class="video-platform">Instagram</div>
+        <div class="video-title">I Tried Every KBBQ in Tanjong Pagar</div>
+        <div class="video-views">12K views</div>
+      </a>
+      <a href="https://www.instagram.com/thehansang.sg" class="video-card" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          [ thumbnail ]
+          <div class="video-play"></div>
+        </div>
+        <div class="video-platform">Instagram</div>
+        <div class="video-title">Kimchi Jjigae in 15 Minutes</div>
+        <div class="video-views">8.2K views</div>
+      </a>
+      <a href="https://www.instagram.com/thehansang.sg" class="video-card" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          [ thumbnail ]
+          <div class="video-play"></div>
+        </div>
+        <div class="video-platform">TikTok</div>
+        <div class="video-title">Korean mart haul at Don Don Donki</div>
+        <div class="video-views">45K views</div>
+      </a>
+      <a href="https://www.instagram.com/thehansang.sg" class="video-card" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          [ thumbnail ]
+          <div class="video-play"></div>
+        </div>
+        <div class="video-platform">Instagram</div>
+        <div class="video-title">Seoul Food Tour: Gwangjang Market</div>
+        <div class="video-views">6.1K views</div>
+      </a>
+      <a href="https://www.instagram.com/thehansang.sg" class="video-card" target="_blank" rel="noopener">
+        <div class="video-thumb">
+          [ thumbnail ]
+          <div class="video-play"></div>
+        </div>
+        <div class="video-platform">TikTok</div>
+        <div class="video-title">The best tteokbokki in Singapore?</div>
+        <div class="video-views">22K views</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED ARTICLE / AD BANNER ===== -->
+  <section class="featured-banner" aria-label="Featured content">
+    <div class="featured-banner-image">
+      [ featured photograph ]
+    </div>
+    <div class="featured-banner-text">
+      <span class="featured-banner-label">Supported by</span>
+      <div class="featured-banner-title">Korea Travel Guide 2026: Where to Eat in Seoul's Best Food Districts</div>
+      <p class="featured-banner-excerpt">From the late-night grills of Mapo-gu to the hidden alleyway restaurants of Euljiro. A neighbourhood-by-neighbourhood guide for the hungry traveller.</p>
+      <a href="#" class="featured-banner-cta">Read the guide</a>
+    </div>
+  </section>
+
+  <!-- ===== COOK BAND (DARK) ===== -->
+  <section class="recipe-band articles" aria-label="Latest recipes">
+    <div class="section-header">
+      <h2 class="section-title">Latest Recipes</h2>
+      <a href="/cook/" class="view-all">View all recipes</a>
+    </div>
+    <div class="carousel-wrap">
+      <div class="articles-grid">
+        <a href="/cook/korean-bbq-at-home" class="article-card">
+          <div class="article-image">[ recipe photo ]</div>
+          <div class="article-pillar">Cook &middot; Recipe</div>
+          <div class="article-title">Korean BBQ at Home: The Singapore Kitchen Guide</div>
+          <div class="article-excerpt">Everything you need from Koryo Mart, the marinade ratios that work, and how to not set off your smoke alarm.</div>
+          <div class="article-meta">Mar 19, 2026</div>
+        </a>
+        <a href="/cook/kimchi-jjigae" class="article-card">
+          <div class="article-image">[ recipe photo ]</div>
+          <div class="article-pillar">Cook &middot; Recipe</div>
+          <div class="article-title">Kimchi Jjigae with Pork Belly</div>
+          <div class="article-excerpt">The stew that uses up your over-fermented kimchi. Fifteen minutes, one pot.</div>
+          <div class="article-meta">Mar 16, 2026</div>
+        </a>
+        <a href="/cook/tteokbokki" class="article-card">
+          <div class="article-image">[ recipe photo ]</div>
+          <div class="article-pillar">Cook &middot; Recipe</div>
+          <div class="article-title">Tteokbokki from Scratch</div>
+          <div class="article-excerpt">Where to buy rice cakes in Singapore, the gochujang ratio, and the fish cake brand that matters.</div>
+          <div class="article-meta">Mar 12, 2026</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ===== HERO ===== */
+  .hero { padding: 0 48px; border-bottom: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.1s both; }
+  .hero-inner { display: grid; grid-template-columns: 5fr 7fr; min-height: 540px; }
+  .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 60px 48px 60px 0; border-right: 1px solid var(--stone); }
+  .hero-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 20px; }
+  h1 { font-family: 'Source Serif 4', serif; font-size: 40px; font-weight: 700; line-height: 1.18; margin-bottom: 20px; text-wrap: balance; max-width: 480px; }
+  .hero-excerpt { font-size: 16px; color: var(--gray-500); line-height: 1.7; max-width: 420px; margin-bottom: 28px; text-wrap: pretty; }
+  .hero-meta { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-500); }
+  .hero-image { background: var(--stone); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--gray-400); letter-spacing: 0.08em; min-height: 440px; overflow: hidden; }
+
+  /* ===== EXPLORE INLINE ===== */
+  .explore-inline { padding: 20px 48px; border-bottom: 1px solid var(--stone); display: flex; align-items: center; gap: 12px; animation: fadeUp 0.6s ease-out 0.2s both; }
+  .explore-inline-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-400); margin-right: 8px; }
+  .explore-inline-links { display: flex; gap: 24px; list-style: none; }
+  .explore-inline-links a { font-size: 14px; color: var(--ink); text-decoration: none; transition: color 0.2s; }
+  .explore-inline-links a:hover { color: var(--ember); }
+  .explore-inline-links .count { font-size: 11px; color: var(--gray-400); margin-left: 3px; }
+
+  .section-header { display: flex; justify-content: space-between; align-items: center; padding: 28px 0; border-bottom: 1px solid var(--stone); }
+  h2.section-title { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-500); }
+
+  /* ===== ARTICLE CAROUSEL ===== */
+  .articles { padding: 0 48px; border-bottom: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.3s both; }
+  .carousel-wrap { position: relative; }
+  .articles-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0; margin: 0 -48px; padding: 0 48px; }
+  .articles-grid::-webkit-scrollbar { display: none; }
+  .carousel-wrap::before, .carousel-wrap::after { position: absolute; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--gray-400); z-index: 2; pointer-events: none; opacity: 0.5; font-family: 'Outfit', sans-serif; font-weight: 300; line-height: 1; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--cream); border: 1px solid var(--stone); }
+  .carousel-wrap::before { content: '\2039'; left: -16px; }
+  .carousel-wrap::after { content: '\203A'; right: -16px; }
+  .recipe-band .carousel-wrap::before, .recipe-band .carousel-wrap::after { background: var(--ink); border-color: #332e2a; color: #7a7470; }
+
+  .article-card { display: block; padding: 32px 28px; border-right: 1px solid var(--stone); text-decoration: none; color: var(--ink); transition: background 0.2s; flex: 0 0 320px; min-width: 320px; scroll-snap-align: start; }
+  .article-card:last-child { border-right: none; padding-right: 28px; }
+  .article-card:first-child { padding-left: 28px; }
+  .article-card:hover { background: var(--linen); }
+  .articles:not(.recipe-band) .article-card:first-child { flex: 0 0 400px; min-width: 400px; }
+  .article-image { width: 100%; aspect-ratio: 3 / 4; background: var(--stone); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-400); overflow: hidden; }
+  .article-card:first-child .article-image { aspect-ratio: 4 / 3; }
+  .article-pillar { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; }
+  .article-title { font-family: 'Source Serif 4', serif; font-size: 18px; font-weight: 600; line-height: 1.35; margin-bottom: 8px; text-wrap: balance; }
+  .article-card:first-child .article-title { font-size: 22px; }
+  .article-excerpt { font-size: 16px; color: var(--gray-500); line-height: 1.65; }
+  .article-meta { font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 12px; }
+  .badge-sponsored { display: inline-block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500); border: 1px solid var(--stone); padding: 2px 8px; margin-bottom: 8px; }
+
+  /* ===== VIDEO ROW ===== */
+  .video-row { padding: 0 48px; border-bottom: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.25s both; }
+  .video-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0; margin: 0 -48px; padding: 0 48px; }
+  .video-grid::-webkit-scrollbar { display: none; }
+  .video-card { flex: 0 0 220px; min-width: 220px; padding: 24px 20px; border-right: 1px solid var(--stone); text-decoration: none; color: var(--ink); transition: background 0.2s; scroll-snap-align: start; }
+  .video-card:last-child { border-right: none; }
+  .video-card:hover { background: var(--linen); }
+  .video-thumb { position: relative; width: 100%; aspect-ratio: 9 / 16; background: var(--stone); margin-bottom: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-400); }
+  .video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .video-play::after { content: ''; display: block; width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent white; margin-left: 2px; }
+  .video-platform { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 4px; }
+  .video-title { font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 600; line-height: 1.35; }
+  .video-views { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
+  /* ===== VIEW ALL ===== */
+  .view-all { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); text-decoration: none; border-bottom: 1px solid var(--ember); padding-bottom: 2px; transition: opacity 0.2s; }
+  .view-all:hover { opacity: 0.7; }
+
+  /* ===== FEATURED BANNER ===== */
+  .featured-banner { display: grid; grid-template-columns: 3fr 2fr; border-bottom: 1px solid var(--stone); animation: fadeIn 0.6s ease-out 0.2s both; }
+  .featured-banner-image { background: var(--stone); min-height: 320px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--gray-400); overflow: hidden; }
+  .featured-banner-text { padding: 48px 48px; display: flex; flex-direction: column; justify-content: center; }
+  .featured-banner-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); border: 1px solid var(--stone); padding: 2px 8px; display: inline-block; margin-bottom: 16px; align-self: flex-start; }
+  .featured-banner-title { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 600; line-height: 1.3; margin-bottom: 12px; text-wrap: balance; }
+  .featured-banner-excerpt { font-size: 16px; color: var(--gray-500); line-height: 1.65; margin-bottom: 20px; }
+  .featured-banner-cta { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ember); text-decoration: none; border-bottom: 1px solid var(--ember); padding-bottom: 2px; align-self: flex-start; transition: opacity 0.2s; }
+  .featured-banner-cta:hover { opacity: 0.7; }
+
+  /* ===== COOK BAND (DARK) ===== */
+  .recipe-band { padding: 0 48px; background: var(--ink); color: var(--cream); border-bottom: 1px solid #332e2a; animation: fadeUp 0.6s ease-out 0.35s both; }
+  .recipe-band .section-header { border-bottom-color: #332e2a; }
+  .recipe-band h2.section-title { color: #7a7470; }
+  .recipe-band .view-all { color: var(--cream); border-bottom-color: #7a7470; }
+  .recipe-band .view-all:hover { opacity: 0.7; }
+  .recipe-band .articles-grid { margin: 0 -48px; padding: 0 48px; }
+  .recipe-band .article-card { border-right-color: #332e2a; color: var(--cream); flex: 0 0 320px; min-width: 320px; }
+  .recipe-band .article-card:hover { background: #252018; }
+  .recipe-band .article-image { background: #332e2a; color: #5a5550; }
+  .recipe-band .article-pillar { color: #7a7470; }
+  .recipe-band .article-title { color: var(--cream); }
+  .recipe-band .article-excerpt { color: #9a9590; }
+  .recipe-band .article-meta { color: #6a6560; }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    .featured-banner { grid-template-columns: 1fr; }
+    .featured-banner-image { min-height: 220px; }
+    .featured-banner-text { padding: 32px 24px; }
+    .hero { padding: 0 24px; }
+    .hero-inner { grid-template-columns: 1fr; min-height: auto; }
+    .hero-text { padding: 40px 0; border-right: none; border-bottom: 1px solid var(--stone); }
+    h1 { font-size: 30px; }
+    .hero-image { min-height: 280px; }
+    .explore-inline { padding: 16px 24px; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .video-row { padding: 0 24px; }
+    .video-grid { margin: 0 -24px; padding: 0 24px; }
+    .video-card { flex: 0 0 180px; min-width: 180px; padding: 20px 16px; }
+    .explore-inline::-webkit-scrollbar { display: none; }
+    .explore-inline-links { gap: 16px; flex-shrink: 0; }
+    .explore-inline-links a { font-size: 13px; white-space: nowrap; }
+    .articles { padding: 0 24px; }
+    .articles-grid { margin: 0 -24px; padding: 0 24px; }
+    .article-card { flex: 0 0 280px !important; min-width: 280px !important; padding: 24px 20px; }
+    .article-card:first-child { padding-left: 20px !important; }
+    .article-card:first-child .article-title { font-size: 20px; }
+    .articles:not(.recipe-band) .article-card:first-child { flex: 0 0 300px !important; min-width: 300px !important; }
+    .recipe-band { padding: 0 24px; }
+    .recipe-band .articles-grid { margin: 0 -24px; padding: 0 24px; }
+    .recipe-band .article-card { flex: 0 0 280px !important; min-width: 280px !important; }
+    .carousel-wrap::before { left: 4px; }
+    .carousel-wrap::after { right: 4px; }
+  }
+</style>

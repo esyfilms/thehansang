@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact" description="Contact The Hansang — restaurant tips, collaborations, press enquiries.">
+
+  <section class="contact-page">
+    <h1>Contact</h1>
+    <p class="contact-intro">Got a restaurant tip? Want to collaborate? Drop us a line.</p>
+
+    <form class="contact-form" action="#" method="post">
+      <div class="form-group">
+        <label for="contact-name">Name</label>
+        <input type="text" id="contact-name" name="name" placeholder="Your name" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="contact-email">Email</label>
+        <input type="email" id="contact-email" name="email" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="contact-subject">Subject</label>
+        <select id="contact-subject" name="subject" required>
+          <option value="" disabled selected>Select a topic</option>
+          <option value="general">General</option>
+          <option value="restaurant-tip">Restaurant Tip</option>
+          <option value="collaboration">Collaboration</option>
+          <option value="press">Press</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+    </form>
+
+    <hr class="contact-divider">
+
+    <div class="contact-social">
+      <h2>Find us elsewhere</h2>
+      <ul class="contact-social-links">
+        <li><a href="https://www.instagram.com/thehansang.sg">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Telegram</a></li>
+        <li><a href="mailto:hello@thehansang.com">hello@thehansang.com</a></li>
+      </ul>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .contact-page { max-width: 680px; margin: 0 auto; padding: 64px 48px 80px; animation: fadeUp 0.6s ease-out 0.1s both; }
+  .contact-page h1 { font-family: 'Source Serif 4', serif; font-size: 40px; font-weight: 700; line-height: 1.18; margin-bottom: 16px; }
+  .contact-intro { font-family: 'Source Serif 4', serif; font-size: 18px; line-height: 1.8; color: var(--gray-500); margin-bottom: 40px; }
+  .contact-form { display: flex; flex-direction: column; gap: 24px; margin-bottom: 56px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea { padding: 14px 18px; border: 1px solid var(--stone); background: var(--white, #fff); font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink); transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--ink); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: var(--gray-400); }
+  .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8279' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; padding-right: 48px; cursor: pointer; }
+  .form-group textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
+  .form-submit { align-self: flex-start; padding: 14px 36px; background: var(--ember); color: var(--cream); border: 1px solid var(--ember); font-family: 'Outfit', sans-serif; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; font-weight: 500; }
+  .form-submit:hover { background: #9c3823; }
+  .contact-divider { border: none; border-top: 1px solid var(--stone); margin-bottom: 40px; }
+  .contact-social h2 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; margin-bottom: 20px; }
+  .contact-social-links { list-style: none; display: flex; flex-wrap: wrap; gap: 16px 32px; }
+  .contact-social-links a { font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--gray-500); text-decoration: none; transition: color 0.2s; }
+  .contact-social-links a:hover { color: var(--ember); }
+
+  @media (max-width: 768px) {
+    .contact-page { padding: 40px 24px 64px; }
+    .contact-page h1 { font-size: 32px; }
+    .contact-intro { font-size: 17px; }
+  }
+  @media (max-width: 480px) {
+    .contact-page h1 { font-size: 28px; }
+    .contact-social-links { flex-direction: column; gap: 12px; }
+  }
+</style>

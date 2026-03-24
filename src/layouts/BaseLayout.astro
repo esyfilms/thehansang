@@ -1,0 +1,138 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = "Everything Korea, for Singapore.", image } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F7F3ED">
+  <meta name="description" content={description}>
+  <title>{title} — The Hansang</title>
+  <link rel="canonical" href={canonicalURL}>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={canonicalURL}>
+  <meta property="og:site_name" content="The Hansang">
+  <meta property="og:type" content="website">
+  {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@200;300;400;500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Ad Header — pulled from Notion Ads DB -->
+  <div class="ad-header">
+    <span class="ad-header-label">Supported by</span>
+    <a href="#">Korea Tourism Organization &middot; Visit Korea Year 2026</a>
+  </div>
+
+  <!-- Navigation -->
+  <nav aria-label="Main navigation">
+    <a href="/" class="nav-logo">
+      <img src="/logo-soban-leg.svg" alt="The Hansang" class="nav-logo-img" />
+      <span class="nav-wordmark">THE<br>HANSANG</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/eat/">Eat</a></li>
+      <li><a href="/cook/">Cook</a></li>
+      <li><a href="/travel/">Travel</a></li>
+      <li><a href="/culture/">Culture</a></li>
+      <li><a href="/events/">Events</a></li>
+      <li><a href="/my-pantry/">My Pantry</a></li>
+    </ul>
+    <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
+    <button type="button" class="nav-search" aria-label="Search the site">Search</button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <button class="mobile-menu-close" id="menuClose" aria-label="Close menu">&times;</button>
+    <ul class="mobile-menu-links">
+      <li><a href="/eat/">Eat</a></li>
+      <li><a href="/cook/">Cook</a></li>
+      <li><a href="/travel/">Travel</a></li>
+      <li><a href="/culture/">Culture</a></li>
+      <li><a href="/events/">Events</a></li>
+      <li><a href="/my-pantry/">My Pantry</a></li>
+    </ul>
+  </div>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <!-- Newsletter -->
+  <section class="newsletter" aria-label="Newsletter signup">
+    <h2>The Weekly Hansang</h2>
+    <p class="newsletter-sub">New reviews, recipes, and guides every Thursday.</p>
+    <form class="newsletter-form" action="#" method="post">
+      <label for="email-input" class="newsletter-label">Email address</label>
+      <input type="email" id="email-input" name="email" class="newsletter-input" placeholder="your@email.com" autocomplete="email" required>
+      <button type="submit" class="newsletter-btn">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-col">
+      <div class="footer-logo">
+        <img src="/logo-soban-leg.svg" alt="The Hansang" style="height: 26px; width: auto;">
+        <span class="footer-logo-text">THE HANSANG</span>
+      </div>
+      <div class="footer-tagline">Everything Korea, for Singapore.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="/eat/">Eat</a>
+      <a href="/cook/">Cook</a>
+      <a href="/travel/">Travel</a>
+      <a href="/culture/">Culture</a>
+      <a href="/events/">Events</a>
+    </div>
+    <div class="footer-col">
+      <h4>More</h4>
+      <a href="/my-pantry/">My Pantry</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="#">Newsletter</a>
+    </div>
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="#">YouTube</a>
+      <a href="#">Telegram</a>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <span>&copy; 2026 The Hansang. All rights reserved.</span>
+    <span>Built with care in Singapore.</span>
+  </div>
+
+  <script>
+    document.getElementById('menuOpen')?.addEventListener('click', () => {
+      document.getElementById('mobileMenu')?.classList.add('open');
+    });
+    document.getElementById('menuClose')?.addEventListener('click', () => {
+      document.getElementById('mobileMenu')?.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
