@@ -212,7 +212,7 @@ function generateAstroPage(post, content) {
   const htmlContent = markdownToHtml(content);
 
   return `---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="${title}" description="${meta}">
