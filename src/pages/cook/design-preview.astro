@@ -1,0 +1,328 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Recipe Layout Preview" description="Design preview of the recipe article template.">
+
+  <!-- Launch Banner -->
+  <div class="launch-banner">
+    We're launching soon — this is a design preview
+  </div>
+
+  <!-- ===== ARTICLE HEADER ===== -->
+  <header class="article-header">
+    <div class="article-pillar-tag"><a href="/cook/">Cook</a> &middot; Main</div>
+    <h1>Recipe Layout Preview</h1>
+    <div class="article-byline">
+      <span class="author">Author Name</span>
+      <span class="separator">/</span>
+      <time>Coming Soon</time>
+      <span class="separator">/</span>
+      <span>5 min read</span>
+    </div>
+  </header>
+
+  <!-- ===== FEATURED IMAGE ===== -->
+  <figure class="article-featured-image">
+    <div class="image-placeholder">[ Featured Image Placeholder ]</div>
+    <figcaption>Photo caption placeholder. Credit: The Hansang</figcaption>
+  </figure>
+
+  <!-- Video embed placeholder -->
+  <div class="article-video">
+    <div class="article-video-inner">
+      <div class="article-video-placeholder">
+        <div class="article-video-play"></div>
+        <span>Watch on Instagram</span>
+      </div>
+    </div>
+    <p class="article-video-caption">Video embed placeholder</p>
+  </div>
+
+  <!-- ===== ARTICLE LAYOUT ===== -->
+  <div class="article-layout">
+
+    <!-- MAIN CONTENT -->
+    <article class="article-content">
+
+      <!-- Recipe Card -->
+      <aside class="recipe-card" aria-label="Recipe overview">
+        <div class="recipe-card-title">Recipe Card</div>
+        <div class="recipe-card-grid">
+          <div class="recipe-card-item">
+            <span class="recipe-card-label">Servings</span>
+            <span class="recipe-card-value">X&ndash;X</span>
+          </div>
+          <div class="recipe-card-item">
+            <span class="recipe-card-label">Prep Time</span>
+            <span class="recipe-card-value">XX min</span>
+          </div>
+          <div class="recipe-card-item">
+            <span class="recipe-card-label">Cook Time</span>
+            <span class="recipe-card-value">XX min</span>
+          </div>
+          <div class="recipe-card-item">
+            <span class="recipe-card-label">Difficulty</span>
+            <span class="recipe-card-value">Easy</span>
+          </div>
+        </div>
+      </aside>
+
+      <p>This is a design preview of the recipe article layout. The text you are reading is placeholder content that demonstrates the typographic hierarchy, ingredient list formatting, step-by-step numbering, and the Singapore Swap box unique to Cook articles.</p>
+
+      <p>Each recipe follows a consistent structure: an introductory paragraph, a Recipe Card summary, ingredient list with checkboxes, a Singapore Swap box for local sourcing tips, and numbered step-by-step instructions.</p>
+
+      <p>This template is designed for Singapore kitchens. Recipes will include local ingredient sourcing notes and realistic cook times.</p>
+
+      <!-- Ingredient List -->
+      <aside class="ingredient-list" aria-label="Ingredients">
+        <div class="ingredient-list-title">Ingredients</div>
+        <ul>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 200g ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 cup ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 tbsp ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 tbsp ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 tsp ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 block ingredient placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 2 cups liquid placeholder</li>
+          <li><span class="ingredient-check" role="checkbox" aria-checked="false" tabindex="0"></span> 1 garnish placeholder, sliced</li>
+        </ul>
+      </aside>
+
+      <!-- Singapore Swap Box -->
+      <aside class="sg-swap" aria-label="Singapore ingredient substitutions">
+        <div class="sg-swap-title">Singapore Swap</div>
+        <ul>
+          <li><strong>Ingredient A:</strong> Available at Korean marts or supermarkets islandwide</li>
+          <li><strong>Ingredient B:</strong> Pre-prepared version available at major supermarkets</li>
+          <li><strong>Ingredient C:</strong> Instant powder version works as a substitute</li>
+        </ul>
+      </aside>
+
+      <!-- Step-by-step instructions -->
+      <h2>Instructions</h2>
+
+      <div class="recipe-steps">
+        <div class="recipe-step">
+          <h3>Step one heading placeholder</h3>
+          <p>Step one instruction placeholder text. This describes the first action the cook should take.</p>
+        </div>
+        <div class="recipe-step">
+          <h3>Step two heading placeholder</h3>
+          <p>Step two instruction placeholder text. This describes the next action in the cooking process.</p>
+        </div>
+
+        <figure class="inline-photo">
+          <div class="image-placeholder">[ Step Photo Placeholder ]</div>
+          <figcaption>Photo caption placeholder describing this step of the cooking process.</figcaption>
+        </figure>
+
+        <div class="recipe-step">
+          <h3>Step three heading placeholder</h3>
+          <p>Step three instruction placeholder text. Seasoning, simmering, or another key cooking action goes here.</p>
+        </div>
+        <div class="recipe-step">
+          <h3>Step four heading placeholder</h3>
+          <p>Step four instruction placeholder text. Adding the final ingredients or adjusting the dish.</p>
+        </div>
+        <div class="recipe-step">
+          <h3>Serve</h3>
+          <p>Serving instruction placeholder. Garnish and serve with steamed rice or accompaniments.</p>
+        </div>
+      </div>
+
+      <!-- Tips Section -->
+      <section class="recipe-tips" aria-label="Cooking tips">
+        <h2>Tips</h2>
+        <ul>
+          <li>Tip one placeholder. Practical cooking advice that helps the home cook get better results from this recipe.</li>
+          <li>Tip two placeholder. Storage or reheating advice for leftovers.</li>
+          <li>Tip three placeholder. An ingredient substitution or variation suggestion.</li>
+        </ul>
+      </section>
+
+    </article>
+
+    <!-- AD SIDEBAR (desktop only) -->
+    <aside class="ad-sidebar" aria-label="Advertisements">
+      <div class="ad-sidebar-inner">
+        <div class="ad-slot">
+          <span class="ad-slot-label">Partner</span>
+          Advertisement
+        </div>
+        <div class="ad-slot">
+          <span class="ad-slot-label">Partner</span>
+          Advertisement
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ===== MORE FROM COOK ===== -->
+  <section class="more-from" aria-label="Related recipes">
+    <div class="more-from-header">
+      <h2 class="more-from-title">More from Cook</h2>
+      <a href="/cook/" class="more-from-link">View all</a>
+    </div>
+    <div class="more-from-grid">
+      <a href="#" class="related-card">
+        <div class="related-card-image">[ Image ]</div>
+        <div class="related-card-pillar">Cook &middot; Side</div>
+        <div class="related-card-title">Related Recipe Title Placeholder</div>
+        <div class="related-card-excerpt">Description placeholder text goes here.</div>
+        <div class="related-card-meta">Coming Soon</div>
+      </a>
+      <a href="#" class="related-card">
+        <div class="related-card-image">[ Image ]</div>
+        <div class="related-card-pillar">Cook &middot; Main</div>
+        <div class="related-card-title">Related Recipe Title Placeholder</div>
+        <div class="related-card-excerpt">Description placeholder text goes here.</div>
+        <div class="related-card-meta">Coming Soon</div>
+      </a>
+      <a href="#" class="related-card">
+        <div class="related-card-image">[ Image ]</div>
+        <div class="related-card-pillar">Cook &middot; Snack</div>
+        <div class="related-card-title">Related Recipe Title Placeholder</div>
+        <div class="related-card-excerpt">Description placeholder text goes here.</div>
+        <div class="related-card-meta">Coming Soon</div>
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .launch-banner { background: var(--ink); color: var(--cream); text-align: center; padding: 10px 24px; font-size: 13px; letter-spacing: 0.05em; }
+
+  /* ===== ARTICLE HEADER ===== */
+  .article-header { max-width: 780px; margin: 0 auto; padding: 48px 48px 32px; text-align: center; animation: fadeUp 0.6s ease-out 0.1s both; }
+  .article-pillar-tag { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 20px; }
+  .article-pillar-tag a { color: var(--gray-500); text-decoration: none; transition: color 0.2s; }
+  .article-pillar-tag a:hover { color: var(--ember); }
+  .article-header h1 { font-family: 'Source Serif 4', serif; font-size: 40px; font-weight: 700; line-height: 1.18; margin-bottom: 20px; text-wrap: balance; }
+  .article-byline { font-size: 13px; color: var(--gray-400); letter-spacing: 0.04em; }
+  .separator { margin: 0 8px; color: var(--stone); }
+  .author { color: var(--ink); font-weight: 500; }
+
+  /* ===== FEATURED IMAGE ===== */
+  .article-featured-image { max-width: 1100px; margin: 0 auto; padding: 0 48px 32px; animation: fadeUp 0.6s ease-out 0.15s both; }
+  .image-placeholder { width: 100%; height: 480px; background: var(--stone); display: flex; align-items: center; justify-content: center; color: var(--gray-400); font-size: 14px; letter-spacing: 0.05em; }
+  .article-featured-image figcaption { font-family: 'Outfit', sans-serif; font-size: 12px; color: var(--gray-400); margin-top: 12px; text-align: center; }
+
+  /* ===== VIDEO EMBED ===== */
+  .article-video { max-width: 480px; margin: 0 auto 32px; padding: 0 48px; animation: fadeUp 0.6s ease-out 0.2s both; }
+  .article-video-inner { position: relative; aspect-ratio: 9 / 16; max-height: 500px; background: var(--stone); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .article-video-placeholder { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--gray-400); font-size: 13px; }
+  .article-video-play { width: 48px; height: 48px; background: rgba(0, 0, 0, 0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .article-video-play::after { content: ''; display: block; width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 14px; border-color: transparent transparent transparent white; margin-left: 3px; }
+  .article-video-caption { text-align: center; font-size: 12px; color: var(--gray-400); margin-top: 12px; font-style: italic; }
+
+  /* ===== ARTICLE LAYOUT ===== */
+  .article-layout { display: grid; grid-template-columns: 1fr 300px; gap: 48px; max-width: 1100px; margin: 0 auto; padding: 0 48px 64px; animation: fadeUp 0.6s ease-out 0.3s both; }
+  .article-content { max-width: 680px; }
+  .article-content p { font-family: 'Source Serif 4', serif; font-size: 18px; line-height: 1.8; margin-bottom: 24px; color: var(--ink); }
+  .article-content h2 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 700; line-height: 1.3; margin-top: 48px; margin-bottom: 20px; color: var(--ink); }
+
+  /* Recipe Card */
+  .recipe-card { border: 1.5px solid var(--stone); padding: 28px 32px; margin-bottom: 40px; background: var(--white); }
+  .recipe-card-title { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--stone); }
+  .recipe-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+  .recipe-card-item { display: flex; flex-direction: column; gap: 4px; }
+  .recipe-card-label { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); }
+  .recipe-card-value { font-family: 'Source Serif 4', serif; font-size: 16px; font-weight: 600; color: var(--ink); }
+
+  /* Ingredient List */
+  .ingredient-list { border: 1.5px solid var(--stone); padding: 28px 32px; margin-top: 48px; margin-bottom: 40px; background: var(--white); }
+  .ingredient-list-title { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--stone); }
+  .ingredient-list ul { list-style: none; }
+  .ingredient-list li { font-family: 'Source Serif 4', serif; font-size: 16px; line-height: 1.7; color: var(--ink); padding: 8px 0; border-bottom: 1px solid var(--linen); display: flex; align-items: baseline; gap: 12px; }
+  .ingredient-list li:last-child { border-bottom: none; }
+  .ingredient-check { width: 16px; height: 16px; border: 1.5px solid var(--stone); border-radius: 2px; flex-shrink: 0; position: relative; top: 2px; cursor: pointer; transition: border-color 0.2s; }
+  .ingredient-check:hover { border-color: var(--ember); }
+
+  /* Singapore Swap */
+  .sg-swap { border: 1.5px solid var(--stone); padding: 24px 28px; margin-bottom: 40px; background: var(--linen); }
+  .sg-swap-title { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--stone); }
+  .sg-swap ul { list-style: none; }
+  .sg-swap li { font-family: 'Source Serif 4', serif; font-size: 15px; line-height: 1.7; color: var(--ink); padding: 6px 0; }
+  .sg-swap li strong { font-weight: 600; }
+
+  /* Recipe Steps */
+  .recipe-steps { margin-top: 48px; counter-reset: step; }
+  .recipe-step { margin-bottom: 32px; padding-left: 48px; position: relative; counter-increment: step; }
+  .recipe-step::before { content: counter(step); position: absolute; left: 0; top: 0; font-family: 'Source Serif 4', serif; font-size: 28px; font-weight: 700; color: var(--ember); line-height: 1; width: 36px; text-align: center; }
+  .recipe-step h3 { font-family: 'Source Serif 4', serif; font-size: 19px; font-weight: 700; line-height: 1.35; margin-top: 0; margin-bottom: 8px; color: var(--ink); }
+  .recipe-step p { font-family: 'Source Serif 4', serif; font-size: 17px; line-height: 1.8; margin-bottom: 0; color: var(--ink); }
+
+  /* Inline photo */
+  .inline-photo { margin: 36px 0; }
+  .inline-photo .image-placeholder { width: 100%; height: 360px; }
+  .inline-photo figcaption { font-family: 'Outfit', sans-serif; font-size: 12px; color: var(--gray-400); margin-top: 10px; line-height: 1.5; }
+
+  /* Tips */
+  .recipe-tips { margin-top: 48px; padding-top: 32px; border-top: 1.5px solid var(--stone); }
+  .recipe-tips h2 { margin-top: 0; }
+  .recipe-tips ul { list-style: none; margin-top: 8px; }
+  .recipe-tips li { font-family: 'Source Serif 4', serif; font-size: 17px; font-style: italic; line-height: 1.8; color: var(--gray-500); padding: 6px 0; padding-left: 20px; position: relative; }
+  .recipe-tips li::before { content: ''; position: absolute; left: 0; top: 14px; width: 6px; height: 6px; background: var(--ember); border-radius: 50%; }
+
+  /* ===== AD SIDEBAR ===== */
+  .ad-sidebar { position: relative; }
+  .ad-sidebar-inner { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 32px; }
+  .ad-slot { width: 300px; height: 250px; border: 2px dashed var(--stone); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--gray-400); font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--white); }
+  .ad-slot-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); border: 1px solid var(--stone); padding: 1px 6px; margin-bottom: 8px; }
+
+  /* ===== MORE FROM COOK ===== */
+  .more-from { max-width: 1100px; margin: 0 auto; padding: 0 48px 64px; border-top: 1px solid var(--stone); animation: fadeUp 0.6s ease-out 0.4s both; }
+  .more-from-header { display: flex; justify-content: space-between; align-items: baseline; padding: 32px 0 24px; }
+  .more-from-title { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; color: var(--ink); }
+  .more-from-link { font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500); text-decoration: none; transition: color 0.2s; }
+  .more-from-link:hover { color: var(--ink); }
+  .more-from-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .related-card { padding: 0 24px; border-right: 1px solid var(--stone); text-decoration: none; color: var(--ink); transition: opacity 0.2s; }
+  .related-card:first-child { padding-left: 0; }
+  .related-card:last-child { padding-right: 0; border-right: none; }
+  .related-card:hover { opacity: 0.75; }
+  .related-card-image { width: 100%; height: 180px; background: var(--stone); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gray-400); margin-bottom: 14px; }
+  .related-card-pillar { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 6px; }
+  .related-card-title { font-family: 'Source Serif 4', serif; font-size: 17px; font-weight: 600; line-height: 1.35; margin-bottom: 6px; }
+  .related-card-excerpt { font-size: 14px; color: var(--gray-500); line-height: 1.55; }
+  .related-card-meta { font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 10px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .article-header { padding: 32px 24px 24px; }
+    .article-header h1 { font-size: 28px; }
+    .article-featured-image { padding: 0 24px 24px; }
+    .image-placeholder { height: 280px; }
+    .article-video { padding: 0 24px; }
+    .article-layout { grid-template-columns: 1fr; padding: 0 24px 48px; }
+    .ad-sidebar { display: none; }
+    .recipe-card { padding: 20px 24px; }
+    .recipe-card-grid { grid-template-columns: 1fr; }
+    .ingredient-list { padding: 20px 24px; }
+    .sg-swap { padding: 20px 24px; }
+    .more-from { padding: 0 24px 48px; }
+    .more-from-grid { grid-template-columns: 1fr; gap: 24px; }
+    .related-card { padding: 0; border-right: none; border-bottom: 1px solid var(--stone); padding-bottom: 24px; }
+    .related-card:last-child { border-bottom: none; }
+  }
+  @media (max-width: 480px) {
+    .article-header h1 { font-size: 24px; }
+  }
+</style>
+
+<script>
+  // Ingredient checkbox toggle
+  document.querySelectorAll('.ingredient-check').forEach(check => {
+    check.addEventListener('click', () => {
+      const li = check.parentElement;
+      if (li) {
+        li.classList.toggle('checked');
+        const isChecked = li.classList.contains('checked');
+        check.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+      }
+    });
+  });
+</script>

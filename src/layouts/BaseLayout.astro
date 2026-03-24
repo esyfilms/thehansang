@@ -37,29 +37,32 @@ import '../styles/global.css';
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Ad Header — pulled from Notion Ads DB -->
-  <div class="ad-header">
-    <span class="ad-header-label">Supported by</span>
-    <a href="#">Korea Tourism Organization &middot; Visit Korea Year 2026</a>
-  </div>
+  <!-- Ad Header — will be populated from Notion Ads DB when sponsors are confirmed -->
 
-  <!-- Navigation -->
-  <nav aria-label="Main navigation">
-    <a href="/" class="nav-logo">
-      <img src="/logo-soban-leg.svg" alt="The Hansang" class="nav-logo-img" />
-      <span class="nav-wordmark">THE<br>HANSANG</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="/eat/">Eat</a></li>
-      <li><a href="/cook/">Cook</a></li>
-      <li><a href="/travel/">Travel</a></li>
-      <li><a href="/culture/">Culture</a></li>
-      <li><a href="/events/">Events</a></li>
-      <li><a href="/my-pantry/">My Pantry</a></li>
-    </ul>
-    <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
-    <button type="button" class="nav-search" aria-label="Search the site">Search</button>
-  </nav>
+  <!-- Navigation — Two-row sticky header like Monocle -->
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Main navigation">
+      <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
+      <a href="/" class="nav-logo">
+        <img src="/logo-soban-leg.svg" alt="The Hansang" class="nav-logo-img" />
+        <span class="nav-wordmark">THE<br>HANSANG</span>
+      </a>
+      <button type="button" class="nav-search" aria-label="Search the site">Search</button>
+    </nav>
+    <nav class="nav-categories" aria-label="Content categories">
+      <a href="/eat/">Eat</a>
+      <span class="nav-pipe">|</span>
+      <a href="/cook/">Cook</a>
+      <span class="nav-pipe">|</span>
+      <a href="/travel/">Travel</a>
+      <span class="nav-pipe">|</span>
+      <a href="/culture/">Culture</a>
+      <span class="nav-pipe">|</span>
+      <a href="/events/">Events</a>
+      <span class="nav-pipe">|</span>
+      <a href="/my-pantry/">My Pantry</a>
+    </nav>
+  </header>
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
