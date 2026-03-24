@@ -7,6 +7,18 @@ interface Props {
 
 const { title, description = "Everything Korea, for Singapore.", image } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const logo = "/thehansang/logo-soban-leg.svg";
+const links = {
+  home: "/thehansang/",
+  eat: "/thehansang/eat/",
+  cook: "/thehansang/cook/",
+  travel: "/thehansang/travel/",
+  culture: "/thehansang/culture/",
+  events: "/thehansang/events/",
+  pantry: "/thehansang/my-pantry/",
+  about: "/thehansang/about/",
+  contact: "/thehansang/contact/",
+};
 
 import '../styles/global.css';
 ---
@@ -18,7 +30,7 @@ import '../styles/global.css';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#F7F3ED">
   <meta name="description" content={description}>
-  <title>{title} — The Hansang</title>
+  <title>{title} - The Hansang</title>
   <link rel="canonical" href={canonicalURL}>
 
   <!-- Open Graph -->
@@ -37,30 +49,30 @@ import '../styles/global.css';
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Ad Header — will be populated from Notion Ads DB when sponsors are confirmed -->
+  <!-- Ad Header - will be populated from Notion Ads DB when sponsors are confirmed -->
 
-  <!-- Navigation — Two-row sticky header like Monocle -->
+  <!-- Navigation - Two-row sticky header like Monocle -->
   <header class="site-header">
     <nav class="nav-bar" aria-label="Main navigation">
       <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
-      <a href="/" class="nav-logo">
-        <img src="/logo-soban-leg.svg" alt="The Hansang" class="nav-logo-img" />
+      <a href={links.home} class="nav-logo">
+        <img src={logo} alt="The Hansang" class="nav-logo-img" />
         <span class="nav-wordmark">THE<br>HANSANG</span>
       </a>
       <button type="button" class="nav-search" aria-label="Search the site">Search</button>
     </nav>
     <nav class="nav-categories" aria-label="Content categories">
-      <a href="/eat/">Eat</a>
+      <a href={links.eat}>Eat</a>
       <span class="nav-pipe">|</span>
-      <a href="/cook/">Cook</a>
+      <a href={links.cook}>Cook</a>
       <span class="nav-pipe">|</span>
-      <a href="/travel/">Travel</a>
+      <a href={links.travel}>Travel</a>
       <span class="nav-pipe">|</span>
-      <a href="/culture/">Culture</a>
+      <a href={links.culture}>Culture</a>
       <span class="nav-pipe">|</span>
-      <a href="/events/">Events</a>
+      <a href={links.events}>Events</a>
       <span class="nav-pipe">|</span>
-      <a href="/my-pantry/">My Pantry</a>
+      <a href={links.pantry}>My Pantry</a>
     </nav>
   </header>
 
@@ -68,12 +80,12 @@ import '../styles/global.css';
   <div class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
     <button class="mobile-menu-close" id="menuClose" aria-label="Close menu">&times;</button>
     <ul class="mobile-menu-links">
-      <li><a href="/eat/">Eat</a></li>
-      <li><a href="/cook/">Cook</a></li>
-      <li><a href="/travel/">Travel</a></li>
-      <li><a href="/culture/">Culture</a></li>
-      <li><a href="/events/">Events</a></li>
-      <li><a href="/my-pantry/">My Pantry</a></li>
+      <li><a href={links.eat}>Eat</a></li>
+      <li><a href={links.cook}>Cook</a></li>
+      <li><a href={links.travel}>Travel</a></li>
+      <li><a href={links.culture}>Culture</a></li>
+      <li><a href={links.events}>Events</a></li>
+      <li><a href={links.pantry}>My Pantry</a></li>
     </ul>
   </div>
 
@@ -96,24 +108,24 @@ import '../styles/global.css';
   <footer>
     <div class="footer-col">
       <div class="footer-logo">
-        <img src="/logo-soban-leg.svg" alt="The Hansang" style="height: 26px; width: auto;">
+        <img src={logo} alt="The Hansang" style="height: 26px; width: auto;">
         <span class="footer-logo-text">THE HANSANG</span>
       </div>
       <div class="footer-tagline">Everything Korea, for Singapore.</div>
     </div>
     <div class="footer-col">
       <h4>Explore</h4>
-      <a href="/eat/">Eat</a>
-      <a href="/cook/">Cook</a>
-      <a href="/travel/">Travel</a>
-      <a href="/culture/">Culture</a>
-      <a href="/events/">Events</a>
+      <a href={links.eat}>Eat</a>
+      <a href={links.cook}>Cook</a>
+      <a href={links.travel}>Travel</a>
+      <a href={links.culture}>Culture</a>
+      <a href={links.events}>Events</a>
     </div>
     <div class="footer-col">
       <h4>More</h4>
-      <a href="/my-pantry/">My Pantry</a>
-      <a href="/about/">About</a>
-      <a href="/contact/">Contact</a>
+      <a href={links.pantry}>My Pantry</a>
+      <a href={links.about}>About</a>
+      <a href={links.contact}>Contact</a>
       <a href="#">Newsletter</a>
     </div>
     <div class="footer-col">
