@@ -10,6 +10,7 @@ import path from 'path';
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const POSTS_DB_ID = 'b933f3f3-cdd6-4c41-9909-0bfae6df37d9';
+const POSTS_DS_ID = '54bd1d7c-c34a-4351-aa57-f0137d946f8f'; // data source ID
 const PAGES_DIR = path.resolve('src/pages');
 
 // Pillar → folder mapping
@@ -22,8 +23,9 @@ const PILLAR_FOLDERS = {
 };
 
 async function fetchPublishedPosts() {
-  const response = await notion.databases.query({
-    database_id: POSTS_DB_ID,
+  // v5 SDK uses dataSources.query instead of databases.query
+  const response = await notion.dataSources.query({
+    data_source_id: POSTS_DS_ID,
     filter: {
       and: [
         { property: 'Status', status: { equals: 'Done' } },
