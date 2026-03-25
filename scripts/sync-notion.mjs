@@ -338,6 +338,7 @@ async function extractPostData(page) {
     homepagePosition: getProperty(page, 'Homepage Position'),
     contributor: getProperty(page, 'Contributor'),
     affiliateLink: getProperty(page, 'Affiliate Link'),
+    recipeCategory: getProperty(page, 'Recipe Category') || [],
     coverImages: getProperty(page, 'Cover Image') || [],
   };
 
@@ -362,11 +363,12 @@ const FILTER_PILLS = {
   ],
   Cook: [
     { label: 'All', filter: 'all' },
-    { label: 'Mains', filter: 'main' },
-    { label: 'Sides', filter: 'side' },
-    { label: 'Soups & Stews', filter: 'soup' },
-    { label: 'Snacks', filter: 'snack' },
-    { label: 'Noodles', filter: 'noodle' },
+    { label: 'Mains', filter: 'mains' },
+    { label: 'Banchan', filter: 'banchan' },
+    { label: 'Soups & Stews', filter: 'soups & stews' },
+    { label: 'Snacks', filter: 'snacks' },
+    { label: 'Hacks', filter: 'hacks' },
+    { label: 'Noodles', filter: 'noodles' },
   ],
   Travel: [
     { label: 'All', filter: 'all' },
@@ -963,7 +965,7 @@ function generateCategoryPage(pillar, posts) {
     const cards = gridPosts
       .map(
         p => `
-        <a href="/${cfg.folder}/${p.slug}/" class="grid-card article-card" data-type="${(p.postType || '').toLowerCase()}">
+        <a href="/${cfg.folder}/${p.slug}/" class="grid-card article-card" data-type="${Array.isArray(p.recipeCategory) && p.recipeCategory.length > 0 ? p.recipeCategory.map(c => c.toLowerCase()).join(' ') : (p.postType || '').toLowerCase()}">
           <div class="grid-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
           <div class="grid-card-body">
             <div class="grid-card-tag">${(p.pillar || '').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
@@ -1015,7 +1017,8 @@ ${CAROUSEL_SCRIPT}
       pill.classList.add('active');
       const filter = pill.dataset.filter;
       document.querySelectorAll('.article-card').forEach(card => {
-        if (filter === 'all' || card.dataset.type === filter) {
+        const types = (card.dataset.type || '').split(' ');
+        if (filter === 'all' || types.includes(filter)) {
           card.style.display = '';
         } else {
           card.style.display = 'none';
