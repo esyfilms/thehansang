@@ -933,7 +933,7 @@ function generateCategoryPage(pillar, posts) {
     const cards = gridPosts
       .map(
         p => `
-        <a href="/${cfg.folder}/${p.slug}/" class="grid-card">
+        <a href="/${cfg.folder}/${p.slug}/" class="grid-card article-card" data-type="${(p.postType || '').toLowerCase()}">
           <div class="grid-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
           <div class="grid-card-body">
             <div class="grid-card-tag">${(p.pillar || '').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
@@ -978,6 +978,30 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 ${CAROUSEL_SCRIPT}
 
+<script>
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      const filter = pill.textContent.trim().toLowerCase();
+      const cards = document.querySelectorAll('.article-grid .article-card');
+
+      cards.forEach(card => {
+        if (filter === 'all') {
+          card.style.display = '';
+        } else {
+          if (card.dataset.type && card.dataset.type.includes(filter)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    });
+  });
+</script>
+
 <style>
   .category-page {
     max-width: 1080px;
@@ -986,7 +1010,9 @@ ${CAROUSEL_SCRIPT}
   }
   .category-header {
     text-align: center;
-    padding: 56px 0 40px;
+    padding: 48px 24px 32px;
+    max-width: 680px;
+    margin: 0 auto;
     border-bottom: 1px solid var(--stone);
     margin-bottom: 40px;
   }
@@ -997,6 +1023,7 @@ ${CAROUSEL_SCRIPT}
     color: var(--ember);
     letter-spacing: 0.2em;
     margin-bottom: 8px;
+    text-align: center;
   }
   .category-header h1 {
     font-family: 'Source Serif 4', serif;
@@ -1004,6 +1031,7 @@ ${CAROUSEL_SCRIPT}
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--ink);
+    text-align: center;
   }
   .category-desc {
     font-family: 'Outfit', sans-serif;
@@ -1011,6 +1039,7 @@ ${CAROUSEL_SCRIPT}
     color: var(--gray-400, #999);
     max-width: 480px;
     margin: 0 auto;
+    text-align: center;
   }
 
   /* ---- Filter pills ---- */
@@ -1309,9 +1338,9 @@ function generateHomepage(allPosts) {
     kitchenSection = `
     <section class="kitchen-band">
       <div class="kitchen-inner">
-        <div class="section-header section-header--light">
-          <div class="section-label">\uC694\uB9AC\uD558\uB2E4</div>
-          <div class="section-label section-label--eng">From the Kitchen</div>
+        <div class="section-header-dark">
+          <span class="section-korean">\uC694\uB9AC\uD558\uB2E4</span>
+          <h2 class="section-title-dark">From the Kitchen</h2>
         </div>
         <div class="kitchen-scroll-row">
           ${cards}
@@ -1322,9 +1351,9 @@ function generateHomepage(allPosts) {
     kitchenSection = `
     <section class="kitchen-band">
       <div class="kitchen-inner">
-        <div class="section-header section-header--light">
-          <div class="section-label">\uC694\uB9AC\uD558\uB2E4</div>
-          <div class="section-label section-label--eng">From the Kitchen</div>
+        <div class="section-header-dark">
+          <span class="section-korean">\uC694\uB9AC\uD558\uB2E4</span>
+          <h2 class="section-title-dark">From the Kitchen</h2>
         </div>
         <p class="coming-soon coming-soon--light">Coming soon.</p>
       </div>
@@ -1453,22 +1482,26 @@ ${CAROUSEL_SCRIPT}
     text-transform: uppercase;
     color: var(--ink, #1C1714);
   }
-  .section-label--eng {
-    font-size: 28px;
-    font-family: 'Source Serif 4', serif;
-    font-weight: 700;
-    letter-spacing: 0;
-    text-transform: none;
-    margin-top: 4px;
+  .section-header-dark {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
   }
-  .section-header--light .section-label {
-    color: var(--cream, #F7F3ED);
-  }
-  .section-header--light .section-label:first-child {
-    color: var(--ember, #B8432A);
+  .section-korean {
+    display: block;
     font-family: 'Noto Serif KR', serif;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 200;
+    color: var(--ember, #B8432A);
+    margin-bottom: 8px;
     letter-spacing: 0.2em;
+  }
+  .section-title-dark {
+    font-family: 'Source Serif 4', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cream, #F7F3ED);
+    margin: 0;
   }
   .section-view-all {
     font-family: 'Outfit', sans-serif;
