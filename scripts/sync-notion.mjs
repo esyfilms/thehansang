@@ -282,7 +282,7 @@ function estimateReadTime(text) {
 // ---------------------------------------------------------------------------
 
 function extractPostData(page) {
-  return {
+  const data = {
     id: page.id,
     title: getProperty(page, 'Title') || 'Untitled',
     pillar: getProperty(page, 'Pillar'),
@@ -318,6 +318,18 @@ function extractPostData(page) {
 
   return data;
 }
+
+// ---------------------------------------------------------------------------
+// Filter pills config by pillar
+// ---------------------------------------------------------------------------
+
+const FILTER_PILLS = {
+  Eat: ['All', 'Reviews', 'Guides', 'Listicles', 'New Openings'],
+  Cook: ['All', 'Mains', 'Sides', 'Soups & Stews', 'Snacks', 'Drinks'],
+  Travel: ['All', 'Seoul', 'Busan', 'Jeju', 'Food Districts'],
+  Culture: ['All', 'K-Drama', 'K-Pop', 'Beauty', 'Language'],
+  Events: ['All', 'Festival', 'Pop-Up', 'Market', 'Workshop'],
+};
 
 // ---------------------------------------------------------------------------
 // 1. Generate individual article page
@@ -413,6 +425,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 <BaseLayout title="${escapeHtml(post.title)}" description="${escapeHtml(post.meta)}">
   <article class="article-page">
+    ${post.coverUrl ? `<div class="article-hero" style="max-width: 900px; margin: 0 auto; aspect-ratio: 16/9; background: var(--linen) url('${escapeHtml(post.coverUrl)}') center/cover no-repeat;"></div>` : ''}
+
     <header class="article-header">
       <div class="article-pillar-tag">${pillarTag}</div>
       <h1>${escapeHtml(post.title)}</h1>
@@ -472,10 +486,12 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     padding: 0 24px;
   }
 
-  /* ---- Header: LEFT-ALIGNED ---- */
+  /* ---- Header: CENTER-ALIGNED ---- */
   .article-header {
-    text-align: left;
-    padding: 48px 0 32px;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
     border-bottom: 1px solid var(--stone);
     margin-bottom: 32px;
   }
@@ -486,6 +502,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     color: var(--ember);
     margin-bottom: 16px;
     font-family: 'Outfit', sans-serif;
+    text-align: center;
   }
   .article-header h1 {
     font-family: 'Source Serif 4', serif;
@@ -494,6 +511,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     line-height: 1.2;
     margin-bottom: 16px;
     color: var(--ink);
+    text-align: center;
   }
   .article-meta {
     font-size: 13px;
@@ -501,6 +519,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     display: flex;
     gap: 8px;
     align-items: center;
+    text-align: center;
+    justify-content: center;
   }
   .article-contributor {
     font-weight: 600;
@@ -515,11 +535,13 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
   /* ---- Instagram embed ---- */
   .article-video {
-    max-width: 400px;
-    margin: 32px 0;
+    text-align: center;
+    max-width: 500px;
+    margin: 32px auto;
   }
   .article-video iframe {
     display: block;
+    margin: 0 auto;
     max-width: 100%;
   }
   .article-video-caption {
@@ -573,9 +595,11 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     font-family: 'Source Serif 4', serif;
     font-size: 18px;
     line-height: 1.8;
-    text-align: justify;
+    text-align: left;
+    -webkit-hyphens: auto;
+    hyphens: auto;
     color: var(--ink);
-    max-width: 720px;
+    max-width: 660px;
     margin: 0 auto;
   }
   .article-body h2 {
@@ -768,7 +792,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .share-link {
     color: var(--ink);
     text-decoration: none;
-    transition: color 0.2s;
+    cursor: pointer;
+    transition: color 0.15s;
   }
   .share-link:hover {
     color: var(--ember);
@@ -885,6 +910,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <p class="category-desc">${cfg.description}</p>
     </header>
 
+    <div class="filter-bar">
+      ${(FILTER_PILLS[pillar] || ['All']).map((pill, i) => `<button class="filter-pill${i === 0 ? ' active' : ''}">${pill}</button>`).join('\n      ')}
+    </div>
+
     ${featuredSection}
     ${gridSection}
   </div>
@@ -925,6 +954,37 @@ ${CAROUSEL_SCRIPT}
     color: var(--gray-400, #999);
     max-width: 480px;
     margin: 0 auto;
+  }
+
+  /* ---- Filter pills ---- */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    padding: 16px 0 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-pill {
+    padding: 8px 20px;
+    border: 1px solid var(--stone);
+    border-radius: 999px;
+    background: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+  .filter-pill:hover {
+    border-color: var(--ink);
+  }
+  .filter-pill.active {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
   }
 
   /* ---- Featured ---- */
