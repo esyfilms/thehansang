@@ -9,6 +9,7 @@
 
 import { Client } from '@notionhq/client';
 import fs from 'fs';
+import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
@@ -247,6 +248,33 @@ function getIgThumbnail(url) {
   return `https://www.instagram.com/p/${match[1]}/media/?size=l`;
 }
 
+async function downloadIgThumbnail(igUrl, slug) {
+  if (!igUrl || !slug) return null;
+  try {
+    const postId = igUrl.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/)?.[1];
+    if (!postId) return null;
+
+    const mediaUrl = `https://www.instagram.com/p/${postId}/media/?size=l`;
+    const response = await fetch(mediaUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+      redirect: 'follow',
+    });
+
+    if (!response.ok) return null;
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const dir = path.resolve('public/images/posts');
+    await mkdir(dir, { recursive: true });
+    const filePath = path.join(dir, `${slug}-thumb.jpg`);
+    await writeFile(filePath, buffer);
+    console.log(`  Downloaded IG thumbnail for "${slug}"`);
+    return `/images/posts/${slug}-thumb.jpg`;
+  } catch (e) {
+    console.warn(`  Failed to download IG thumbnail for "${slug}":`, e.message);
+    return null;
+  }
+}
+
 function buildIgEmbed(url) {
   if (!url) return '';
   // Normalise to embed URL
@@ -281,7 +309,7 @@ function estimateReadTime(text) {
 // Extract structured post data from a Notion page
 // ---------------------------------------------------------------------------
 
-function extractPostData(page) {
+async function extractPostData(page) {
   const data = {
     id: page.id,
     title: getProperty(page, 'Title') || 'Untitled',
@@ -313,8 +341,9 @@ function extractPostData(page) {
     coverImages: getProperty(page, 'Cover Image') || [],
   };
 
-  // Resolve cover URL: use first cover image, fall back to IG thumbnail
-  data.coverUrl = data.coverImages[0] || getIgThumbnail(data.videoUrl) || '';
+  // Resolve cover URL: use first cover image, fall back to downloaded IG thumbnail
+  const igThumb = data.coverImages[0] ? null : await downloadIgThumbnail(data.videoUrl, data.slug);
+  data.coverUrl = data.coverImages[0] || igThumb || '';
 
   return data;
 }
@@ -1142,457 +1171,634 @@ ${CAROUSEL_SCRIPT}
 // ---------------------------------------------------------------------------
 
 function generateHomepage(allPosts) {
+  // ---------------------------------------------------------------------------
   // Categorise posts by homepage position
+  // ---------------------------------------------------------------------------
   const heroPosts = allPosts.filter(p => p.homepagePosition === 'Hero');
-  const koreanEatsPosts = allPosts.filter(p => p.homepagePosition === 'Korean Eats').length > 0
-    ? allPosts.filter(p => p.homepagePosition === 'Korean Eats')
-    : allPosts.filter(p => p.pillar === 'Eat').slice(0, 6);
-  const kitchenPosts = allPosts.filter(p => p.homepagePosition === 'From the Kitchen').length > 0
-    ? allPosts.filter(p => p.homepagePosition === 'From the Kitchen')
-    : allPosts.filter(p => p.pillar === 'Cook').slice(0, 4);
+
+  const koreanEatsPosts = (() => {
+    const tagged = allPosts.filter(p => p.homepagePosition === 'Korean Eats');
+    if (tagged.length > 0) return tagged.slice(0, 6);
+    return allPosts.filter(p => p.pillar === 'Eat').slice(0, 6);
+  })();
+
+  const kitchenPosts = (() => {
+    const tagged = allPosts.filter(p => p.homepagePosition === 'From the Kitchen');
+    if (tagged.length > 0) return tagged.slice(0, 4);
+    return allPosts.filter(p => p.pillar === 'Cook').slice(0, 4);
+  })();
+
   const editorsPick = allPosts.find(p => p.homepagePosition === 'Editors Pick') || null;
   const videoPosts = allPosts.filter(p => p.videoUrl).slice(0, 6);
 
-  // Hero section
+  // ---------------------------------------------------------------------------
+  // 1. HERO section
+  // ---------------------------------------------------------------------------
   let heroSection = '';
-  if (heroPosts.length === 1) {
-    const h = heroPosts[0];
+  const buildHeroCard = (h) => {
     const folder = PILLAR_CONFIG[h.pillar]?.folder || 'eat';
-    heroSection = `
-    <section class="hero">
-      <a href="/${folder}/${h.slug}/" class="hero-card">
-        <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
-        <div class="hero-content">
-          <div class="hero-tag">${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}</div>
-          <h2>${escapeHtml(h.title)}</h2>
-          <p>${escapeHtml((h.excerpt || '').slice(0, 200))}</p>
-          <time datetime="${h.date || ''}">${formatDate(h.date)}</time>
-        </div>
-      </a>
-    </section>`;
-  } else if (heroPosts.length > 1) {
-    const items = heroPosts
-      .map(h => {
-        const folder = PILLAR_CONFIG[h.pillar]?.folder || 'eat';
-        return `
-        <div class="carousel-item">
+    return `
           <a href="/${folder}/${h.slug}/" class="hero-card">
             <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
             <div class="hero-content">
               <div class="hero-tag">${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}</div>
               <h2>${escapeHtml(h.title)}</h2>
-              <p>${escapeHtml((h.excerpt || '').slice(0, 200))}</p>
+              <p class="hero-excerpt">${escapeHtml((h.excerpt || '').slice(0, 200))}</p>
               <time datetime="${h.date || ''}">${formatDate(h.date)}</time>
             </div>
-          </a>
-        </div>`;
-      })
-      .join('\n');
+          </a>`;
+  };
+
+  if (heroPosts.length === 1) {
     heroSection = `
-    <section class="hero auto-carousel">
-      ${items}
+    <section class="hero-section">
+      <div class="hero-wrap">
+        ${buildHeroCard(heroPosts[0])}
+      </div>
+    </section>`;
+  } else if (heroPosts.length > 1) {
+    const items = heroPosts.map(h => `
+          <div class="carousel-slide">${buildHeroCard(h)}</div>`).join('\n');
+    heroSection = `
+    <section class="hero-section">
+      <div class="hero-wrap">
+        <div class="hero-carousel auto-carousel">
+          ${items}
+        </div>
+      </div>
+    </section>`;
+  } else {
+    // No hero posts — show a minimal welcome
+    heroSection = `
+    <section class="hero-section">
+      <div class="hero-wrap">
+        <div class="hero-card hero-card--empty">
+          <div class="hero-image"></div>
+          <div class="hero-content">
+            <div class="hero-tag">THE HANSANG</div>
+            <h2>Everything Korea, for Singapore.</h2>
+            <p class="hero-excerpt">Restaurant reviews, recipes, travel guides, and culture explainers. Welcome to the table.</p>
+          </div>
+        </div>
+      </div>
     </section>`;
   }
 
-  // Korean Eats carousel
+  // ---------------------------------------------------------------------------
+  // 2. KOREAN EATS section
+  // ---------------------------------------------------------------------------
   let koreanEatsSection = '';
   if (koreanEatsPosts.length > 0) {
     const cards = koreanEatsPosts
-      .map(p => {
+      .map((p, i) => {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'eat';
+        const cls = i === 0 ? 'eat-card eat-card--first' : 'eat-card';
         return `
-        <a href="/${folder}/${p.slug}/" class="scroll-card">
-          <div class="scroll-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
-          <div class="scroll-card-tag">${(p.pillar || '').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
-          <h3>${escapeHtml(p.title)}</h3>
-          <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
-        </a>`;
+          <a href="/${folder}/${p.slug}/" class="${cls}">
+            <div class="eat-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
+            <div class="eat-card-body">
+              <div class="eat-card-tag">${(p.pillar || 'EAT').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
+              <h3>${escapeHtml(p.title)}</h3>
+              <p class="eat-card-excerpt">${escapeHtml((p.excerpt || '').slice(0, 120))}</p>
+              <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
+            </div>
+          </a>`;
       })
       .join('\n');
     koreanEatsSection = `
-    <section class="home-section">
-      <div class="section-header">
-        <span class="section-korean">\uBA39\uB2E4</span>
-        <h2>Korean Eats</h2>
+    <section class="hp-section">
+      <div class="hp-section-inner">
+        <div class="section-header">
+          <div class="section-label">KOREAN EATS</div>
+          <a href="/eat/" class="section-view-all">View All</a>
+        </div>
+        <div class="eat-scroll-row">
+          ${cards}
+        </div>
       </div>
-      <div class="scroll-row">
-        ${cards}
+    </section>`;
+  } else {
+    koreanEatsSection = `
+    <section class="hp-section">
+      <div class="hp-section-inner">
+        <div class="section-header">
+          <div class="section-label">KOREAN EATS</div>
+          <a href="/eat/" class="section-view-all">View All</a>
+        </div>
+        <p class="coming-soon">Coming soon.</p>
       </div>
     </section>`;
   }
 
-  // From the Kitchen (dark band)
+  // ---------------------------------------------------------------------------
+  // 3. FROM THE KITCHEN (dark band)
+  // ---------------------------------------------------------------------------
   let kitchenSection = '';
   if (kitchenPosts.length > 0) {
     const cards = kitchenPosts
       .map(p => {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'cook';
         return `
-        <a href="/${folder}/${p.slug}/" class="kitchen-card">
-          <div class="kitchen-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
-          <h3>${escapeHtml(p.title)}</h3>
-          <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
-        </a>`;
+          <a href="/${folder}/${p.slug}/" class="kitchen-card">
+            <div class="kitchen-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
+            <h3>${escapeHtml(p.title)}</h3>
+            <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
+          </a>`;
       })
       .join('\n');
     kitchenSection = `
     <section class="kitchen-band">
       <div class="kitchen-inner">
-        <div class="section-header section-header-light">
-          <span class="section-korean">\uC694\uB9AC\uD558\uB2E4</span>
-          <h2>From the Kitchen</h2>
+        <div class="section-header section-header--light">
+          <div class="section-label">\uC694\uB9AC\uD558\uB2E4</div>
+          <div class="section-label section-label--eng">From the Kitchen</div>
         </div>
-        <div class="kitchen-grid">
+        <div class="kitchen-scroll-row">
           ${cards}
         </div>
       </div>
     </section>`;
+  } else {
+    kitchenSection = `
+    <section class="kitchen-band">
+      <div class="kitchen-inner">
+        <div class="section-header section-header--light">
+          <div class="section-label">\uC694\uB9AC\uD558\uB2E4</div>
+          <div class="section-label section-label--eng">From the Kitchen</div>
+        </div>
+        <p class="coming-soon coming-soon--light">Coming soon.</p>
+      </div>
+    </section>`;
   }
 
-  // Editor's Pick
+  // ---------------------------------------------------------------------------
+  // 4. EDITOR'S PICK (full-width banner, hidden if none)
+  // ---------------------------------------------------------------------------
   let editorsPickSection = '';
   if (editorsPick) {
     const folder = PILLAR_CONFIG[editorsPick.pillar]?.folder || 'eat';
     editorsPickSection = `
-    <section class="editors-pick">
-      <a href="/${folder}/${editorsPick.slug}/" class="editors-pick-card">
-        <div class="editors-pick-label">Editor's Pick</div>
-        <div class="editors-pick-image"${editorsPick.coverUrl ? ` style="background-image:url('${escapeHtml(editorsPick.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
-        <div class="editors-pick-content">
-          <h2>${escapeHtml(editorsPick.title)}</h2>
-          <p>${escapeHtml((editorsPick.excerpt || '').slice(0, 200))}</p>
+    <section class="hp-section editors-pick-section">
+      <div class="hp-section-inner">
+        <div class="section-header">
+          <div class="section-label">EDITOR'S PICK</div>
         </div>
-      </a>
+        <a href="/${folder}/${editorsPick.slug}/" class="editors-pick-card">
+          <div class="editors-pick-image"${editorsPick.coverUrl ? ` style="background-image:url('${escapeHtml(editorsPick.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
+          <div class="editors-pick-content">
+            <div class="editors-pick-tag">${(editorsPick.pillar || '').toUpperCase()} &middot; ${(editorsPick.postType || '').toUpperCase()}</div>
+            <h2>${escapeHtml(editorsPick.title)}</h2>
+            <p>${escapeHtml((editorsPick.excerpt || '').slice(0, 200))}</p>
+            <time datetime="${editorsPick.date || ''}">${formatDate(editorsPick.date)}</time>
+          </div>
+        </a>
+      </div>
     </section>`;
   }
+  // If no editor's pick, section is completely omitted
 
-  // On Video carousel
+  // ---------------------------------------------------------------------------
+  // 5. ON VIDEO
+  // ---------------------------------------------------------------------------
   let videoSection = '';
   if (videoPosts.length > 0) {
     const cards = videoPosts
       .map(p => {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'eat';
         return `
-        <a href="/${folder}/${p.slug}/" class="video-card">
-          <div class="video-card-thumb"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}>
-            <div class="video-card-play"></div>
-          </div>
-          <h3>${escapeHtml(p.title)}</h3>
-        </a>`;
+          <a href="/${folder}/${p.slug}/" class="video-card">
+            <div class="video-card-thumb"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}>
+              <div class="video-card-play">
+                <svg width="18" height="20" viewBox="0 0 18 20" fill="none"><polygon points="0,0 18,10 0,20" fill="white"/></svg>
+              </div>
+            </div>
+            <h3>${escapeHtml(p.title)}</h3>
+          </a>`;
       })
       .join('\n');
     videoSection = `
-    <section class="home-section">
-      <div class="section-header">
-        <h2>On Video</h2>
+    <section class="hp-section">
+      <div class="hp-section-inner">
+        <div class="section-header">
+          <div class="section-label">ON VIDEO</div>
+          <a href="https://www.instagram.com/thehansang.sg/" target="_blank" rel="noopener" class="section-view-all">More Videos</a>
+        </div>
+        <div class="video-scroll-row">
+          ${cards}
+        </div>
       </div>
-      <div class="scroll-row">
-        ${cards}
+    </section>`;
+  } else {
+    videoSection = `
+    <section class="hp-section">
+      <div class="hp-section-inner">
+        <div class="section-header">
+          <div class="section-label">ON VIDEO</div>
+          <a href="https://www.instagram.com/thehansang.sg/" target="_blank" rel="noopener" class="section-view-all">More Videos</a>
+        </div>
+        <p class="coming-soon">Coming soon.</p>
       </div>
     </section>`;
   }
 
+  // ---------------------------------------------------------------------------
+  // Assemble page
+  // ---------------------------------------------------------------------------
   return `---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="The Hansang - Everything Korea, for Singapore" description="The definitive Korean food, culture and lifestyle authority in Singapore.">
   <div class="homepage">
-
-    <!-- Launch banner -->
-    <div class="launch-banner">
-      <p>Welcome to <strong>The Hansang</strong> \u2014 Everything Korea, for Singapore.</p>
-    </div>
-
     ${heroSection}
     ${koreanEatsSection}
     ${kitchenSection}
     ${editorsPickSection}
     ${videoSection}
-
   </div>
 </BaseLayout>
 
 ${CAROUSEL_SCRIPT}
 
 <style>
+  /* ===========================================================================
+     Homepage master styles
+     =========================================================================== */
   .homepage {
     width: 100%;
   }
 
-  /* ---- Launch banner ---- */
-  .launch-banner {
-    background: var(--ink, #1C1714);
-    color: var(--cream, #F7F3ED);
-    text-align: center;
-    padding: 12px 24px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.04em;
+  /* ---- Shared section wrapper ---- */
+  .hp-section {
+    padding: 64px 0;
   }
-  .launch-banner strong {
-    color: var(--ember);
-  }
-
-  /* ---- Hero ---- */
-  .hero {
+  .hp-section-inner {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 48px 24px;
+    padding: 0 24px;
+  }
+
+  /* ---- Section headers ---- */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .section-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink, #1C1714);
+  }
+  .section-label--eng {
+    font-size: 28px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-top: 4px;
+  }
+  .section-header--light .section-label {
+    color: var(--cream, #F7F3ED);
+  }
+  .section-header--light .section-label:first-child {
+    color: var(--ember, #B8432A);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+  }
+  .section-view-all {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ember, #B8432A);
+    text-decoration: none;
+  }
+  .section-view-all:hover {
+    text-decoration: underline;
+  }
+
+  .coming-soon {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--gray-400, #999);
+    font-style: italic;
+  }
+  .coming-soon--light {
+    color: rgba(247, 243, 237, 0.5);
+  }
+
+  /* ===========================================================================
+     1. HERO
+     =========================================================================== */
+  .hero-section {
+    padding: 48px 0 0;
+  }
+  .hero-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
   .hero-card {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 40px;
+    gap: 48px;
     text-decoration: none;
     color: inherit;
+    align-items: center;
+  }
+  .hero-card--empty {
+    pointer-events: none;
   }
   .hero-image {
-    background: var(--stone);
+    background: var(--stone, #E0D8CE);
     aspect-ratio: 16/10;
+    border-radius: 2px;
   }
   .hero-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 4px;
   }
   .hero-tag {
+    font-family: 'Outfit', sans-serif;
     font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 16px;
-    font-family: 'Outfit', sans-serif;
+    color: var(--ember, #B8432A);
+    margin-bottom: 12px;
   }
   .hero-content h2 {
     font-family: 'Source Serif 4', serif;
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.18;
     margin-bottom: 16px;
-    color: var(--ink);
+    color: var(--ink, #1C1714);
   }
-  .hero-content p {
+  .hero-excerpt {
+    font-family: 'Outfit', sans-serif;
     font-size: 15px;
-    color: var(--gray-400, #999);
-    line-height: 1.6;
-    margin-bottom: 12px;
+    color: var(--gray-400, #888);
+    line-height: 1.65;
+    margin-bottom: 14px;
   }
   .hero-content time {
+    font-family: 'Outfit', sans-serif;
     font-size: 12px;
     color: var(--gray-400, #999);
-    font-family: 'Outfit', sans-serif;
   }
 
-  .carousel-item {
-    display: none;
-  }
-  .carousel-item:first-child {
-    display: block;
-  }
+  /* Carousel slides */
+  .hero-carousel { position: relative; }
+  .carousel-slide { display: none; }
+  .carousel-slide:first-child { display: block; }
 
-  /* ---- Section headers ---- */
-  .home-section {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 48px 24px;
-  }
-  .section-header {
-    margin-bottom: 32px;
-  }
-  .section-korean {
-    display: block;
-    font-family: 'Noto Serif KR', serif;
-    font-size: 12px;
-    color: var(--ember);
-    letter-spacing: 0.2em;
-    margin-bottom: 4px;
-  }
-  .section-header h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .section-header-light h2 {
-    color: var(--cream, #F7F3ED);
-  }
-  .section-header-light .section-korean {
-    color: var(--ember);
-  }
-
-  /* ---- Scroll row ---- */
-  .scroll-row {
+  /* ===========================================================================
+     2. KOREAN EATS
+     =========================================================================== */
+  .eat-scroll-row {
     display: flex;
     gap: 24px;
     overflow-x: auto;
+    scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     padding-bottom: 8px;
   }
-  .scroll-row::-webkit-scrollbar {
-    display: none;
-  }
-  .scroll-card {
-    flex: 0 0 260px;
+  .eat-scroll-row::-webkit-scrollbar { display: none; }
+
+  .eat-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
     text-decoration: none;
     color: inherit;
+    display: flex;
+    flex-direction: column;
   }
-  .scroll-card-image {
-    background: var(--stone);
+  .eat-card--first {
+    flex: 0 0 400px;
+  }
+  .eat-card-image {
+    background: var(--stone, #E0D8CE);
     aspect-ratio: 3/2;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    border-radius: 2px;
   }
-  .scroll-card-tag {
+  .eat-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .eat-card-tag {
+    font-family: 'Outfit', sans-serif;
     font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 6px;
-    font-family: 'Outfit', sans-serif;
+    color: var(--ember, #B8432A);
+    margin-bottom: 4px;
   }
-  .scroll-card h3 {
+  .eat-card h3 {
     font-family: 'Source Serif 4', serif;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 1.3;
-    margin-bottom: 6px;
-    color: var(--ink);
+    margin-bottom: 4px;
+    color: var(--ink, #1C1714);
   }
-  .scroll-card time {
+  .eat-card-excerpt {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    color: var(--gray-400, #888);
+    line-height: 1.5;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .eat-card time {
+    font-family: 'Outfit', sans-serif;
     font-size: 12px;
     color: var(--gray-400, #999);
-    font-family: 'Outfit', sans-serif;
   }
 
-  /* ---- Kitchen dark band ---- */
+  /* ===========================================================================
+     3. FROM THE KITCHEN (dark band)
+     =========================================================================== */
   .kitchen-band {
     background: var(--ink, #1C1714);
-    padding: 56px 0;
-    margin: 24px 0;
+    color: var(--cream, #F7F3ED);
+    padding: 64px 0;
   }
   .kitchen-inner {
     max-width: 1080px;
     margin: 0 auto;
     padding: 0 24px;
   }
-  .kitchen-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+  .kitchen-scroll-row {
+    display: flex;
     gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
   }
+  .kitchen-scroll-row::-webkit-scrollbar { display: none; }
+
   .kitchen-card {
+    flex: 0 0 240px;
+    scroll-snap-align: start;
     text-decoration: none;
     color: var(--cream, #F7F3ED);
   }
   .kitchen-card-image {
-    background: var(--stone);
+    background: rgba(255,255,255,0.08);
     aspect-ratio: 1/1;
-    margin-bottom: 12px;
-    opacity: 0.9;
+    margin-bottom: 14px;
+    border-radius: 2px;
   }
   .kitchen-card h3 {
     font-family: 'Source Serif 4', serif;
     font-size: 16px;
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.35;
     margin-bottom: 6px;
   }
   .kitchen-card time {
-    font-size: 12px;
-    color: var(--gray-400, #999);
     font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    color: rgba(247, 243, 237, 0.5);
   }
 
-  /* ---- Editor's Pick ---- */
-  .editors-pick {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 48px 24px;
+  /* ===========================================================================
+     4. EDITOR'S PICK
+     =========================================================================== */
+  .editors-pick-section {
+    border-top: 1px solid var(--stone, #E0D8CE);
   }
   .editors-pick-card {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 48px;
     text-decoration: none;
     color: inherit;
-    position: relative;
-  }
-  .editors-pick-label {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: var(--ember);
-    color: #fff;
-    font-family: 'Outfit', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    z-index: 1;
+    align-items: center;
   }
   .editors-pick-image {
-    background: var(--stone);
+    background: var(--stone, #E0D8CE);
     aspect-ratio: 16/9;
+    border-radius: 2px;
   }
   .editors-pick-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 4px;
+  }
+  .editors-pick-tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ember, #B8432A);
+    margin-bottom: 8px;
   }
   .editors-pick-content h2 {
     font-family: 'Source Serif 4', serif;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.22;
     margin-bottom: 16px;
-    color: var(--ink);
+    color: var(--ink, #1C1714);
   }
   .editors-pick-content p {
+    font-family: 'Outfit', sans-serif;
     font-size: 15px;
+    color: var(--gray-400, #888);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .editors-pick-content time {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
     color: var(--gray-400, #999);
-    line-height: 1.6;
   }
 
-  /* ---- On Video ---- */
+  /* ===========================================================================
+     5. ON VIDEO
+     =========================================================================== */
+  .video-scroll-row {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+  .video-scroll-row::-webkit-scrollbar { display: none; }
+
   .video-card {
     flex: 0 0 180px;
+    scroll-snap-align: start;
     text-decoration: none;
     color: inherit;
   }
   .video-card-thumb {
-    background: var(--stone);
+    background: var(--stone, #E0D8CE);
     aspect-ratio: 9/16;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    border-radius: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
   }
   .video-card-play {
-    width: 40px;
-    height: 40px;
-    background: rgba(0, 0, 0, 0.5);
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.45);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.2s;
   }
-  .video-card-play::after {
-    content: '';
-    border-style: solid;
-    border-width: 7px 0 7px 12px;
-    border-color: transparent transparent transparent white;
+  .video-card:hover .video-card-play {
+    background: rgba(0, 0, 0, 0.65);
+  }
+  .video-card-play svg {
     margin-left: 2px;
   }
   .video-card h3 {
     font-family: 'Source Serif 4', serif;
     font-size: 14px;
     font-weight: 600;
-    line-height: 1.3;
-    color: var(--ink);
+    line-height: 1.35;
+    color: var(--ink, #1C1714);
   }
 
+  /* ===========================================================================
+     Responsive
+     =========================================================================== */
   @media (max-width: 768px) {
+    .hp-section {
+      padding: 48px 0;
+    }
+    .hero-section {
+      padding: 32px 0 0;
+    }
     .hero-card {
       grid-template-columns: 1fr;
       gap: 24px;
@@ -1600,9 +1806,17 @@ ${CAROUSEL_SCRIPT}
     .hero-content h2 {
       font-size: 26px;
     }
-    .kitchen-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    .eat-card {
+      flex: 0 0 280px;
+    }
+    .eat-card--first {
+      flex: 0 0 320px;
+    }
+    .kitchen-band {
+      padding: 48px 0;
+    }
+    .kitchen-card {
+      flex: 0 0 200px;
     }
     .editors-pick-card {
       grid-template-columns: 1fr;
@@ -1610,6 +1824,22 @@ ${CAROUSEL_SCRIPT}
     }
     .editors-pick-content h2 {
       font-size: 24px;
+    }
+    .video-card {
+      flex: 0 0 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-content h2 {
+      font-size: 22px;
+    }
+    .eat-card,
+    .eat-card--first {
+      flex: 0 0 260px;
+    }
+    .section-label--eng {
+      font-size: 22px;
     }
   }
 </style>`;
@@ -1622,7 +1852,7 @@ ${CAROUSEL_SCRIPT}
 const CAROUSEL_SCRIPT = `
 <script>
   document.querySelectorAll('.auto-carousel').forEach(carousel => {
-    const items = carousel.querySelectorAll('.carousel-item');
+    const items = carousel.querySelectorAll('.carousel-item, .carousel-slide');
     if (items.length <= 1) return;
     let current = 0;
     items.forEach((item, i) => { item.style.display = i === 0 ? 'block' : 'none'; });
@@ -1817,7 +2047,7 @@ async function main() {
   // Extract structured data and fetch body blocks for each post
   const allPosts = [];
   for (const page of pages) {
-    const post = extractPostData(page);
+    const post = await extractPostData(page);
 
     if (!post.slug || !post.pillar) {
       console.warn(`Skipping "${post.title}" - missing slug or pillar.`);
@@ -1867,10 +2097,15 @@ async function main() {
   }
 
   // -----------------------------------------------------------------------
-  // 3. Generate homepage
+  // 3. Generate homepage (delete any static index.astro first to avoid conflict)
   // -----------------------------------------------------------------------
+  const homepagePath = path.join(PAGES_DIR, 'index.astro');
+  if (fs.existsSync(homepagePath)) {
+    fs.unlinkSync(homepagePath);
+    console.log('  Deleted existing: src/pages/index.astro');
+  }
   const homepageSrc = generateHomepage(allPosts);
-  fs.writeFileSync(path.join(PAGES_DIR, 'index.astro'), homepageSrc);
+  fs.writeFileSync(homepagePath, homepageSrc);
   console.log('  Written: src/pages/index.astro');
 
   // -----------------------------------------------------------------------
