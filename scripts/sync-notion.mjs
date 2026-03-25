@@ -336,6 +336,7 @@ async function extractPostData(page) {
     reservation: getProperty(page, 'Reservation'),
     featured: getProperty(page, 'Featured'),
     homepagePosition: getProperty(page, 'Homepage Position'),
+    sortOrder: getProperty(page, 'Sort Order'),
     contributor: getProperty(page, 'Contributor'),
     affiliateLink: getProperty(page, 'Affiliate Link'),
     recipeCategory: getProperty(page, 'Recipe Category') || [],
@@ -1239,8 +1240,15 @@ function generateHomepage(allPosts) {
 
   const kitchenPosts = (() => {
     const tagged = allPosts.filter(p => p.homepagePosition === 'From the Kitchen');
-    if (tagged.length > 0) return tagged.slice(0, 4);
-    return allPosts.filter(p => p.pillar === 'Cook').slice(0, 4);
+    if (tagged.length > 0) {
+      return tagged.sort((a, b) => {
+        const aOrd = a.sortOrder ?? 9999;
+        const bOrd = b.sortOrder ?? 9999;
+        if (aOrd !== bOrd) return aOrd - bOrd;
+        return new Date(b.date) - new Date(a.date);
+      }).slice(0, 10);
+    }
+    return allPosts.filter(p => p.pillar === 'Cook').slice(0, 10);
   })();
 
   const editorsPick = allPosts.find(p => p.homepagePosition === 'Editors Pick') || null;
