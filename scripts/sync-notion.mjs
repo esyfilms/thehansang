@@ -353,11 +353,32 @@ async function extractPostData(page) {
 // ---------------------------------------------------------------------------
 
 const FILTER_PILLS = {
-  Eat: ['All', 'Reviews', 'Guides', 'Listicles', 'New Openings'],
-  Cook: ['All', 'Mains', 'Sides', 'Soups & Stews', 'Snacks', 'Drinks'],
-  Travel: ['All', 'Seoul', 'Busan', 'Jeju', 'Food Districts'],
-  Culture: ['All', 'K-Drama', 'K-Pop', 'Beauty', 'Language'],
-  Events: ['All', 'Festival', 'Pop-Up', 'Market', 'Workshop'],
+  Eat: [
+    { label: 'All', filter: 'all' },
+    { label: 'Reviews', filter: 'review' },
+    { label: 'Guides', filter: 'guide' },
+    { label: 'Listicles', filter: 'listicle' },
+    { label: 'New Openings', filter: 'new opening' },
+  ],
+  Cook: [
+    { label: 'All', filter: 'all' },
+    { label: 'Recipes', filter: 'recipe' },
+    { label: 'Guides', filter: 'guide' },
+  ],
+  Travel: [
+    { label: 'All', filter: 'all' },
+    { label: 'Guides', filter: 'guide' },
+    { label: 'Listicles', filter: 'listicle' },
+  ],
+  Culture: [
+    { label: 'All', filter: 'all' },
+    { label: 'Guides', filter: 'guide' },
+    { label: 'Listicles', filter: 'listicle' },
+  ],
+  Events: [
+    { label: 'All', filter: 'all' },
+    { label: 'Events', filter: 'event' },
+  ],
 };
 
 // ---------------------------------------------------------------------------
@@ -968,7 +989,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </header>
 
     <div class="filter-bar">
-      ${(FILTER_PILLS[pillar] || ['All']).map((pill, i) => `<button class="filter-pill${i === 0 ? ' active' : ''}">${pill}</button>`).join('\n      ')}
+      ${(FILTER_PILLS[pillar] || [{ label: 'All', filter: 'all' }]).map((pill, i) => `<button class="filter-pill${i === 0 ? ' active' : ''}" data-filter="${pill.filter}">${pill.label}</button>`).join('\n      ')}
     </div>
 
     ${featuredSection}
@@ -983,19 +1004,12 @@ ${CAROUSEL_SCRIPT}
     pill.addEventListener('click', () => {
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
       pill.classList.add('active');
-
-      const filter = pill.textContent.trim().toLowerCase();
-      const cards = document.querySelectorAll('.article-grid .article-card');
-
-      cards.forEach(card => {
-        if (filter === 'all') {
+      const filter = pill.dataset.filter;
+      document.querySelectorAll('.article-card').forEach(card => {
+        if (filter === 'all' || card.dataset.type === filter) {
           card.style.display = '';
         } else {
-          if (card.dataset.type && card.dataset.type.includes(filter)) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
+          card.style.display = 'none';
         }
       });
     });
@@ -1226,49 +1240,38 @@ function generateHomepage(allPosts) {
   let heroSection = '';
   const buildHeroCard = (h) => {
     const folder = PILLAR_CONFIG[h.pillar]?.folder || 'eat';
+    const readTime = estimateReadTime(h.plainText || h.excerpt || '');
+    const heroLabel = `FEATURED &middot; ${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}`;
+    const heroDate = formatDate(h.date);
+    const heroMeta = `${heroDate}${heroDate && readTime ? ' &middot; ' : ''}${readTime} min read`;
     return `
-          <a href="/${folder}/${h.slug}/" class="hero-card">
-            <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
-            <div class="hero-content">
-              <div class="hero-tag">${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}</div>
-              <h2>${escapeHtml(h.title)}</h2>
-              <p class="hero-excerpt">${escapeHtml((h.excerpt || '').slice(0, 200))}</p>
-              <time datetime="${h.date || ''}">${formatDate(h.date)}</time>
-            </div>
-          </a>`;
+    <section class="hero">
+      <a href="/${folder}/${h.slug}/" class="hero-inner">
+        <div class="hero-text">
+          <div class="hero-label">${heroLabel}</div>
+          <h2>${escapeHtml(h.title)}</h2>
+          <p class="hero-excerpt">${escapeHtml((h.excerpt || '').slice(0, 200))}</p>
+          <div class="hero-meta">${heroMeta}</div>
+        </div>
+        <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
+      </a>
+    </section>`;
   };
 
-  if (heroPosts.length === 1) {
-    heroSection = `
-    <section class="hero-section">
-      <div class="hero-wrap">
-        ${buildHeroCard(heroPosts[0])}
-      </div>
-    </section>`;
-  } else if (heroPosts.length > 1) {
-    const items = heroPosts.map(h => `
-          <div class="carousel-slide">${buildHeroCard(h)}</div>`).join('\n');
-    heroSection = `
-    <section class="hero-section">
-      <div class="hero-wrap">
-        <div class="hero-carousel auto-carousel">
-          ${items}
-        </div>
-      </div>
-    </section>`;
+  if (heroPosts.length >= 1) {
+    heroSection = buildHeroCard(heroPosts[0]);
   } else {
     // No hero posts — show a minimal welcome
     heroSection = `
-    <section class="hero-section">
-      <div class="hero-wrap">
-        <div class="hero-card hero-card--empty">
-          <div class="hero-image"></div>
-          <div class="hero-content">
-            <div class="hero-tag">THE HANSANG</div>
-            <h2>Everything Korea, for Singapore.</h2>
-            <p class="hero-excerpt">Restaurant reviews, recipes, travel guides, and culture explainers. Welcome to the table.</p>
-          </div>
+    <section class="hero">
+      <div class="hero-inner" style="pointer-events:none;">
+        <div class="hero-text">
+          <div class="hero-label">THE HANSANG</div>
+          <h2>Everything Korea, for Singapore.</h2>
+          <p class="hero-excerpt">Restaurant reviews, recipes, travel guides, and culture explainers. Welcome to the table.</p>
+          <div class="hero-meta"></div>
         </div>
+        <div class="hero-image"></div>
       </div>
     </section>`;
   }
@@ -1483,23 +1486,24 @@ ${CAROUSEL_SCRIPT}
     color: var(--ink, #1C1714);
   }
   .section-header-dark {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 24px 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
   }
   .section-korean {
-    display: block;
     font-family: 'Noto Serif KR', serif;
-    font-size: 14px;
-    font-weight: 200;
-    color: var(--ember, #B8432A);
-    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--ember);
     letter-spacing: 0.2em;
   }
   .section-title-dark {
     font-family: 'Source Serif 4', serif;
     font-size: 28px;
     font-weight: 700;
+    font-style: italic;
     color: var(--cream, #F7F3ED);
     margin: 0;
   }
@@ -1529,74 +1533,14 @@ ${CAROUSEL_SCRIPT}
   /* ===========================================================================
      1. HERO
      =========================================================================== */
-  .hero-section {
-    padding: 48px 0 0;
-  }
-  .hero-wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  .hero-card {
-    display: grid;
-    grid-template-columns: 55% 1fr;
-    gap: 48px;
-    text-decoration: none;
-    color: inherit;
-    align-items: center;
-    overflow: hidden;
-  }
-  .hero-card--empty {
-    pointer-events: none;
-  }
-  .hero-image {
-    background: var(--stone, #E0D8CE);
-    aspect-ratio: 16/10;
-    border-radius: 2px;
-    overflow: hidden;
-    min-width: 0;
-  }
-  .hero-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    min-width: 0;
-  }
-  .hero-tag {
-    font-family: 'Outfit', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ember, #B8432A);
-    margin-bottom: 12px;
-  }
-  .hero-content h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.18;
-    margin-bottom: 16px;
-    color: var(--ink, #1C1714);
-  }
-  .hero-excerpt {
-    font-family: 'Outfit', sans-serif;
-    font-size: 15px;
-    color: var(--gray-400, #888);
-    line-height: 1.65;
-    margin-bottom: 14px;
-  }
-  .hero-content time {
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    color: var(--gray-400, #999);
-  }
-
-  /* Carousel slides */
-  .hero-carousel { position: relative; }
-  .carousel-slide { display: none; }
-  .carousel-slide:first-child { display: block; }
+  .hero { padding: 0 48px; border-bottom: 1px solid var(--stone); }
+  .hero-inner { display: grid; grid-template-columns: 5fr 7fr; min-height: 540px; text-decoration: none; color: inherit; }
+  .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 60px 48px 60px 0; border-right: 1px solid var(--stone); }
+  .hero-label { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 16px; }
+  .hero-inner h2 { font-family: 'Source Serif 4', serif; font-size: 36px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--ink); }
+  .hero-excerpt { font-family: 'Outfit', sans-serif; font-size: 15px; color: var(--gray-400, #999); line-height: 1.6; margin-bottom: 20px; }
+  .hero-meta { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400, #999); }
+  .hero-image { background: var(--stone); display: flex; align-items: center; justify-content: center; min-height: 440px; overflow: hidden; background-size: cover; background-position: center; }
 
   /* ===========================================================================
      2. KOREAN EATS
@@ -1833,16 +1777,11 @@ ${CAROUSEL_SCRIPT}
     .hp-section {
       padding: 48px 0;
     }
-    .hero-section {
-      padding: 32px 0 0;
-    }
-    .hero-card {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-    .hero-content h2 {
-      font-size: 26px;
-    }
+    .hero { padding: 0 24px; }
+    .hero-inner { grid-template-columns: 1fr; min-height: auto; }
+    .hero-image { min-height: 280px; order: -1; }
+    .hero-text { padding: 32px 0; border-right: none; }
+    .hero-inner h2 { font-size: 28px; }
     .eat-card {
       flex: 0 0 280px;
     }
@@ -1868,9 +1807,6 @@ ${CAROUSEL_SCRIPT}
   }
 
   @media (max-width: 480px) {
-    .hero-content h2 {
-      font-size: 22px;
-    }
     .eat-card,
     .eat-card--first {
       flex: 0 0 260px;
