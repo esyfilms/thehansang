@@ -1506,11 +1506,12 @@ ${CAROUSEL_SCRIPT}
   }
   .hero-card {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 55% 1fr;
     gap: 48px;
     text-decoration: none;
     color: inherit;
     align-items: center;
+    overflow: hidden;
   }
   .hero-card--empty {
     pointer-events: none;
@@ -1519,12 +1520,15 @@ ${CAROUSEL_SCRIPT}
     background: var(--stone, #E0D8CE);
     aspect-ratio: 16/10;
     border-radius: 2px;
+    overflow: hidden;
+    min-width: 0;
   }
   .hero-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 4px;
+    min-width: 0;
   }
   .hero-tag {
     font-family: 'Outfit', sans-serif;
