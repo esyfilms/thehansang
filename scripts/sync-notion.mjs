@@ -237,6 +237,16 @@ function getPlainText(blocks) {
 // Instagram embed helper
 // ---------------------------------------------------------------------------
 
+function getIgThumbnail(url) {
+  if (!url) return '';
+  // Extract post ID from Instagram URL patterns:
+  // https://www.instagram.com/p/ABC123/
+  // https://www.instagram.com/reel/ABC123/
+  const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if (!match) return '';
+  return `https://www.instagram.com/p/${match[1]}/media/?size=l`;
+}
+
 function buildIgEmbed(url) {
   if (!url) return '';
   // Normalise to embed URL
@@ -302,6 +312,11 @@ function extractPostData(page) {
     affiliateLink: getProperty(page, 'Affiliate Link'),
     coverImages: getProperty(page, 'Cover Image') || [],
   };
+
+  // Resolve cover URL: use first cover image, fall back to IG thumbnail
+  data.coverUrl = data.coverImages[0] || getIgThumbnail(data.videoUrl) || '';
+
+  return data;
 }
 
 // ---------------------------------------------------------------------------
@@ -421,7 +436,33 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     ${affiliateBlock}
     ${restaurantInfo}
     ${verdict}
+
+    <div class="article-share">
+      <span class="article-share-label">Share</span>
+      <a href="#" class="share-link" data-share="copy" title="Copy link">Copy Link</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://twitter.com/intent/tweet?url=ARTICLE_URL&text=${encodeURIComponent(post.title)}" class="share-link" target="_blank" rel="noopener" title="Share on X">X</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on Facebook">Facebook</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://wa.me/?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on WhatsApp">WhatsApp</a>
+    </div>
   </article>
+
+<script>
+  // Replace ARTICLE_URL placeholders with actual page URL
+  document.querySelectorAll('.share-link').forEach(link => {
+    if (link.href) link.href = link.href.replace(/ARTICLE_URL/g, encodeURIComponent(window.location.href));
+  });
+  // Copy link handler
+  document.querySelector('[data-share="copy"]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      e.target.textContent = 'Copied!';
+      setTimeout(() => { e.target.textContent = 'Copy Link'; }, 2000);
+    });
+  });
+</script>
 </BaseLayout>
 
 <style>
@@ -532,8 +573,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     font-family: 'Source Serif 4', serif;
     font-size: 18px;
     line-height: 1.8;
-    text-align: left;
+    text-align: justify;
     color: var(--ink);
+    max-width: 720px;
+    margin: 0 auto;
   }
   .article-body h2 {
     font-size: 24px;
@@ -703,6 +746,37 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     font-weight: 400;
   }
 
+  /* ---- Share section ---- */
+  .article-share {
+    max-width: 720px;
+    margin: 40px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--stone);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+  }
+  .article-share-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-400, #999);
+    margin-right: 4px;
+  }
+  .share-link {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .share-link:hover {
+    color: var(--ember);
+  }
+  .share-dot {
+    color: var(--stone);
+  }
+
   @media (max-width: 768px) {
     .article-header h1 {
       font-size: 28px;
@@ -739,7 +813,7 @@ function generateCategoryPage(pillar, posts) {
     featuredSection = `
     <section class="category-featured">
       <a href="/${cfg.folder}/${f.slug}/" class="featured-card">
-        <div class="featured-card-image"></div>
+        <div class="featured-card-image"${f.coverUrl ? ` style="background-image:url('${escapeHtml(f.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
         <div class="featured-card-content">
           <div class="featured-card-tag">${(f.pillar || '').toUpperCase()} &middot; ${(f.postType || '').toUpperCase()}</div>
           <h2>${escapeHtml(f.title)}</h2>
@@ -754,7 +828,7 @@ function generateCategoryPage(pillar, posts) {
         f => `
         <div class="carousel-item">
           <a href="/${cfg.folder}/${f.slug}/" class="featured-card">
-            <div class="featured-card-image"></div>
+            <div class="featured-card-image"${f.coverUrl ? ` style="background-image:url('${escapeHtml(f.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
             <div class="featured-card-content">
               <div class="featured-card-tag">${(f.pillar || '').toUpperCase()} &middot; ${(f.postType || '').toUpperCase()}</div>
               <h2>${escapeHtml(f.title)}</h2>
@@ -778,7 +852,7 @@ function generateCategoryPage(pillar, posts) {
       .map(
         p => `
         <a href="/${cfg.folder}/${p.slug}/" class="grid-card">
-          <div class="grid-card-image"></div>
+          <div class="grid-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
           <div class="grid-card-body">
             <div class="grid-card-tag">${(p.pillar || '').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
             <h3>${escapeHtml(p.title)}</h3>
@@ -999,7 +1073,7 @@ function generateHomepage(allPosts) {
     heroSection = `
     <section class="hero">
       <a href="/${folder}/${h.slug}/" class="hero-card">
-        <div class="hero-image"></div>
+        <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
         <div class="hero-content">
           <div class="hero-tag">${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}</div>
           <h2>${escapeHtml(h.title)}</h2>
@@ -1015,7 +1089,7 @@ function generateHomepage(allPosts) {
         return `
         <div class="carousel-item">
           <a href="/${folder}/${h.slug}/" class="hero-card">
-            <div class="hero-image"></div>
+            <div class="hero-image"${h.coverUrl ? ` style="background-image:url('${escapeHtml(h.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
             <div class="hero-content">
               <div class="hero-tag">${(h.pillar || '').toUpperCase()} &middot; ${(h.postType || '').toUpperCase()}</div>
               <h2>${escapeHtml(h.title)}</h2>
@@ -1040,7 +1114,7 @@ function generateHomepage(allPosts) {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'eat';
         return `
         <a href="/${folder}/${p.slug}/" class="scroll-card">
-          <div class="scroll-card-image"></div>
+          <div class="scroll-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
           <div class="scroll-card-tag">${(p.pillar || '').toUpperCase()} &middot; ${(p.postType || '').toUpperCase()}</div>
           <h3>${escapeHtml(p.title)}</h3>
           <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
@@ -1067,7 +1141,7 @@ function generateHomepage(allPosts) {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'cook';
         return `
         <a href="/${folder}/${p.slug}/" class="kitchen-card">
-          <div class="kitchen-card-image"></div>
+          <div class="kitchen-card-image"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
           <h3>${escapeHtml(p.title)}</h3>
           <time datetime="${p.date || ''}">${formatDate(p.date)}</time>
         </a>`;
@@ -1095,7 +1169,7 @@ function generateHomepage(allPosts) {
     <section class="editors-pick">
       <a href="/${folder}/${editorsPick.slug}/" class="editors-pick-card">
         <div class="editors-pick-label">Editor's Pick</div>
-        <div class="editors-pick-image"></div>
+        <div class="editors-pick-image"${editorsPick.coverUrl ? ` style="background-image:url('${escapeHtml(editorsPick.coverUrl)}');background-size:cover;background-position:center;"` : ''}></div>
         <div class="editors-pick-content">
           <h2>${escapeHtml(editorsPick.title)}</h2>
           <p>${escapeHtml((editorsPick.excerpt || '').slice(0, 200))}</p>
@@ -1112,7 +1186,7 @@ function generateHomepage(allPosts) {
         const folder = PILLAR_CONFIG[p.pillar]?.folder || 'eat';
         return `
         <a href="/${folder}/${p.slug}/" class="video-card">
-          <div class="video-card-thumb">
+          <div class="video-card-thumb"${p.coverUrl ? ` style="background-image:url('${escapeHtml(p.coverUrl)}');background-size:cover;background-position:center;"` : ''}>
             <div class="video-card-play"></div>
           </div>
           <h3>${escapeHtml(p.title)}</h3>
@@ -1473,6 +1547,173 @@ const CAROUSEL_SCRIPT = `
 </script>`;
 
 // ---------------------------------------------------------------------------
+// Pantry Items
+// ---------------------------------------------------------------------------
+
+const PANTRY_DS_ID = 'b13b7b7f-60a4-47e2-a6ff-eb6ffcdf062b';
+
+async function fetchPantryItems() {
+  try {
+    const response = await notion.dataSources.query({
+      data_source_id: PANTRY_DS_ID,
+    });
+    return response.results;
+  } catch (err) {
+    console.warn('Could not fetch Pantry Items:', err.message);
+    return [];
+  }
+}
+
+function extractPantryItem(page) {
+  return {
+    title: getProperty(page, 'Name') || getProperty(page, 'Title') || 'Untitled',
+    category: getProperty(page, 'Category') || 'Uncategorised',
+    description: getProperty(page, 'Description') || '',
+    link: getProperty(page, 'Link') || getProperty(page, 'Affiliate Link') || '',
+    image: (() => {
+      const imgs = getProperty(page, 'Image') || getProperty(page, 'Cover Image') || [];
+      return imgs[0] || '';
+    })(),
+  };
+}
+
+function generatePantryPage(items) {
+  // Group by category
+  const grouped = {};
+  for (const item of items) {
+    if (!grouped[item.category]) grouped[item.category] = [];
+    grouped[item.category].push(item);
+  }
+
+  let sections = '';
+  for (const [category, catItems] of Object.entries(grouped)) {
+    const cards = catItems
+      .map(
+        item => `
+        <${item.link ? `a href="${escapeHtml(item.link)}" target="_blank" rel="noopener"` : 'div'} class="pantry-card">
+          <div class="pantry-card-image"${item.image ? ` style="background-image:url('${escapeHtml(item.image)}');background-size:cover;background-position:center;"` : ''}></div>
+          <h3>${escapeHtml(item.title)}</h3>
+          ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
+        </${item.link ? 'a' : 'div'}>`
+      )
+      .join('\n');
+    sections += `
+    <section class="pantry-section">
+      <h2>${escapeHtml(category)}</h2>
+      <div class="pantry-grid">
+        ${cards}
+      </div>
+    </section>`;
+  }
+
+  if (items.length === 0) {
+    sections = `
+    <section class="empty-state">
+      <p>Pantry items coming soon.</p>
+    </section>`;
+  }
+
+  return `---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="My Pantry" description="Korean ingredients, kitchen tools, and guides curated for Singapore kitchens.">
+  <div class="pantry-page">
+    <header class="pantry-header">
+      <h1>My Pantry</h1>
+      <p class="pantry-desc">Korean ingredients, kitchen tools, and guides curated for Singapore kitchens.</p>
+    </header>
+
+    ${sections}
+  </div>
+</BaseLayout>
+
+<style>
+  .pantry-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .pantry-header {
+    text-align: center;
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--stone);
+    margin-bottom: 40px;
+  }
+  .pantry-header h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .pantry-desc {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    color: var(--gray-400, #999);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .pantry-section {
+    margin-bottom: 48px;
+  }
+  .pantry-section h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-400, #999);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--stone);
+  }
+  .pantry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .pantry-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .pantry-card-image {
+    background: var(--stone);
+    aspect-ratio: 1/1;
+    margin-bottom: 12px;
+  }
+  .pantry-card h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .pantry-card p {
+    font-size: 13px;
+    color: var(--gray-400, #999);
+    line-height: 1.5;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 64px 0;
+    color: var(--gray-400, #999);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+  }
+  @media (max-width: 768px) {
+    .pantry-header h1 { font-size: 32px; }
+    .pantry-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  }
+  @media (max-width: 480px) {
+    .pantry-grid { grid-template-columns: 1fr; }
+  }
+</style>`;
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
@@ -1543,6 +1784,18 @@ async function main() {
   const homepageSrc = generateHomepage(allPosts);
   fs.writeFileSync(path.join(PAGES_DIR, 'index.astro'), homepageSrc);
   console.log('  Written: src/pages/index.astro');
+
+  // -----------------------------------------------------------------------
+  // 4. Generate Pantry page
+  // -----------------------------------------------------------------------
+  console.log('Fetching Pantry Items from Notion...');
+  const pantryPages = await fetchPantryItems();
+  console.log(`Found ${pantryPages.length} pantry item(s).`);
+  const pantryItems = pantryPages.map(extractPantryItem);
+  const pantryDir = path.join(PAGES_DIR, 'my-pantry');
+  fs.mkdirSync(pantryDir, { recursive: true });
+  fs.writeFileSync(path.join(pantryDir, 'index.astro'), generatePantryPage(pantryItems));
+  console.log('  Written: src/pages/my-pantry/index.astro');
 
   console.log('Sync complete.');
 }

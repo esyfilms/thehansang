@@ -19,6 +19,11 @@
 /* ===== RESET ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 /* ===== BODY ===== */
 body {
   font-family: 'Outfit', sans-serif;
@@ -89,6 +94,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   z-index: 10000;
   animation: fadeIn 0.5s ease-out both;
   box-shadow: 0 1px 0 var(--stone);
+  /* Ensure solid background so nothing shows through on scroll */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 /* Row 1: Logo bar */
@@ -153,6 +161,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  background: var(--cream);
 }
 .nav-categories::-webkit-scrollbar { display: none; }
 
@@ -481,6 +490,7 @@ h2.section-title {
   padding: 0 48px;
   border-bottom: 1px solid var(--stone);
   animation: fadeUp 0.6s ease-out 0.3s both;
+  overflow: hidden;
 }
 
 /* Carousel wrapper */
@@ -630,6 +640,7 @@ h2.section-title {
   padding: 0 48px;
   border-bottom: 1px solid var(--stone);
   animation: fadeUp 0.6s ease-out 0.25s both;
+  overflow: hidden;
 }
 
 .video-grid {
