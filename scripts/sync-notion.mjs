@@ -512,6 +512,10 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     margin-bottom: 16px;
     color: var(--ink);
     text-align: center;
+    text-wrap: balance;
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .article-meta {
     font-size: 13px;
