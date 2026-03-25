@@ -1024,8 +1024,8 @@ ${CAROUSEL_SCRIPT}
   }
   .category-header {
     text-align: center;
-    padding: 48px 24px 32px;
-    max-width: 680px;
+    padding: 48px 48px 32px;
+    max-width: 100%;
     margin: 0 auto;
     border-bottom: 1px solid var(--stone);
     margin-bottom: 40px;
