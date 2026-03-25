@@ -439,6 +439,18 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       </div>
     </header>
 
+    <div class="article-share">
+      <span class="article-share-label">Share</span>
+      <a href="#" class="share-link" data-share="copy" title="Copy link">Copy Link</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://twitter.com/intent/tweet?url=ARTICLE_URL&text=${encodeURIComponent(post.title)}" class="share-link" target="_blank" rel="noopener" title="Share on X">X</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on Facebook">Facebook</a>
+      <span class="share-dot">&middot;</span>
+      <a href="https://wa.me/?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on WhatsApp">WhatsApp</a>
+      <span class="copy-toast" id="copyToast">Link copied!</span>
+    </div>
+
     ${videoEmbed}
     ${infoCard}
 
@@ -450,17 +462,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     ${affiliateBlock}
     ${restaurantInfo}
     ${verdict}
-
-    <div class="article-share">
-      <span class="article-share-label">Share</span>
-      <a href="#" class="share-link" data-share="copy" title="Copy link">Copy Link</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://twitter.com/intent/tweet?url=ARTICLE_URL&text=${encodeURIComponent(post.title)}" class="share-link" target="_blank" rel="noopener" title="Share on X">X</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on Facebook">Facebook</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://wa.me/?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on WhatsApp">WhatsApp</a>
-    </div>
   </article>
 
 <script>
@@ -468,12 +469,15 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   document.querySelectorAll('.share-link').forEach(link => {
     if (link.href) link.href = link.href.replace(/ARTICLE_URL/g, encodeURIComponent(window.location.href));
   });
-  // Copy link handler
+  // Copy link handler with toast
   document.querySelector('[data-share="copy"]')?.addEventListener('click', (e) => {
     e.preventDefault();
     navigator.clipboard.writeText(window.location.href).then(() => {
-      e.target.textContent = 'Copied!';
-      setTimeout(() => { e.target.textContent = 'Copy Link'; }, 2000);
+      const toast = document.getElementById('copyToast');
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 2000);
+      }
     });
   });
 </script>
@@ -774,14 +778,16 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     font-weight: 400;
   }
 
-  /* ---- Share section ---- */
+  /* ---- Share section (top, below header) ---- */
   .article-share {
-    max-width: 720px;
-    margin: 40px auto 0;
-    padding-top: 24px;
-    border-top: 1px solid var(--stone);
+    position: relative;
+    max-width: 660px;
+    margin: 0 auto 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--stone);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-family: 'Outfit', sans-serif;
     font-size: 13px;
@@ -804,6 +810,24 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   }
   .share-dot {
     color: var(--stone);
+  }
+  .copy-toast {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .copy-toast.show {
+    opacity: 1;
   }
 
   @media (max-width: 768px) {
