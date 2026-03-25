@@ -1035,7 +1035,7 @@ ${CAROUSEL_SCRIPT}
     font-family: 'Noto Serif KR', serif;
     font-size: 14px;
     color: var(--ember);
-    letter-spacing: 0.2em;
+    letter-spacing: 0;
     margin-bottom: 8px;
     text-align: center;
   }
