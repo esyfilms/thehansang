@@ -14,13 +14,14 @@ const links = {
   cook: "/cook/",
   travel: "/travel/",
   culture: "/culture/",
-  events: "/events/",
+  directory: "/directory/",
   pantry: "/my-pantry/",
   about: "/about/",
   contact: "/contact/",
 };
 
 import '../styles/global.css';
+import siteAlert from '../data/site-alert.json';
 ---
 
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ import '../styles/global.css';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <meta name="theme-color" content="#F7F3ED">
+  <meta name="theme-color" content="#FFFFFF">
   <meta name="description" content={description}>
   <title>{title} - The Hansang</title>
   <link rel="canonical" href={canonicalURL}>
@@ -46,36 +47,52 @@ import '../styles/global.css';
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@200;300;400;500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Ad Header - will be populated from Notion Ads DB when sponsors are confirmed -->
+  <!-- Site Alert Banner (controlled from Notion Site Alerts DB) -->
+  {siteAlert?.active && (
+    <div class={`site-alert site-alert--${(siteAlert.type || 'info').toLowerCase()}`}>
+      <div class="container">
+        {siteAlert.link
+          ? <a href={siteAlert.link}>{siteAlert.message}</a>
+          : <span>{siteAlert.message}</span>
+        }
+      </div>
+    </div>
+  )}
 
-  <!-- Navigation - Two-row sticky header like Monocle -->
+  <!-- Header - Three-row editorial header -->
   <header class="site-header">
-    <nav class="nav-bar" aria-label="Main navigation">
-      <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
-      <a href={links.home} class="nav-logo">
-        <img src={logo} alt="The Hansang" class="nav-logo-img" />
-        <span class="nav-wordmark">THE<br>HANSANG</span>
-      </a>
-      <button type="button" class="nav-search" aria-label="Search the site">Search</button>
-    </nav>
-    <nav class="nav-categories" aria-label="Content categories">
-      <a href={links.eat}>Eat</a>
-      <span class="nav-pipe">|</span>
-      <a href={links.cook}>Cook</a>
-      <span class="nav-pipe">|</span>
-      <a href={links.travel}>Travel</a>
-      <span class="nav-pipe">|</span>
-      <a href={links.culture}>Culture</a>
-      <span class="nav-pipe">|</span>
-      <a href={links.events}>Events</a>
-      <span class="nav-pipe">|</span>
+    <!-- Row 1: Utility bar -->
+    <div class="util-bar"><div class="container">
+      <span>Everything Korea, for Singapore</span>
+      <span><a href="#" id="searchOpen">Search</a> &nbsp;&bull;&nbsp; <a href="#newsletter">Newsletter</a></span>
+    </div></div>
+
+    <!-- Row 2: Wordmark row -->
+    <div class="wordmark-row"><div class="container">
+      <a href="/"><img src={logo} alt="The Hansang" class="logo-icon" /></a>
+      <a href="/" class="wordmark">THE HANSANG</a>
+    </div></div>
+
+    <!-- Row 3: Navigation -->
+    <div class="nav-row"><div class="container">
+      <a href={links.eat}>Eat</a><span class="pipe">|</span>
+      <a href={links.cook}>Cook</a><span class="pipe">|</span>
+      <a href={links.travel}>Travel</a><span class="pipe">|</span>
+      <a href={links.culture}>Culture</a><span class="pipe">|</span>
+      <a href={links.directory}>Directory</a><span class="pipe">|</span>
       <a href={links.pantry}>My Pantry</a>
-    </nav>
+    </div></div>
+
+    <!-- Row 4: Chestnut border -->
+    <div class="nav-bottom-rule"></div>
+
+    <!-- Mobile hamburger (hidden on desktop) -->
+    <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
   </header>
 
   <!-- Mobile Menu -->
@@ -86,9 +103,20 @@ import '../styles/global.css';
       <li><a href={links.cook}>Cook</a></li>
       <li><a href={links.travel}>Travel</a></li>
       <li><a href={links.culture}>Culture</a></li>
-      <li><a href={links.events}>Events</a></li>
+      <li><a href={links.directory}>Directory</a></li>
       <li><a href={links.pantry}>My Pantry</a></li>
+      <li><a href="/search/">Search</a></li>
     </ul>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-overlay-inner">
+      <button class="search-overlay-close" id="searchClose">&times;</button>
+      <input type="text" class="search-overlay-input" id="searchInput" placeholder="Search articles..." autocomplete="off" />
+      <div class="search-overlay-results" id="searchResults"></div>
+      <a href="/search/" class="search-overlay-all" id="searchViewAll" style="display:none;">View all results &rarr;</a>
+    </div>
   </div>
 
   <main id="main">
@@ -96,9 +124,9 @@ import '../styles/global.css';
   </main>
 
   <!-- Newsletter -->
-  <section class="newsletter" aria-label="Newsletter">
+  <section class="newsletter" id="newsletter" aria-label="Newsletter">
     <h2>The Weekly Hansang</h2>
-    <p class="newsletter-sub">New reviews, recipes, and guides every Thursday.</p>
+    <p class="newsletter-sub">New reviews, recipes, and guides — delivered to your inbox.</p>
     <p style="font-size: 14px; color: var(--stone); margin-top: 16px; letter-spacing: 0.05em; text-transform: uppercase;">Coming Soon — Under Construction</p>
   </section>
 
@@ -117,18 +145,22 @@ import '../styles/global.css';
       <a href={links.cook}>Cook</a>
       <a href={links.travel}>Travel</a>
       <a href={links.culture}>Culture</a>
-      <a href={links.events}>Events</a>
+      <a href={links.directory}>Directory</a>
     </div>
     <div class="footer-col">
       <h4>More</h4>
       <a href={links.pantry}>My Pantry</a>
       <a href={links.about}>About</a>
       <a href={links.contact}>Contact</a>
-      <a href="#">Newsletter</a>
+      <a href="#newsletter">Newsletter</a>
     </div>
     <div class="footer-col">
       <h4>Follow</h4>
       <a href="https://www.instagram.com/thehansang.sg/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="footer-col">
+      <h4>&nbsp;</h4>
+      <a href={links.contact}>Contact Us</a>
     </div>
   </footer>
   <div class="footer-bottom">
@@ -136,12 +168,83 @@ import '../styles/global.css';
     <span>Built with care in Singapore.</span>
   </div>
 
+  <!-- All styles handled by global.css — no scoped styles here to avoid specificity conflicts -->
+
   <script>
+    // Mobile menu
     document.getElementById('menuOpen')?.addEventListener('click', () => {
       document.getElementById('mobileMenu')?.classList.add('open');
     });
     document.getElementById('menuClose')?.addEventListener('click', () => {
       document.getElementById('mobileMenu')?.classList.remove('open');
+    });
+
+    // Search overlay
+    const searchOpen = document.getElementById('searchOpen');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchClose = document.getElementById('searchClose');
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+    const searchResults = document.getElementById('searchResults');
+    const searchViewAll = document.getElementById('searchViewAll') as HTMLAnchorElement | null;
+    let searchIndex: any[] | null = null;
+
+    searchOpen?.addEventListener('click', () => {
+      searchOverlay?.classList.add('open');
+      searchInput?.focus();
+    });
+    searchClose?.addEventListener('click', () => {
+      searchOverlay?.classList.remove('open');
+    });
+    searchOverlay?.addEventListener('click', (e) => {
+      if (e.target === searchOverlay) searchOverlay.classList.remove('open');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') searchOverlay?.classList.remove('open');
+    });
+
+    async function loadSearchIndex() {
+      if (searchIndex) return searchIndex;
+      try {
+        const res = await fetch('/search-index.json');
+        searchIndex = await res.json();
+        return searchIndex;
+      } catch { return []; }
+    }
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    searchInput?.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        const q = searchInput.value.trim().toLowerCase();
+        if (q.length < 2) {
+          if (searchResults) searchResults.innerHTML = '<p class="search-hint">Start typing to search articles...</p>';
+          if (searchViewAll) searchViewAll.style.display = 'none';
+          return;
+        }
+        const index = await loadSearchIndex();
+        const matches = (index || []).filter((p: any) =>
+          p.title?.toLowerCase().includes(q) ||
+          p.pillar?.toLowerCase().includes(q) ||
+          p.excerpt?.toLowerCase().includes(q) ||
+          (p.tags || []).some((t: string) => t.toLowerCase().includes(q))
+        ).slice(0, 5);
+
+        if (matches.length === 0) {
+          if (searchResults) searchResults.innerHTML = `<p class="search-hint">No articles found for "${searchInput.value}"</p>`;
+          if (searchViewAll) searchViewAll.style.display = 'none';
+        } else {
+          if (searchResults) searchResults.innerHTML = matches.map((m: any) => `
+            <a href="${m.url}" class="search-result-item">
+              <span class="search-result-pillar">${m.pillar || ''}</span>
+              <span class="search-result-title">${m.title}</span>
+            </a>
+          `).join('');
+          if (searchViewAll) {
+            searchViewAll.href = '/search/?q=' + encodeURIComponent(searchInput.value);
+            searchViewAll.style.display = 'block';
+          }
+        }
+      }, 200);
     });
   </script>
   <!-- Cloudflare Web Analytics -->

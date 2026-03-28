@@ -14,6 +14,8 @@ import path from 'path';
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const POSTS_DS_ID = '54bd1d7c-c34a-4351-aa57-f0137d946f8f';
+const ADS_DS_ID   = '761a79d4-766c-4d75-8f09-f41a8e559696';
+const ALERTS_DS_ID = '8461c7ea-9b01-4919-b476-84a0f9b44526';
 const PAGES_DIR = path.resolve('src/pages');
 
 const DEFAULT_AUTHOR = 'Eric Youn @esyfilms';
@@ -44,11 +46,11 @@ const PILLAR_CONFIG = {
     english: 'Culture',
     description: 'K-drama, K-pop, beauty, and language explainers.',
   },
-  Events: {
-    folder: 'events',
-    korean: '\uD589\uC0AC',
-    english: 'Events',
-    description: 'Korean festivals, pop-ups, and happenings in Singapore.',
+  Directory: {
+    folder: 'directory',
+    korean: '\uBAA9\uB85D',
+    english: 'Directory',
+    description: 'Korean businesses, services, and resources in Singapore.',
   },
 };
 
@@ -68,6 +70,65 @@ async function fetchPublishedPosts() {
     sorts: [{ property: 'Published Date', direction: 'descending' }],
   });
   return response.results;
+}
+
+async function fetchActiveSiteAlert() {
+  if (!ALERTS_DS_ID) return null;
+  try {
+    const response = await notion.dataSources.query({
+      data_source_id: ALERTS_DS_ID,
+      filter: { property: 'Active', checkbox: { equals: true } },
+    });
+    const page = response.results[0];
+    if (!page) return null;
+    return {
+      active: true,
+      message: getProperty(page, 'Message') || '',
+      type: getProperty(page, 'Type') || 'Info',
+      link: getProperty(page, 'Link') || '',
+    };
+  } catch (e) {
+    console.warn('Could not fetch site alert:', e.message);
+    return null;
+  }
+}
+
+async function fetchActiveAds() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const response = await notion.dataSources.query({
+      data_source_id: ADS_DS_ID,
+      filter: { property: 'Active', checkbox: { equals: true } },
+    });
+    return response.results
+      .map(page => ({
+        sponsorName: getProperty(page, 'Sponsor Name') || '',
+        displayText: getProperty(page, 'Display Text') || '',
+        placement:   getProperty(page, 'Placement') || '',
+        linkUrl:     getProperty(page, 'Link URL') || '#',
+        startDate:   getProperty(page, 'Start Date') || '',
+        endDate:     getProperty(page, 'End Date') || '',
+        bannerImages: getProperty(page, 'Banner Image') || [],
+      }))
+      .filter(ad => {
+        // Only include ads within date range (if dates are set)
+        if (ad.startDate && ad.startDate > today) return false;
+        if (ad.endDate && ad.endDate < today) return false;
+        return true;
+      });
+  } catch (e) {
+    console.warn('Could not fetch ads:', e.message);
+    return [];
+  }
+}
+
+function getAdHtml(ads, placement, fallback = '') {
+  const ad = ads.find(a => a.placement === placement);
+  if (!ad) return fallback;
+  const img = ad.bannerImages[0]
+    ? `<img src="${escapeHtml(ad.bannerImages[0])}" alt="${escapeHtml(ad.sponsorName)}" style="max-width:100%;display:block;">`
+    : `<span>${escapeHtml(ad.displayText || ad.sponsorName)}</span>`;
+  return `<a href="${escapeHtml(ad.linkUrl)}" target="_blank" rel="noopener sponsored" class="ad-slot-link">${img}</a>`;
 }
 
 function getProperty(page, name) {
@@ -341,6 +402,8 @@ async function extractPostData(page) {
     affiliateLink: getProperty(page, 'Affiliate Link'),
     recipeCategory: getProperty(page, 'Recipe Category') || [],
     coverImages: getProperty(page, 'Cover Image') || [],
+    googleMapsUrl: getProperty(page, 'Google Maps URL') || '',
+    excerpt: getProperty(page, 'Excerpt') || '',
   };
 
   // Resolve cover URL: use first cover image, fall back to downloaded IG thumbnail
@@ -385,11 +448,11 @@ const FILTER_PILLS = {
     { label: 'Beauty', filter: 'beauty' },
     { label: 'Language', filter: 'language' },
   ],
-  Events: [
+  Directory: [
     { label: 'All', filter: 'all' },
-    { label: 'Festivals', filter: 'festival' },
-    { label: 'Pop-Ups', filter: 'popup' },
-    { label: 'Markets', filter: 'market' },
+    { label: 'Restaurants', filter: 'restaurant' },
+    { label: 'Groceries', filter: 'grocery' },
+    { label: 'Services', filter: 'service' },
   ],
 };
 
@@ -397,7 +460,7 @@ const FILTER_PILLS = {
 // 1. Generate individual article page
 // ---------------------------------------------------------------------------
 
-function generateArticlePage(post, bodyHtml, plainText) {
+function generateArticlePage(post, bodyHtml, plainText, allPosts = [], ads = []) {
   const pillarCfg = PILLAR_CONFIG[post.pillar] || PILLAR_CONFIG.Eat;
   const pillarTag = `${(post.pillar || 'Eat').toUpperCase()} &middot; ${(post.postType || 'Article').toUpperCase()}`;
   const contributor = post.contributor || DEFAULT_AUTHOR;
@@ -405,80 +468,94 @@ function generateArticlePage(post, bodyHtml, plainText) {
   const readTime = estimateReadTime(plainText);
   const isRecipe = post.postType === 'Recipe';
   const isReview = post.postType === 'Review';
+  const pillarFolder = pillarCfg.folder || 'eat';
 
   // Instagram embed
   const videoEmbed = buildIgEmbed(post.videoUrl);
 
-  // Recipe card
+  // Info card (Quick Take for reviews, Recipe Card for recipes)
   let infoCard = '';
   if (isRecipe) {
     infoCard = `
-    <div class="info-card">
-      <div class="info-card-header">Recipe Card</div>
-      <div class="info-card-grid">
-        <div><span class="info-label">Servings</span><span class="info-value">${post.servings || '-'}</span></div>
-        <div><span class="info-label">Prep Time</span><span class="info-value">${post.prepTime ? post.prepTime + ' min' : '-'}</span></div>
-        <div><span class="info-label">Cook Time</span><span class="info-value">${post.cookTime ? post.cookTime + ' min' : '-'}</span></div>
-        <div><span class="info-label">Difficulty</span><span class="info-value">${post.difficulty || '-'}</span></div>
-      </div>
-    </div>`;
+      <div class="info-card">
+        <h3>Recipe Card</h3>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-label">Servings</div><div class="info-value">${post.servings || '-'}</div></div>
+          <div class="info-item"><div class="info-label">Prep Time</div><div class="info-value">${post.prepTime ? post.prepTime + ' min' : '-'}</div></div>
+          <div class="info-item"><div class="info-label">Cook Time</div><div class="info-value">${post.cookTime ? post.cookTime + ' min' : '-'}</div></div>
+          <div class="info-item"><div class="info-label">Difficulty</div><div class="info-value">${post.difficulty || '-'}</div></div>
+        </div>
+      </div>`;
   } else if (isReview) {
     infoCard = `
-    <div class="info-card">
-      <div class="info-card-header">Quick Take</div>
-      <div class="info-card-grid">
-        <div><span class="info-label">Rating</span><span class="info-value rating">${post.rating || '-'} / 10</span></div>
-        <div><span class="info-label">Price Range</span><span class="info-value">${post.priceRange || '-'}</span></div>
-        <div><span class="info-label">Best Dish</span><span class="info-value">${post.bestDish || '-'}</span></div>
-        <div><span class="info-label">Skip This</span><span class="info-value">${post.skipThis || '-'}</span></div>
-      </div>
-    </div>`;
+      <div class="info-card">
+        <h3>Quick Take</h3>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-label">Rating</div><div class="info-value">${post.rating || '-'} / 10</div></div>
+          <div class="info-item"><div class="info-label">Price Range</div><div class="info-value">${post.priceRange || '-'}</div></div>
+          <div class="info-item"><div class="info-label">Best Dish</div><div class="info-value">${post.bestDish || '-'}</div></div>
+          <div class="info-item"><div class="info-label">Skip This</div><div class="info-value">${post.skipThis || '-'}</div></div>
+        </div>
+      </div>`;
   }
 
   // Singapore Swaps
   let sgSwapBlock = '';
   if (post.singaporeSwaps) {
     sgSwapBlock = `
-    <div class="sg-swap-box">
-      <div class="sg-swap-header">Singapore Swap</div>
-      <p>${escapeHtml(post.singaporeSwaps)}</p>
-    </div>`;
+      <div class="sg-swap-box">
+        <div class="sg-swap-header">Singapore Swap</div>
+        <p>${escapeHtml(post.singaporeSwaps)}</p>
+      </div>`;
   }
 
   // Affiliate link (ONLY if present)
   let affiliateBlock = '';
   if (post.affiliateLink) {
     affiliateBlock = `
-    <div class="affiliate-link">
-      <a href="${escapeHtml(post.affiliateLink)}" target="_blank" rel="noopener sponsored">Shop the ingredients &rarr;</a>
-    </div>`;
+      <div class="affiliate-link">
+        <a href="${escapeHtml(post.affiliateLink)}" target="_blank" rel="noopener sponsored">Shop the ingredients &rarr;</a>
+      </div>`;
   }
 
   // Restaurant info (reviews only)
   let restaurantInfo = '';
   if (isReview && post.restaurantAddress) {
     restaurantInfo = `
-    <div class="restaurant-info">
-      <div class="restaurant-info-header">Restaurant Info</div>
-      <dl>
-        ${post.restaurantAddress ? `<div><dt>Address</dt><dd>${escapeHtml(post.restaurantAddress)}</dd></div>` : ''}
-        ${post.restaurantMRT ? `<div><dt>MRT</dt><dd>${escapeHtml(post.restaurantMRT)}</dd></div>` : ''}
-        ${post.restaurantHours ? `<div><dt>Hours</dt><dd>${escapeHtml(post.restaurantHours)}</dd></div>` : ''}
-        ${post.priceRange ? `<div><dt>Price Range</dt><dd>${escapeHtml(post.priceRange)} per person</dd></div>` : ''}
-        ${post.reservation ? `<div><dt>Reservation</dt><dd>${escapeHtml(post.reservation)}</dd></div>` : ''}
-        <div><dt>Halal</dt><dd>${post.halal ? 'Yes' : 'No'}</dd></div>
-      </dl>
-    </div>`;
+      <div class="info-card restaurant-info">
+        <h3>Restaurant Info</h3>
+        <div class="info-grid">
+          ${post.restaurantAddress ? `<div class="info-item"><div class="info-label">Address</div><div class="info-value">${escapeHtml(post.restaurantAddress)}<a href="${post.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(post.restaurantAddress)}`}" target="_blank" rel="noopener" class="directions-link">Get Directions &rarr;</a></div></div>` : ''}
+          ${post.restaurantMRT ? `<div class="info-item"><div class="info-label">MRT</div><div class="info-value">${escapeHtml(post.restaurantMRT)}</div></div>` : ''}
+          ${post.restaurantHours ? `<div class="info-item"><div class="info-label">Hours</div><div class="info-value">${escapeHtml(post.restaurantHours)}</div></div>` : ''}
+          ${post.priceRange ? `<div class="info-item"><div class="info-label">Price Range</div><div class="info-value">${escapeHtml(post.priceRange)} per person</div></div>` : ''}
+          ${post.reservation ? `<div class="info-item"><div class="info-label">Reservation</div><div class="info-value">${escapeHtml(post.reservation)}</div></div>` : ''}
+          <div class="info-item"><div class="info-label">Halal</div><div class="info-value">${post.halal ? 'Yes' : 'No'}</div></div>
+        </div>
+      </div>`;
   }
 
   // Verdict (reviews with rating)
   let verdict = '';
   if (isReview && post.rating) {
     verdict = `
-    <div class="verdict">
-      <h2>Verdict</h2>
-      <div class="verdict-rating">${post.rating}<span class="verdict-of"> / 10</span></div>
-    </div>`;
+      <div class="verdict">
+        <h2>Verdict</h2>
+        <div class="verdict-rating">${post.rating}<span class="verdict-of"> / 10</span></div>
+      </div>`;
+  }
+
+  // Tags
+  const tagsArray = Array.isArray(post.recipeCategory) ? post.recipeCategory : [];
+  let tagsBlock = '';
+  if (tagsArray.length > 0) {
+    tagsBlock = `
+      <div class="article-tags">
+        <div class="tags-label">Tags</div>
+        <div class="tags-list">
+          ${tagsArray.map(t => `<a href="/${pillarFolder}/" class="tag">${escapeHtml(t)}</a>`).join('\n          ')}
+        </div>
+      </div>`;
   }
 
   return `---
@@ -486,49 +563,105 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="${escapeHtml(post.title)}" description="${escapeHtml(post.meta)}">
-  <article class="article-page">
-    ${post.coverUrl ? `<div class="article-hero" style="max-width: 900px; margin: 0 auto; aspect-ratio: 16/9; background: var(--linen) url('${escapeHtml(post.coverUrl)}') center/cover no-repeat;"></div>` : ''}
 
-    <header class="article-header">
-      <div class="article-pillar-tag">${pillarTag}</div>
+  <!-- ===== HERO IMAGE + OVERLAY ===== -->
+  <div class="article-hero">
+    ${post.coverUrl
+      ? `<div class="hero-bg" style="background: url('${escapeHtml(post.coverUrl)}') center/cover no-repeat;"></div>`
+      : `<div class="hero-bg"></div>`}
+    <div class="hero-overlay">
+      <div class="breadcrumb"><a href="/">Home</a> &nbsp;|&nbsp; <a href="/${pillarFolder}/">${escapeHtml(pillarCfg.english)}</a> &nbsp;|&nbsp; ${escapeHtml(post.postType || 'Article')}</div>
+      <div class="pillar-tag">${pillarTag}</div>
       <h1>${escapeHtml(post.title)}</h1>
-      <div class="article-meta">
-        <span class="article-contributor">${escapeHtml(contributor)}</span>
-        <span class="article-meta-sep">/</span>
-        <time datetime="${post.date || ''}">${dateFormatted || 'Coming Soon'}</time>
-        <span class="article-meta-sep">/</span>
-        <span class="article-read-time">${readTime} min read</span>
-      </div>
-    </header>
-
-    <div class="article-share">
-      <span class="article-share-label">Share</span>
-      <a href="#" class="share-link" data-share="copy" title="Copy link">Copy Link</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://twitter.com/intent/tweet?url=ARTICLE_URL&text=${encodeURIComponent(post.title)}" class="share-link" target="_blank" rel="noopener" title="Share on X">X</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on Facebook">Facebook</a>
-      <span class="share-dot">&middot;</span>
-      <a href="https://wa.me/?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-link" target="_blank" rel="noopener" title="Share on WhatsApp">WhatsApp</a>
-      <span class="copy-toast" id="copyToast">Link copied!</span>
+      ${post.meta ? `<p class="subtitle">${escapeHtml(post.meta)}</p>` : ''}
     </div>
+  </div>
 
-    ${videoEmbed}
-    ${infoCard}
+  <!-- ===== META BAR (author, date, share) ===== -->
+  <div class="article-meta-bar">
+    <div class="meta-left">
+      <span>By ${escapeHtml(contributor)}</span>
+      <span>${dateFormatted || 'Coming Soon'}</span>
+      <span>${readTime} min read</span>
+    </div>
+    <div class="share-icons">
+      <span class="share-label">Share</span>
+      <a href="#" class="share-btn" data-share="copy" title="Copy link">&#128279;</a>
+      <a href="https://www.instagram.com/" class="share-btn" target="_blank" rel="noopener" title="Instagram">IG</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=ARTICLE_URL" class="share-btn" target="_blank" rel="noopener" title="Facebook">f</a>
+      <a href="https://wa.me/?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-btn" target="_blank" rel="noopener" title="WhatsApp">&#9742;</a>
+      <a href="https://www.threads.net/intent/post?text=${encodeURIComponent(post.title)}%20ARTICLE_URL" class="share-btn" target="_blank" rel="noopener" title="Threads">&#129525;</a>
+    </div>
+    <span class="copy-toast" id="copyToast">Link copied!</span>
+  </div>
 
-    <div class="article-body">
+  <!-- ===== ARTICLE BODY + SIDEBAR ===== -->
+  <div class="article-layout">
+    <article class="article-body">
+
+      ${videoEmbed}
+      ${infoCard}
+
       ${bodyHtml}
-    </div>
 
-    ${sgSwapBlock}
-    ${affiliateBlock}
-    ${restaurantInfo}
-    ${verdict}
-  </article>
+      ${sgSwapBlock}
+      ${affiliateBlock}
+      ${restaurantInfo}
+      ${verdict}
+
+      ${tagsBlock}
+
+    </article>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="article-sidebar">
+      <div class="sidebar-section">
+        <h4>Recommendations</h4>
+        <div class="sidebar-recs-placeholder" data-pillar="${pillarFolder}"></div>
+      </div>
+
+      <div class="sidebar-ad">${getAdHtml(ads, 'Sidebar 300x250', 'Ad &middot; 300&times;250')}</div>
+
+      <div class="sidebar-section">
+        <h4>Most Read</h4>
+        <div class="sidebar-most-read-placeholder" data-pillar="${pillarFolder}"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== AD SPACE ===== -->
+  <div class="ad-space">
+    ${getAdHtml(ads, 'Article Mid-Content', '<span>Ad Space</span>')}
+  </div>
+
+  <!-- ===== MORE FROM THE HANSANG ===== -->
+  <div class="more-articles">
+    <div class="section-header">
+      <h3>More from The Hansang</h3>
+      <a href="/${pillarFolder}/">View All</a>
+    </div>
+    <div class="more-grid">
+      ${allPosts
+        .filter(p => p.pillar === post.pillar && p.slug !== post.slug)
+        .slice(0, 4)
+        .map(p => {
+          const cfg2 = PILLAR_CONFIG[p.pillar] || {};
+          const imgHtml = p.coverUrl
+            ? `<img src="${escapeHtml(p.coverUrl)}" alt="${escapeHtml(p.title)}" loading="lazy">`
+            : `<div style="width:100%;height:100%;background:linear-gradient(145deg,#E0D8CE,#C8BEB5);"></div>`;
+          return `<a href="/${cfg2.folder || pillarFolder}/${p.slug}/" class="more-card">
+              <div class="more-img">${imgHtml}</div>
+              <div class="more-tag">${escapeHtml(p.pillar || '')} &middot; ${escapeHtml(p.postType || '')}</div>
+              <h4>${escapeHtml(p.title)}</h4>
+              <div class="card-meta">${p.date ? new Date(p.date).toLocaleDateString('en-SG', {day:'numeric',month:'short',year:'numeric'}) : ''}</div>
+            </a>`;
+        }).join('\n      ')}
+    </div>
+  </div>
 
 <script>
   // Replace ARTICLE_URL placeholders with actual page URL
-  document.querySelectorAll('.share-link').forEach(link => {
+  document.querySelectorAll('.share-btn').forEach(link => {
     if (link.href) link.href = link.href.replace(/ARTICLE_URL/g, encodeURIComponent(window.location.href));
   });
   // Copy link handler with toast
@@ -546,340 +679,129 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-  .article-page {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  /* ---- Header: CENTER-ALIGNED ---- */
-  .article-header {
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 48px 24px 32px;
-    border-bottom: 1px solid var(--stone);
-    margin-bottom: 32px;
-  }
-  .article-pillar-tag {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 16px;
-    font-family: 'Outfit', sans-serif;
-    text-align: center;
-  }
-  .article-header h1 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 38px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 16px;
-    color: var(--ink);
-    text-align: center;
-    text-wrap: balance;
-    max-width: 660px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .article-meta {
-    font-size: 13px;
-    color: var(--gray-400, #999);
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
-  .article-contributor {
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .article-meta-sep {
-    color: var(--stone);
-  }
-  .article-read-time {
-    color: var(--gray-400, #999);
-  }
-
-  /* ---- Instagram embed ---- */
-  .article-video {
-    text-align: center;
-    max-width: 500px;
-    margin: 32px auto;
-  }
-  .article-video iframe {
-    display: block;
-    margin: 0 auto;
-    max-width: 100%;
-  }
-  .article-video-caption {
-    font-size: 12px;
-    color: var(--gray-400, #999);
-    margin-top: 8px;
-    font-style: italic;
-  }
-
-  /* ---- Info card (Recipe Card / Quick Take) ---- */
-  .info-card {
-    border: 1px solid var(--stone);
-    padding: 24px;
-    margin-bottom: 32px;
-  }
-  .info-card-header {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gray-400, #999);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--stone);
-    font-family: 'Outfit', sans-serif;
-  }
-  .info-card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .info-label {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-400, #999);
-    margin-bottom: 4px;
-    font-family: 'Outfit', sans-serif;
-  }
-  .info-value {
-    font-family: 'Source Serif 4', serif;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  .info-value.rating {
-    color: var(--ember);
-  }
-
-  /* ---- Body ---- */
-  .article-body {
-    font-family: 'Source Serif 4', serif;
-    font-size: 18px;
-    line-height: 1.8;
-    text-align: left;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-    color: var(--ink);
-    max-width: 660px;
-    margin: 0 auto;
-  }
-  .article-body h2 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 40px 0 16px;
-  }
-  .article-body h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 32px 0 12px;
-  }
-  .article-body p {
-    margin-bottom: 20px;
-  }
-  .article-body ul,
-  .article-body ol {
-    margin-bottom: 20px;
-    padding-left: 24px;
-  }
-  .article-body li {
-    margin-bottom: 8px;
-  }
-  .article-body strong {
-    font-weight: 700;
-  }
-  .article-body em {
-    font-style: italic;
-  }
-  .article-body figure {
-    margin: 24px 0;
-  }
-  .article-body img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .article-body figcaption {
-    font-size: 13px;
-    color: var(--gray-400, #999);
-    margin-top: 8px;
-    font-family: 'Outfit', sans-serif;
-  }
-  .article-body hr {
-    border: none;
-    border-top: 1px solid var(--stone);
-    margin: 32px 0;
-  }
-  .article-body blockquote {
-    border-left: 3px solid var(--ember);
-    padding-left: 20px;
-    margin: 24px 0;
-    font-style: italic;
-    color: var(--gray-400, #999);
-  }
-  .article-body .callout {
-    background: var(--linen, #EDE6DC);
-    padding: 16px 20px;
-    margin: 24px 0;
-    border-left: 3px solid var(--ember);
-    font-size: 16px;
-  }
-
-  /* ---- Singapore Swap box ---- */
-  .sg-swap-box {
-    background: var(--linen, #EDE6DC);
-    border: 1px solid var(--stone);
-    padding: 24px;
-    margin: 32px 0;
-  }
-  .sg-swap-header {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ember);
-    margin-bottom: 12px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-  }
-  .sg-swap-box p {
-    font-family: 'Source Serif 4', serif;
-    font-size: 16px;
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* ---- Affiliate link ---- */
-  .affiliate-link {
-    margin: 32px 0;
-    text-align: center;
-  }
-  .affiliate-link a {
-    display: inline-block;
-    padding: 12px 32px;
-    background: var(--ember);
-    color: #fff;
-    font-family: 'Outfit', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: opacity 0.2s;
-  }
-  .affiliate-link a:hover {
-    opacity: 0.85;
-  }
-
-  /* ---- Restaurant info ---- */
-  .restaurant-info {
-    border: 1px solid var(--stone);
-    padding: 24px;
-    margin: 40px 0;
-  }
-  .restaurant-info-header {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gray-400, #999);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--stone);
-    font-family: 'Outfit', sans-serif;
-  }
-  .restaurant-info dl {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .restaurant-info dl > div {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 16px;
-  }
-  .restaurant-info dt {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-400, #999);
-    padding-top: 3px;
-    font-family: 'Outfit', sans-serif;
-  }
-  .restaurant-info dd {
-    font-size: 15px;
-  }
-
-  /* ---- Verdict ---- */
-  .verdict {
-    margin: 40px 0;
-    padding-top: 32px;
-    border-top: 1px solid var(--stone);
-  }
-  .verdict h2 {
-    font-family: 'Source Serif 4', serif;
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .verdict-rating {
-    font-family: 'Source Serif 4', serif;
-    font-size: 48px;
-    font-weight: 700;
-    color: var(--ember);
-  }
-  .verdict-of {
-    font-size: 20px;
-    color: var(--gray-400, #999);
-    font-weight: 400;
-  }
-
-  /* ---- Share section (top, below header) ---- */
-  .article-share {
+  /* ===== HERO IMAGE WITH OVERLAY ===== */
+  .article-hero {
     position: relative;
-    max-width: 660px;
-    margin: 0 auto 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--stone);
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 480px;
+    overflow: hidden;
+  }
+  .article-hero .hero-bg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #d4a574 0%, #8b6548 50%, #5a4030 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    font-family: 'Outfit', sans-serif;
+    color: rgba(255,255,255,0.2);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .article-hero .hero-overlay {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 48px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  }
+  .hero-overlay .breadcrumb {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 12px;
+  }
+  .hero-overlay .breadcrumb a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+  .hero-overlay .breadcrumb a:hover { color: #fff; }
+  .hero-overlay .pillar-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .hero-overlay h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    max-width: 700px;
+  }
+  .hero-overlay .subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  /* ===== ARTICLE META BAR ===== */
+  .article-meta-bar {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+  }
+  .meta-left {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+  }
+  .meta-left span { margin-right: 16px; }
+
+  /* Share icons — circular buttons */
+  .share-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .share-icons .share-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 8px;
+  }
+  .share-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+    color: #666;
     font-size: 13px;
   }
-  .article-share-label {
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gray-400, #999);
-    margin-right: 4px;
-  }
-  .share-link {
-    color: var(--ink);
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 0.15s;
-  }
-  .share-link:hover {
-    color: var(--ember);
-  }
-  .share-dot {
-    color: var(--stone);
-  }
+  .share-btn:hover { border-color: #1C1714; background: #f8f8f8; }
   .copy-toast {
     position: absolute;
-    top: -36px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--ink);
-    color: var(--cream);
+    top: -12px;
+    right: 40px;
+    background: #1C1714;
+    color: #F7F3ED;
     padding: 6px 16px;
     border-radius: 4px;
     font-size: 12px;
@@ -892,19 +814,482 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     opacity: 1;
   }
 
-  @media (max-width: 768px) {
-    .article-header h1 {
-      font-size: 28px;
+  /* ===== ARTICLE BODY + SIDEBAR GRID ===== */
+  .article-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 0;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 48px;
+  }
+
+  /* Main article body */
+  .article-body {
+    max-width: 660px;
+  }
+  .article-body p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 24px;
+  }
+  .article-body h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1C1714;
+    margin: 40px 0 16px;
+    line-height: 1.3;
+  }
+  .article-body h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1C1714;
+    margin: 32px 0 12px;
+  }
+  .article-body ul,
+  .article-body ol {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    padding-left: 24px;
+  }
+  .article-body li {
+    margin-bottom: 8px;
+  }
+  .article-body strong {
+    font-weight: 700;
+  }
+  .article-body em {
+    font-style: italic;
+  }
+  .article-body blockquote {
+    border-left: 3px solid #B8432A;
+    padding: 4px 0 4px 24px;
+    margin: 32px 0;
+    font-style: italic;
+    color: #666;
+  }
+  .article-body figure {
+    margin: 32px 0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .article-body img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .article-body figcaption {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .article-body hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 32px 0;
+  }
+  .article-body .callout {
+    background: #EDE6DC;
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-left: 3px solid #B8432A;
+    font-size: 16px;
+  }
+
+  /* IG Video Embed */
+  .article-video {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 32px 0;
+    text-align: center;
+  }
+  .article-video iframe {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 6px;
+  }
+  .article-video-caption {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  /* Info card (Quick Take / Recipe Card) */
+  .info-card {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+  .info-card h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1C1714;
+    margin: 0 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #eee;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .info-item .info-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  .info-item .info-value {
+    font-family: 'Source Serif 4', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1C1714;
+  }
+  .directions-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #B8432A;
+    text-decoration: none;
+  }
+  .directions-link:hover { text-decoration: underline; }
+
+  /* Singapore Swap box */
+  .sg-swap-box {
+    background: #EDE6DC;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 28px;
+    margin: 32px 0;
+  }
+  .sg-swap-header {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 12px;
+  }
+  .sg-swap-box p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Affiliate link */
+  .affiliate-link {
+    margin: 32px 0;
+    text-align: center;
+  }
+  .affiliate-link a {
+    display: inline-block;
+    padding: 12px 32px;
+    background: #B8432A;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+  }
+  .affiliate-link a:hover {
+    opacity: 0.85;
+  }
+
+  /* Verdict */
+  .verdict {
+    margin: 40px 0;
+    padding-top: 32px;
+    border-top: 2px solid #eee;
+  }
+  .verdict h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .verdict-rating {
+    font-family: 'Source Serif 4', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #B8432A;
+  }
+  .verdict-of {
+    font-size: 20px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  /* Tags */
+  .article-tags {
+    margin: 40px 0;
+    padding-top: 24px;
+    border-top: 2px solid #eee;
+  }
+  .article-tags .tags-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 12px;
+  }
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #666;
+    padding: 6px 14px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tag:hover { border-color: #B8432A; color: #B8432A; }
+
+  /* ===== SIDEBAR ===== */
+  .article-sidebar {
+    padding-top: 0;
+    border-left: 2px solid #eee;
+    padding-left: 32px;
+  }
+  .sidebar-section {
+    margin-bottom: 32px;
+  }
+  .sidebar-section h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #eee;
+  }
+  .rec-card {
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .rec-card .rec-img {
+    height: 140px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .rec-card .rec-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .rec-card:hover .rec-img img { transform: scale(1.03); }
+  .rec-card .rec-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 4px;
+  }
+  .rec-card h5 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .rec-card .card-meta {
+    font-size: 10px;
+    color: #bbb;
+  }
+  .sidebar-ad {
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  /* ===== AD SPACE (between tags and more articles) ===== */
+  .ad-space {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 40px;
+  }
+  .ad-space span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    color: #bbb;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ===== MORE ARTICLES (bottom) ===== */
+  .more-articles {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px 60px;
+  }
+  .more-articles .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 0 24px;
+    border-top: 5px solid #6B4C3B;
+  }
+  .more-articles .section-header h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .more-articles .section-header a {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #B8432A;
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .more-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .more-card { cursor: pointer; text-decoration: none; color: inherit; }
+  .more-card .more-img {
+    height: 160px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .more-card .more-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .more-card:hover .more-img img { transform: scale(1.03); }
+  .more-card .more-tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 4px;
+  }
+  .more-card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .more-card .card-meta {
+    font-size: 10px;
+    color: #bbb;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .article-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 24px 20px 0;
     }
-    .article-body {
+    .article-sidebar {
+      border-left: none;
+      padding-left: 0;
+      border-top: 2px solid #eee;
+      padding-top: 32px;
+      margin-top: 40px;
+    }
+    .more-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 768px) {
+    .article-hero {
+      height: 360px;
+    }
+    .hero-overlay {
+      padding: 24px;
+    }
+    .hero-overlay h1 {
+      font-size: 26px;
+    }
+    .article-meta-bar {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 16px 20px;
+    }
+    .article-layout {
+      padding: 20px 16px 0;
+    }
+    .article-body p {
       font-size: 16px;
     }
-    .info-card-grid {
+    .info-grid {
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-    .article-video {
-      max-width: 100%;
+    .more-articles {
+      padding: 0 16px 40px;
+    }
+    .more-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .ad-space {
+      padding: 0 16px;
     }
   }
 </style>`;
@@ -1462,7 +1847,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="The Hansang - Everything Korea, for Singapore" description="The definitive Korean food, culture and lifestyle authority in Singapore.">
   <div class="homepage">
-    ${heroSection}
+    <div class="container">
+      ${heroSection}
+    </div>
     ${koreanEatsSection}
     ${kitchenSection}
     ${editorsPickSection}
@@ -1478,6 +1865,13 @@ ${CAROUSEL_SCRIPT}
      =========================================================================== */
   .homepage {
     width: 100%;
+  }
+
+  /* ---- Container ---- */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
 
   /* ---- Shared section wrapper ---- */
@@ -1498,7 +1892,7 @@ ${CAROUSEL_SCRIPT}
     margin-bottom: 32px;
   }
   .section-label {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.15em;
@@ -1528,7 +1922,7 @@ ${CAROUSEL_SCRIPT}
     margin: 0;
   }
   .section-view-all {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -1541,7 +1935,7 @@ ${CAROUSEL_SCRIPT}
   }
 
   .coming-soon {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     color: var(--gray-400, #999);
     font-style: italic;
@@ -1556,10 +1950,10 @@ ${CAROUSEL_SCRIPT}
   .hero { padding: 0 48px; border-bottom: 1px solid var(--stone); }
   .hero-inner { display: grid; grid-template-columns: 5fr 7fr; min-height: 540px; text-decoration: none; color: inherit; }
   .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 60px 48px 60px 0; border-right: 1px solid var(--stone); }
-  .hero-label { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 16px; }
-  .hero-inner h2 { font-family: 'Source Serif 4', serif; font-size: 36px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--ink); }
-  .hero-excerpt { font-family: 'Outfit', sans-serif; font-size: 15px; color: var(--gray-400, #999); line-height: 1.6; margin-bottom: 20px; }
-  .hero-meta { font-family: 'Outfit', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400, #999); }
+  .hero-label { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 16px; }
+  .hero-inner h2 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--ink); }
+  .hero-excerpt { font-family: 'Inter', sans-serif; font-size: 15px; color: var(--gray-400, #999); line-height: 1.6; margin-bottom: 20px; }
+  .hero-meta { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400, #999); }
   .hero-image { background: var(--stone); display: flex; align-items: center; justify-content: center; min-height: 440px; overflow: hidden; background-size: cover; background-position: center; }
 
   /* ===========================================================================
@@ -1599,7 +1993,7 @@ ${CAROUSEL_SCRIPT}
     gap: 4px;
   }
   .eat-card-tag {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -1609,14 +2003,14 @@ ${CAROUSEL_SCRIPT}
   }
   .eat-card h3 {
     font-family: 'Source Serif 4', serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 4px;
     color: var(--ink, #1C1714);
   }
   .eat-card-excerpt {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 13px;
     color: var(--gray-400, #888);
     line-height: 1.5;
@@ -1627,7 +2021,7 @@ ${CAROUSEL_SCRIPT}
     overflow: hidden;
   }
   .eat-card time {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--gray-400, #999);
   }
@@ -1636,7 +2030,7 @@ ${CAROUSEL_SCRIPT}
      3. FROM THE KITCHEN (dark band)
      =========================================================================== */
   .kitchen-band {
-    background: var(--ink, #1C1714);
+    background: var(--chestnut, #6B4C3B);
     color: var(--cream, #F7F3ED);
     padding: 64px 0;
   }
@@ -1676,7 +2070,7 @@ ${CAROUSEL_SCRIPT}
     margin-bottom: 6px;
   }
   .kitchen-card time {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: rgba(247, 243, 237, 0.5);
   }
@@ -1707,7 +2101,7 @@ ${CAROUSEL_SCRIPT}
     gap: 4px;
   }
   .editors-pick-tag {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -1724,14 +2118,14 @@ ${CAROUSEL_SCRIPT}
     color: var(--ink, #1C1714);
   }
   .editors-pick-content p {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 15px;
     color: var(--gray-400, #888);
     line-height: 1.65;
     margin-bottom: 10px;
   }
   .editors-pick-content time {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--gray-400, #999);
   }
@@ -2029,6 +2423,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 // ---------------------------------------------------------------------------
 
 async function main() {
+  // Fetch and write site alert JSON for BaseLayout to consume at build time
+  console.log('Fetching site alert from Notion...');
+  const siteAlert = await fetchActiveSiteAlert();
+  const dataDir = path.resolve('src/data');
+  fs.mkdirSync(dataDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(dataDir, 'site-alert.json'),
+    JSON.stringify(siteAlert || { active: false }, null, 2)
+  );
+  console.log(siteAlert?.active ? `Site alert active: "${siteAlert.message}"` : 'No active site alert.');
+
+  console.log('Fetching active ads from Notion...');
+  const activeAds = await fetchActiveAds();
+  console.log(`Found ${activeAds.length} active ad(s).`);
+
   console.log('Fetching published posts from Notion...');
   const pages = await fetchPublishedPosts();
   console.log(`Found ${pages.length} published post(s).`);
@@ -2057,7 +2466,7 @@ async function main() {
     const blocks = await getPageBlocks(page.id);
     post.bodyHtml = blocksToHtml(blocks);
     post.plainText = getPlainText(blocks);
-    post.excerpt = post.plainText.slice(0, 300);
+    post.excerpt = post.excerpt || post.plainText.slice(0, 300);
 
     allPosts.push(post);
   }
@@ -2070,7 +2479,7 @@ async function main() {
     const dir = path.join(PAGES_DIR, cfg.folder, post.slug);
     fs.mkdirSync(dir, { recursive: true });
 
-    const articlePage = generateArticlePage(post, post.bodyHtml, post.plainText);
+    const articlePage = generateArticlePage(post, post.bodyHtml, post.plainText, allPosts, activeAds);
     fs.writeFileSync(path.join(dir, 'index.astro'), articlePage);
     console.log(`  Written: src/pages/${cfg.folder}/${post.slug}/index.astro`);
   }
@@ -2112,6 +2521,24 @@ async function main() {
   fs.mkdirSync(pantryDir, { recursive: true });
   fs.writeFileSync(path.join(pantryDir, 'index.astro'), generatePantryPage(pantryItems));
   console.log('  Written: src/pages/my-pantry/index.astro');
+
+  // -----------------------------------------------------------------------
+  // 5. Generate search index
+  // -----------------------------------------------------------------------
+  const searchIndex = allPosts.map(p => ({
+    title: p.title,
+    pillar: p.pillar,
+    postType: p.postType,
+    slug: p.slug,
+    date: p.date ? formatDate(p.date) : '',
+    excerpt: (p.excerpt || '').substring(0, 200),
+    coverUrl: p.coverUrl || '',
+    url: `/${(p.pillar || 'eat').toLowerCase()}/${p.slug}/`,
+    tags: p.recipeCategory || []
+  }));
+  const searchIndexPath = path.join(process.cwd(), 'public', 'search-index.json');
+  fs.writeFileSync(searchIndexPath, JSON.stringify(searchIndex, null, 2));
+  console.log(`  \u2705 Search index: ${searchIndex.length} entries \u2192 public/search-index.json`);
 
   console.log('Sync complete.');
 }
