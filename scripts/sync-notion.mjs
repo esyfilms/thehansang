@@ -346,7 +346,7 @@ function buildIgEmbed(url) {
   }
   return `
     <div class="article-video">
-      <iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" style="border:none;overflow:hidden;width:100%;min-height:500px;"></iframe>
+      <iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" style="border:none;overflow:hidden;width:100%;min-height:750px;"></iframe>
       <p class="article-video-caption">Watch the full video on Instagram @thehansang.sg</p>
     </div>`;
 }
@@ -546,11 +546,16 @@ function generateArticlePage(post, bodyHtml, plainText, allPosts = [], ads = [])
   // Restaurant info (reviews only)
   let restaurantInfo = '';
   if (isReview && post.restaurantAddress) {
+    const mapsQuery = encodeURIComponent(post.restaurantAddress);
+    const mapsLink = post.googleMapsUrl || `https://maps.google.com/?q=${mapsQuery}`;
     restaurantInfo = `
       <div class="info-card restaurant-info">
         <h3>Restaurant Info</h3>
+        <div class="restaurant-map">
+          <iframe src="https://maps.google.com/maps?q=${mapsQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="250" style="border:0;border-radius:8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
         <div class="info-grid">
-          ${post.restaurantAddress ? `<div class="info-item"><div class="info-label">Address</div><div class="info-value">${escapeHtml(post.restaurantAddress)}<a href="${post.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(post.restaurantAddress)}`}" target="_blank" rel="noopener" class="directions-link">Get Directions &rarr;</a></div></div>` : ''}
+          ${post.restaurantAddress ? `<div class="info-item"><div class="info-label">Address</div><div class="info-value">${escapeHtml(post.restaurantAddress)}<a href="${mapsLink}" target="_blank" rel="noopener" class="directions-link">Get Directions &rarr;</a></div></div>` : ''}
           ${post.restaurantMRT ? `<div class="info-item"><div class="info-label">MRT</div><div class="info-value">${escapeHtml(post.restaurantMRT)}</div></div>` : ''}
           ${post.restaurantHours ? `<div class="info-item"><div class="info-label">Hours</div><div class="info-value">${escapeHtml(post.restaurantHours)}</div></div>` : ''}
           ${post.priceRange ? `<div class="info-item"><div class="info-label">Price Range</div><div class="info-value">${escapeHtml(post.priceRange)} per person</div></div>` : ''}
@@ -943,8 +948,11 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     margin: 0 auto;
     width: 100%;
     max-width: 540px;
-    min-height: 500px;
+    min-height: 750px;
     border-radius: 6px;
+  }
+  .restaurant-map {
+    margin-bottom: 16px;
   }
   .article-video-caption {
     font-size: 11px;
