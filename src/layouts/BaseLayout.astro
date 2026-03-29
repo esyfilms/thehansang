@@ -28,7 +28,7 @@ try {
   const adsModule = await import('../data/ads.json');
   ads = adsModule.default || [];
 } catch(e) { ads = []; }
-const leaderboardAd = ads.find((a: any) => a.placement === 'Leaderboard 728x90' || a.placement === 'Header Leaderboard' || a.placement === 'Header Strip');
+const leaderboardAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Header Strip') : a.placement === 'Header Strip');
 
 const currentPath = Astro.url.pathname || '/';
 const activeStyle = "color:#B8432A;";

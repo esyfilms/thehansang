@@ -2,7 +2,7 @@
   {
     "sponsorName": "The Hansang",
     "displayText": "The Hansang Officially Opening Soon - Eat and Cook are live!",
-    "placement": "Header Strip",
+    "placement": ["Header Strip"],
     "linkUrl": "/",
     "bannerImages": [],
     "active": true
@@ -10,7 +10,7 @@
   {
     "sponsorName": "Korea Tourism Organization",
     "displayText": "Visit Korea Year 2025-2026. Discover the beauty of Korea.",
-    "placement": "Eat Leaderboard",
+    "placement": ["Eat Leaderboard", "Cook Leaderboard"],
     "linkUrl": "https://english.visitkorea.or.kr",
     "bannerImages": [],
     "active": true

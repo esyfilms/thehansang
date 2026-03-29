@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 let ads: any[] = [];
 try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
-const pageAd = ads.find((a: any) => a.placement === 'Travel Leaderboard');
-const inlineAd = ads.find((a: any) => a.placement === 'Category Inline');
+const pageAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Travel Leaderboard') : a.placement === 'Travel Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
 ---
 
 <BaseLayout title="Travel" description="Travel: Korea travel guides, neighbourhood itineraries, and food district maps for Singaporeans. The Hansang.">
@@ -178,7 +180,14 @@ const inlineAd = ads.find((a: any) => a.placement === 'Category Inline');
 
     <!-- Ad Rectangle -->
     <div style="padding: 14px 18px;">
-      <div class="ad-rect">Ad &middot; 300 &times; 250</div>
+      {mobileInlineAd ? (
+        <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
     </div>
 
   </div>

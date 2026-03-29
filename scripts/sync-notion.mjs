@@ -123,7 +123,7 @@ async function fetchActiveAds() {
 }
 
 function getAdHtml(ads, placement, fallback = '') {
-  const ad = ads.find(a => a.placement === placement);
+  const ad = ads.find(a => Array.isArray(a.placement) ? a.placement.includes(placement) : a.placement === placement);
   if (!ad) return fallback;
   const img = ad.bannerImages[0]
     ? `<img src="${escapeHtml(ad.bannerImages[0])}" alt="${escapeHtml(ad.sponsorName)}" style="max-width:100%;display:block;">`
