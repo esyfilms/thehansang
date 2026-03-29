@@ -500,13 +500,36 @@ function generateArticlePage(post, bodyHtml, plainText, allPosts = [], ads = [])
       </div>`;
   }
 
-  // Singapore Swaps
+  // My Pantry Affiliate Picks (replaces old Singapore Swap)
   let sgSwapBlock = '';
-  if (post.singaporeSwaps) {
+  if (post.pillar === 'Cook') {
     sgSwapBlock = `
-      <div class="sg-swap-box">
-        <div class="sg-swap-header">Singapore Swap</div>
-        <p>${escapeHtml(post.singaporeSwaps)}</p>
+      <div class="pantry-picks">
+        <div class="pantry-picks-hd">
+          <span class="pantry-picks-label">From My Pantry</span>
+          <a href="/my-pantry/" class="pantry-picks-link">View All</a>
+        </div>
+        <div class="pantry-picks-grid" id="article-pantry-picks">
+          <a class="pantry-pick" href="/my-pantry/">
+            <div class="pp-img"></div>
+            <span class="pp-badge">Essential</span>
+            <span class="pp-name">Product Placeholder</span>
+            <span class="pp-cta">Shop Now</span>
+          </a>
+          <a class="pantry-pick" href="/my-pantry/">
+            <div class="pp-img"></div>
+            <span class="pp-badge">Essential</span>
+            <span class="pp-name">Product Placeholder</span>
+            <span class="pp-cta">Shop Now</span>
+          </a>
+          <a class="pantry-pick" href="/my-pantry/">
+            <div class="pp-img"></div>
+            <span class="pp-badge">Essential</span>
+            <span class="pp-name">Product Placeholder</span>
+            <span class="pp-cta">Shop Now</span>
+          </a>
+        </div>
+        <p class="pantry-picks-note">Links may earn a small commission at no extra cost to you.</p>
       </div>`;
   }
 
@@ -979,29 +1002,20 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   }
   .directions-link:hover { text-decoration: underline; }
 
-  /* Singapore Swap box */
-  .sg-swap-box {
-    background: #EDE6DC;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 28px;
-    margin: 32px 0;
-  }
-  .sg-swap-header {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #B8432A;
-    margin-bottom: 12px;
-  }
-  .sg-swap-box p {
-    font-family: 'Source Serif 4', serif;
-    font-size: 16px;
-    line-height: 1.7;
-    margin: 0;
-  }
+  /* My Pantry Affiliate Picks */
+  .pantry-picks { border-top: 4px solid #6B4C3B; padding: 24px 0; margin: 32px 0; }
+  .pantry-picks-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .pantry-picks-label { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #1C1714; }
+  .pantry-picks-link { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: #B8432A; text-decoration: none; }
+  .pantry-picks-link:hover { text-decoration: underline; }
+  .pantry-picks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pantry-pick { text-decoration: none; color: #1C1714; display: block; border: 1px solid #eee; border-radius: 6px; overflow: hidden; transition: box-shadow 0.15s; }
+  .pantry-pick:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .pp-img { height: 120px; background: #E0D8CE; }
+  .pp-badge { display: block; font-family: 'Inter', sans-serif; font-size: 8px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #B8432A; padding: 10px 12px 0; }
+  .pp-name { display: block; font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 500; line-height: 1.3; padding: 4px 12px 0; color: #1C1714; }
+  .pp-cta { display: block; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #B8432A; padding: 8px 12px 12px; }
+  .pantry-picks-note { font-family: 'Inter', sans-serif; font-size: 10px; color: #bbb; margin-top: 12px; text-align: center; }
 
   /* Affiliate link */
   .affiliate-link {
