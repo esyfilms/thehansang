@@ -18,18 +18,18 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <div class="filters-mobile">
-      <span class="pill on">All</span>
-      <span class="pill">Meats</span>
-      <span class="pill">Soup Broth</span>
-      <span class="pill">Banchan</span>
-      <span class="pill">Hacks Tips</span>
-      <span class="pill">Noodles</span>
-      <span class="pill">Rice</span>
-      <span class="pill">Viral Trend</span>
+      <button class="pill on" onclick="filterCookMobile('all', this)">All</button>
+      <button class="pill" onclick="filterCookMobile('meats', this)">Meats</button>
+      <button class="pill" onclick="filterCookMobile('soup-broth', this)">Soup Broth</button>
+      <button class="pill" onclick="filterCookMobile('banchan', this)">Banchan</button>
+      <button class="pill" onclick="filterCookMobile('hacks-tips', this)">Hacks Tips</button>
+      <button class="pill" onclick="filterCookMobile('noodles', this)">Noodles</button>
+      <button class="pill" onclick="filterCookMobile('rice', this)">Rice</button>
+      <button class="pill" onclick="filterCookMobile('viral-trend', this)">Viral Trend</button>
     </div>
 
     <!-- Hero Card -->
-    <a href="/cook/design-preview/" class="ch1">
+    <a href="/cook/design-preview/" class="ch1" data-mcat="meats">
       <div>
         <div class="ptag">Cook &middot; Featured</div>
         <div class="ch1-title">Featured Recipe Title Placeholder</div>
@@ -40,25 +40,25 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
 
     <!-- 2x2 Grid -->
     <div class="hgrid">
-      <a href="/cook/design-preview/" class="hgc">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="meats">
         <div class="hgc-img" style="background:#E0D8CE;"></div>
         <div class="ptag">Main</div>
         <div class="hgc-title">Recipe Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/cook/design-preview/" class="hgc">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="banchan">
         <div class="hgc-img" style="background:#E0D8CE;"></div>
         <div class="ptag">Side</div>
         <div class="hgc-title">Recipe Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/cook/design-preview/" class="hgc">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="soup-broth">
         <div class="hgc-img" style="background:#E0D8CE;"></div>
         <div class="ptag">Soup</div>
         <div class="hgc-title">Recipe Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/cook/design-preview/" class="hgc">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="hacks-tips">
         <div class="hgc-img" style="background:#E0D8CE;"></div>
         <div class="ptag">Snack</div>
         <div class="hgc-title">Recipe Title Placeholder</div>
@@ -67,7 +67,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <!-- List Cards -->
-    <a href="/cook/design-preview/" class="lc">
+    <a href="/cook/design-preview/" class="lc" data-mcat="noodles">
       <div>
         <div class="ptag">Main</div>
         <div class="lc-title">Recipe Title Placeholder</div>
@@ -86,7 +86,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
     )}
 
-    <a href="/cook/design-preview/" class="lc">
+    <a href="/cook/design-preview/" class="lc" data-mcat="rice">
       <div>
         <div class="ptag">Drink</div>
         <div class="lc-title">Recipe Title Placeholder</div>
@@ -720,5 +720,19 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     });
     var info = document.querySelector('.results-info');
     if (info) info.textContent = 'Showing ' + visible + ' recipe' + (visible !== 1 ? 's' : '');
+  }
+</script>
+
+<script is:inline>
+  function filterCookMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
   }
 </script>

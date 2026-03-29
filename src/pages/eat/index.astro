@@ -17,12 +17,12 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="cat-sub">Korean restaurants, guides &amp; reviews in Singapore</div>
     </div>
     <div class="filters-mobile">
-      <span class="pill on">All</span>
-      <span class="pill">Reviews</span>
-      <span class="pill">Guides</span>
-      <span class="pill">Versus</span>
-      <span class="pill">New Openings</span>
-      <span class="pill">Upcoming</span>
+      <button class="pill on" onclick="filterEatMobile('all', this)">All</button>
+      <button class="pill" onclick="filterEatMobile('reviews', this)">Reviews</button>
+      <button class="pill" onclick="filterEatMobile('guides', this)">Guides</button>
+      <button class="pill" onclick="filterEatMobile('versus', this)">Versus</button>
+      <button class="pill" onclick="filterEatMobile('new-openings', this)">New Openings</button>
+      <button class="pill" onclick="filterEatMobile('upcoming', this)">Upcoming</button>
     </div>
     <div class="filters-2">
       <select class="fsel"><option>Any Price</option><option>$ Under $15</option><option>$$ $15-30</option><option>$$$ $30-50</option><option>$$$$ $50+</option></select>
@@ -31,7 +31,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <!-- Hero card -->
-    <a href="/eat/design-preview/" class="ch1">
+    <a href="/eat/design-preview/" class="ch1" data-mcat="reviews">
       <div>
         <div class="ptag">Review &middot; Featured</div>
         <div class="ch1-title">Featured Article Title Placeholder</div>
@@ -42,25 +42,25 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
 
     <!-- 2x2 grid -->
     <div class="hgrid">
-      <a href="/eat/design-preview/" class="hgc">
+      <a href="/eat/design-preview/" class="hgc" data-mcat="reviews">
         <div class="hgc-img" style="background:var(--stone);"></div>
         <div class="ptag">Review</div>
         <div class="hgc-title">Article Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/eat/design-preview/" class="hgc">
+      <a href="/eat/design-preview/" class="hgc" data-mcat="guides">
         <div class="hgc-img" style="background:var(--stone);"></div>
         <div class="ptag">Guide</div>
         <div class="hgc-title">Guide Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/eat/design-preview/" class="hgc">
+      <a href="/eat/design-preview/" class="hgc" data-mcat="versus">
         <div class="hgc-img" style="background:var(--stone);"></div>
         <div class="ptag">Versus</div>
         <div class="hgc-title">Comparison Title Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a href="/eat/design-preview/" class="hgc">
+      <a href="/eat/design-preview/" class="hgc" data-mcat="reviews">
         <div class="hgc-img" style="background:var(--stone);"></div>
         <div class="ptag">Review</div>
         <div class="hgc-title">Review Title Placeholder</div>
@@ -69,7 +69,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <!-- List cards -->
-    <a href="/eat/design-preview/" class="lc">
+    <a href="/eat/design-preview/" class="lc" data-mcat="new-openings">
       <div>
         <div class="ptag">New Opening</div>
         <div class="lc-title">Article Title Placeholder</div>
@@ -78,7 +78,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       </div>
       <div class="lc-img" style="background:var(--stone);"></div>
     </a>
-    <a href="/eat/design-preview/" class="lc">
+    <a href="/eat/design-preview/" class="lc" data-mcat="guides">
       <div>
         <div class="ptag">Guide</div>
         <div class="lc-title">Guide Title Placeholder</div>
@@ -927,5 +927,19 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     });
     var info = document.querySelector('.results-info');
     if (info) info.textContent = 'Showing ' + visible + ' article' + (visible !== 1 ? 's' : '');
+  }
+</script>
+
+<script is:inline>
+  function filterEatMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
   }
 </script>

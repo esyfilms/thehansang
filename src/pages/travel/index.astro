@@ -21,12 +21,12 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
 
     <!-- Filter Pills -->
     <div class="filters-mobile">
-      <button class="pill on">All</button>
-      <button class="pill">Seoul</button>
-      <button class="pill">Busan</button>
-      <button class="pill">Jeju</button>
-      <button class="pill">Day Trips</button>
-      <button class="pill">Planning</button>
+      <button class="pill on" onclick="filterTravelMobile('all', this)">All</button>
+      <button class="pill" onclick="filterTravelMobile('seoul', this)">Seoul</button>
+      <button class="pill" onclick="filterTravelMobile('busan', this)">Busan</button>
+      <button class="pill" onclick="filterTravelMobile('jeju', this)">Jeju</button>
+      <button class="pill" onclick="filterTravelMobile('day-trips', this)">Day Trips</button>
+      <button class="pill" onclick="filterTravelMobile('planning', this)">Planning</button>
     </div>
 
     <!-- Hero Card -->
@@ -720,11 +720,12 @@ function filterTravel(cat) {
   if (ad) ad.style.display = (cat === 'all') ? '' : 'none';
 }
 
-function filterTravelMobile(cat) {
-  var cards = document.querySelectorAll('.mobile-only .lc');
-  cards.forEach(function(card) {
-    if (cat === 'all' || card.dataset.mcat === cat) { card.style.display = ''; }
-    else { card.style.display = 'none'; }
+function filterTravelMobile(cat, btn) {
+  document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+  btn.classList.add('on');
+  document.querySelectorAll('.mobile-only .ch1, .mobile-only .lc, .mobile-only .kg-dest').forEach(function(c) {
+    if (cat === 'all' || c.getAttribute('data-mcat') === cat) { c.style.display = ''; }
+    else { c.style.display = 'none'; }
   });
 }
 </script>

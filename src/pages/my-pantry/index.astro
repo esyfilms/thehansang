@@ -19,17 +19,17 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <div class="filters-mobile">
-      <button class="pill on">All</button>
-      <button class="pill">Ingredients</button>
-      <button class="pill">Kitchen Accessories</button>
-      <button class="pill">Ceramics/Pottery</button>
-      <button class="pill">Pots &amp; Pans</button>
-      <button class="pill">Ramyeon</button>
-      <button class="pill">Knives &amp; Chopping Boards</button>
+      <button class="pill on" onclick="filterPantryMobile('all', this)">All</button>
+      <button class="pill" onclick="filterPantryMobile('ingredients', this)">Ingredients</button>
+      <button class="pill" onclick="filterPantryMobile('kitchen-accessories', this)">Kitchen Accessories</button>
+      <button class="pill" onclick="filterPantryMobile('ceramics-pottery', this)">Ceramics/Pottery</button>
+      <button class="pill" onclick="filterPantryMobile('pots-pans', this)">Pots &amp; Pans</button>
+      <button class="pill" onclick="filterPantryMobile('ramyeon', this)">Ramyeon</button>
+      <button class="pill" onclick="filterPantryMobile('knives-chopping-boards', this)">Knives &amp; Chopping Boards</button>
     </div>
 
     <!-- Hero card (Eric's Top Pick) -->
-    <a class="ch1" href="#">
+    <a class="ch1" href="#" data-mcat="ceramics-pottery">
       <div>
         <div class="ptag">Eric's Pick &middot; Kitchen</div>
         <div class="ch1-title">Product Placeholder</div>
@@ -40,25 +40,25 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
 
     <!-- 2x2 grid -->
     <div class="hgrid">
-      <a class="hgc" href="#">
+      <a class="hgc" href="#" data-mcat="ingredients">
         <div class="hgc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
         <div class="ptag">Ingredient</div>
         <div class="hgc-title">Product Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a class="hgc" href="#">
+      <a class="hgc" href="#" data-mcat="kitchen-accessories">
         <div class="hgc-img" style="background:linear-gradient(145deg,#4a6b5a,#2e4a3a);"></div>
         <div class="ptag">Kitchen</div>
         <div class="hgc-title">Product Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a class="hgc" href="#">
+      <a class="hgc" href="#" data-mcat="pots-pans">
         <div class="hgc-img" style="background:linear-gradient(145deg,#6b4c3b,#4a3428);"></div>
         <div class="ptag">Kitchen</div>
         <div class="hgc-title">Product Placeholder</div>
         <div class="hgc-meta">Coming Soon</div>
       </a>
-      <a class="hgc" href="#">
+      <a class="hgc" href="#" data-mcat="ramyeon">
         <div class="hgc-img" style="background:linear-gradient(145deg,#8B6914,#6b5010);"></div>
         <div class="ptag">Ingredient</div>
         <div class="hgc-title">Product Placeholder</div>
@@ -79,7 +79,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
     </div>
 
     <!-- List cards -->
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="knives-chopping-boards">
       <div>
         <div class="ptag">Instant</div>
         <div class="lc-title">Product Placeholder</div>
@@ -88,7 +88,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="ingredients">
       <div>
         <div class="ptag">Kitchen</div>
         <div class="lc-title">Product Placeholder</div>
@@ -97,7 +97,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#4a4a5a,#2a2a3a);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="ceramics-pottery">
       <div>
         <div class="ptag">Ingredient</div>
         <div class="lc-title">Product Placeholder</div>
@@ -106,7 +106,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#3a5040,#1e3028);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="kitchen-accessories">
       <div>
         <div class="ptag">Instant</div>
         <div class="lc-title">Product Placeholder</div>
@@ -115,7 +115,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="pots-pans">
       <div>
         <div class="ptag">Ingredient</div>
         <div class="lc-title">Product Placeholder</div>
@@ -124,7 +124,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#c4a882,#8b7550);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="ramyeon">
       <div>
         <div class="ptag">Kitchen</div>
         <div class="lc-title">Product Placeholder</div>
@@ -133,7 +133,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="lc-img" style="background:linear-gradient(145deg,#5a5a5a,#2a2a2a);"></div>
     </a>
 
-    <a class="lc" href="#">
+    <a class="lc" href="#" data-mcat="knives-chopping-boards">
       <div>
         <div class="ptag">Instant</div>
         <div class="lc-title">Product Placeholder</div>
@@ -770,6 +770,18 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
 </style>
 
 <script is:inline>
+  function filterPantryMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }
+
   function filterPantry(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
