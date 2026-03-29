@@ -2439,6 +2439,13 @@ async function main() {
   const activeAds = await fetchActiveAds();
   console.log(`Found ${activeAds.length} active ad(s).`);
 
+  // Write ads.json so BaseLayout can render CMS-managed ad banners
+  fs.writeFileSync(
+    path.join(dataDir, 'ads.json'),
+    JSON.stringify(activeAds, null, 2)
+  );
+  console.log(`Written: src/data/ads.json (${activeAds.length} ad(s))`);
+
   console.log('Fetching published posts from Notion...');
   const pages = await fetchPublishedPosts();
   console.log(`Found ${pages.length} published post(s).`);

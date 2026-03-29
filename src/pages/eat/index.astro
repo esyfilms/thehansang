@@ -16,6 +16,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <span class="pill">Guides</span>
       <span class="pill">Versus</span>
       <span class="pill">New Openings</span>
+      <span class="pill">Upcoming</span>
     </div>
     <div class="filters-2">
       <select class="fsel"><option>Any Price</option><option>$ Under $15</option><option>$$ $15-30</option><option>$$$ $30-50</option><option>$$$$ $50+</option></select>
@@ -192,6 +193,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <button class="filter-btn" onclick="filterEat('dessert',this)">Korean Dessert</button>
           <button class="filter-btn" onclick="filterEat('alacarte',this)">Korean A La Carte</button>
           <button class="filter-btn" onclick="filterEat('guide',this)">Guide</button>
+          <button class="filter-btn" onclick="filterEat('upcoming',this)">Upcoming Korean Restaurant</button>
         </div>
         <div class="secondary-filters">
           <select class="filter-select">
@@ -736,12 +738,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         var articles = data.filter(function(a) { return a.pillar === 'Eat'; });
         if (!articles.length) return;
 
+        // === Helper: derive data-cat from article tags/postType ===
+        function deriveCat(article) {
+          var tags = (article.tags || []).map(function(t) { return t.toLowerCase(); });
+          var pt = (article.postType || '').toLowerCase();
+          if (pt === 'guide') return 'guide';
+          if (tags.indexOf('kbbq') !== -1 || tags.indexOf('korean bbq') !== -1) return 'kbbq';
+          if (tags.indexOf('noodles') !== -1 || tags.indexOf('korean noodles') !== -1) return 'noodles';
+          if (tags.indexOf('budget') !== -1 || tags.indexOf('budget friendly') !== -1) return 'budget';
+          if (tags.indexOf('buffet') !== -1 || tags.indexOf('korean buffet') !== -1) return 'buffet';
+          if (tags.indexOf('dessert') !== -1 || tags.indexOf('korean dessert') !== -1) return 'dessert';
+          if (tags.indexOf('alacarte') !== -1 || tags.indexOf('a la carte') !== -1) return 'alacarte';
+          return pt || 'review';
+        }
+
         // === DESKTOP: article-grid cards ===
         var desktopCards = document.querySelectorAll('.desktop-only .article-grid .card');
         desktopCards.forEach(function(card, i) {
           if (i < articles.length) {
             var a = articles[i];
             card.setAttribute('href', a.url || '#');
+            card.setAttribute('data-cat', deriveCat(a));
             var img = card.querySelector('.card-img .img-placeholder');
             if (img && a.coverUrl) {
               img.style.background = "url('" + a.coverUrl + "') center/cover";

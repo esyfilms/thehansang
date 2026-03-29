@@ -23,6 +23,13 @@ const links = {
 import '../styles/global.css';
 import siteAlert from '../data/site-alert.json';
 
+let ads: any[] = [];
+try {
+  const adsModule = await import('../data/ads.json');
+  ads = adsModule.default || [];
+} catch(e) { ads = []; }
+const leaderboardAd = ads.find((a: any) => a.placement === 'Leaderboard 728x90' || a.placement === 'Header Leaderboard' || a.placement === 'Header Strip');
+
 const currentPath = Astro.url.pathname || '/';
 const activeStyle = "color:#B8432A;";
 ---
@@ -72,7 +79,19 @@ const activeStyle = "color:#B8432A;";
 
   <!-- Ad Header (hidden on mobile via global.css) -->
   <div class="ad-header">
-    <div class="ad-header-inner">Ad &middot; 728&times;90 Leaderboard</div>
+    {leaderboardAd ? (
+      leaderboardAd.bannerImages?.[0] ? (
+        <a href={leaderboardAd.linkUrl} target="_blank" rel="noopener sponsored" class="ad-header-inner" style="display:block;text-align:center;text-decoration:none;">
+          <img src={leaderboardAd.bannerImages[0]} alt={leaderboardAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+        </a>
+      ) : (
+        <a href={leaderboardAd.linkUrl} target="_blank" rel="noopener sponsored" class="ad-header-inner" style="display:block;text-align:center;text-decoration:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:400;color:#fff;background:#1C1714;padding:8px 16px;letter-spacing:0.02em;">
+          {leaderboardAd.displayText || leaderboardAd.sponsorName}
+        </a>
+      )
+    ) : (
+      <div class="ad-header-inner">Ad &middot; 728&times;90 Leaderboard</div>
+    )}
   </div>
 
   <!-- Header - Three-row editorial header -->

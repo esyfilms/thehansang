@@ -418,6 +418,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             heroImg.textContent = '';
           }
         }
+
+        // === Editor's Pick section: use second Cook article (or first Eat) ===
+        var epArticle = cookArticles.length > 1 ? cookArticles[1] : (eatArticles.length > 0 ? eatArticles[0] : null);
+        if (epArticle) {
+          var epLink = document.querySelector('.featured-banner');
+          if (epLink) {
+            epLink.setAttribute('href', epArticle.url || '#');
+            var epImg = epLink.querySelector('.featured-img .img-placeholder');
+            if (epImg && epArticle.coverUrl) {
+              epImg.style.background = "url('" + epArticle.coverUrl + "') center/cover";
+              epImg.textContent = '';
+            }
+            var epTag = epLink.querySelector('.featured-body .pillar-tag');
+            if (epTag) epTag.textContent = (epArticle.pillar || 'Cook') + ' \u00B7 ' + (epArticle.postType || 'Recipe');
+            var epH4 = epLink.querySelector('.featured-body h4');
+            if (epH4) epH4.textContent = epArticle.title || '';
+            var epP = epLink.querySelector('.featured-body p');
+            if (epP) epP.textContent = epArticle.excerpt || '';
+            var epMeta = epLink.querySelector('.featured-body .meta');
+            if (epMeta) epMeta.textContent = epArticle.date || '';
+          }
+        }
       })
       .catch(function(err) {
         console.error('Failed to load search-index.json:', err);
