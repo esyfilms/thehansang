@@ -402,13 +402,14 @@ async function extractPostData(page) {
     affiliateLink: getProperty(page, 'Affiliate Link'),
     recipeCategory: getProperty(page, 'Recipe Category') || [],
     coverImages: getProperty(page, 'Cover Image') || [],
+    videoThumbnail: getProperty(page, 'Video Thumbnail') || '',
     googleMapsUrl: getProperty(page, 'Google Maps URL') || '',
     excerpt: getProperty(page, 'Excerpt') || '',
   };
 
-  // Resolve cover URL: use first cover image, fall back to downloaded IG thumbnail
-  const igThumb = data.coverImages[0] ? null : await downloadIgThumbnail(data.videoUrl, data.slug);
-  data.coverUrl = data.coverImages[0] || igThumb || '';
+  // Resolve cover URL: 1) Cover Image file, 2) Video Thumbnail URL, 3) IG thumbnail download
+  const igThumb = (data.coverImages[0] || data.videoThumbnail) ? null : await downloadIgThumbnail(data.videoUrl, data.slug);
+  data.coverUrl = data.coverImages[0] || data.videoThumbnail || igThumb || '';
 
   return data;
 }
