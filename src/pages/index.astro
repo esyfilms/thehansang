@@ -425,11 +425,11 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           });
         }
 
-        // === From the Kitchen section: dynamically generate all cook cards ===
+        // === From the Kitchen section: show max 12 cook cards ===
         var kitchenGrid = document.querySelector('.kitchen-band .scroll-grid');
         if (kitchenGrid && cookArticles.length > 0) {
           kitchenGrid.innerHTML = '';
-          cookArticles.forEach(function(a) {
+          cookArticles.slice(0, 12).forEach(function(a) {
             var card = document.createElement('a');
             card.href = a.url || '#';
             card.className = 'card';
