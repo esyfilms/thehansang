@@ -728,6 +728,146 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   }
 </style>
 
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/search-index.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var articles = data.filter(function(a) { return a.pillar === 'Eat'; });
+        if (!articles.length) return;
+
+        // === DESKTOP: article-grid cards ===
+        var desktopCards = document.querySelectorAll('.desktop-only .article-grid .card');
+        desktopCards.forEach(function(card, i) {
+          if (i < articles.length) {
+            var a = articles[i];
+            card.setAttribute('href', a.url || '#');
+            var img = card.querySelector('.card-img .img-placeholder');
+            if (img && a.coverUrl) {
+              img.style.background = "url('" + a.coverUrl + "') center/cover";
+              img.textContent = '';
+            }
+            var tag = card.querySelector('.card-tag');
+            if (tag) tag.textContent = 'Eat \u00B7 ' + (a.postType || 'Review');
+            var h4 = card.querySelector('h4');
+            if (h4) h4.textContent = a.title || '';
+            var meta = card.querySelector('.card-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === DESKTOP: hero section ===
+        if (articles.length > 0) {
+          var hero = articles[0];
+          var heroLink = document.querySelector('.desktop-only .category-hero .container');
+          if (heroLink) heroLink.setAttribute('href', hero.url || '#');
+          var heroTag = document.querySelector('.desktop-only .category-hero-text .pillar-tag');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 Eat \u00B7 ' + (hero.postType || 'Review');
+          var heroH2 = document.querySelector('.desktop-only .category-hero-text h2');
+          if (heroH2) heroH2.textContent = hero.title || '';
+          var heroP = document.querySelector('.desktop-only .category-hero-text p');
+          if (heroP) heroP.textContent = hero.excerpt || '';
+          var heroMeta = document.querySelector('.desktop-only .category-hero-text .meta');
+          if (heroMeta) heroMeta.textContent = hero.date || '';
+          var heroImg = document.querySelector('.desktop-only .category-hero-img .img-placeholder');
+          if (heroImg && hero.coverUrl) {
+            heroImg.style.background = "url('" + hero.coverUrl + "') center/cover";
+            heroImg.textContent = '';
+          }
+        }
+
+        // === DESKTOP: guide cards ===
+        var guideArticles = articles.filter(function(a) { return a.postType === 'Guide'; });
+        var guideCards = document.querySelectorAll('.desktop-only .guide-card');
+        guideCards.forEach(function(card, i) {
+          if (i < guideArticles.length) {
+            var a = guideArticles[i];
+            card.setAttribute('href', a.url || '#');
+            var h4 = card.querySelector('h4');
+            if (h4) h4.textContent = a.title || '';
+            var img = card.querySelector('.guide-card-img .img-placeholder');
+            if (img && a.coverUrl) {
+              img.style.background = "url('" + a.coverUrl + "') center/cover";
+              img.textContent = '';
+            }
+            var tag = card.querySelector('.guide-card-tag');
+            if (tag) tag.textContent = 'Eat \u00B7 Guide';
+            var meta = card.querySelector('.guide-card-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === DESKTOP: results-info ===
+        var info = document.querySelector('.desktop-only .results-info');
+        if (info) info.textContent = 'Showing ' + articles.length + ' article' + (articles.length !== 1 ? 's' : '');
+
+        // === MOBILE: hero card (.ch1) ===
+        var mobileHero = document.querySelector('.mobile-only .ch1');
+        if (mobileHero && articles.length > 0) {
+          var mh = articles[0];
+          mobileHero.setAttribute('href', mh.url || '#');
+          var mhTag = mobileHero.querySelector('.ptag');
+          if (mhTag) mhTag.textContent = (mh.postType || 'Review') + ' \u00B7 Featured';
+          var mhTitle = mobileHero.querySelector('.ch1-title');
+          if (mhTitle) mhTitle.textContent = mh.title || '';
+          var mhMeta = mobileHero.querySelector('.ch1-meta');
+          if (mhMeta) mhMeta.textContent = mh.date || '';
+          var mhImg = mobileHero.querySelector('.ch1-img');
+          if (mhImg && mh.coverUrl) mhImg.style.background = "url('" + mh.coverUrl + "') center/cover";
+        }
+
+        // === MOBILE: 2x2 grid cards (.hgc) ===
+        var mobileGrid = document.querySelectorAll('.mobile-only .hgc');
+        mobileGrid.forEach(function(card, i) {
+          var idx = i + 1;
+          if (idx < articles.length) {
+            var a = articles[idx];
+            card.setAttribute('href', a.url || '#');
+            var img = card.querySelector('.hgc-img');
+            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
+            var tag = card.querySelector('.ptag');
+            if (tag) tag.textContent = a.postType || 'Review';
+            var title = card.querySelector('.hgc-title');
+            if (title) title.textContent = a.title || '';
+            var meta = card.querySelector('.hgc-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === MOBILE: list cards (.lc) ===
+        var mobileList = document.querySelectorAll('.mobile-only .lc');
+        mobileList.forEach(function(card, i) {
+          var idx = i + 5;
+          if (idx < articles.length) {
+            var a = articles[idx];
+            card.setAttribute('href', a.url || '#');
+            var tag = card.querySelector('.ptag');
+            if (tag) tag.textContent = a.postType || 'Review';
+            var title = card.querySelector('.lc-title');
+            if (title) title.textContent = a.title || '';
+            var sub = card.querySelector('.lc-sub');
+            if (sub) sub.textContent = a.excerpt || '';
+            var meta = card.querySelector('.lc-meta');
+            if (meta) meta.textContent = a.date || '';
+            var img = card.querySelector('.lc-img');
+            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      })
+      .catch(function(err) {
+        console.error('Failed to load search-index.json:', err);
+      });
+  });
+</script>
+
 <script>
   function filterEat(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });

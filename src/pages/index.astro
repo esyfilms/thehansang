@@ -49,9 +49,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div class="card-meta">5 min read</div>
             </a>
             <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
-              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Dolsot Garden</div></div>
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Placeholder</div></div>
               <div class="card-tag">Eat &middot; Review</div>
-              <h4>Dolsot Garden: Tanjong Pagar Gem</h4>
+              <h4>Placeholder: Tanjong Pagar Gem</h4>
               <div class="card-meta">4 min read</div>
             </a>
             <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
@@ -73,9 +73,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div class="card-meta">10 min read</div>
             </a>
             <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
-              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Goguma House</div></div>
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Placeholder</div></div>
               <div class="card-tag">Eat &middot; Review</div>
-              <h4>Goguma House Korean BBQ Buffet - Clarke Quay</h4>
+              <h4>Placeholder Korean BBQ Buffet - Clarke Quay</h4>
               <div class="card-meta">7 min read</div>
             </a>
             <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
@@ -156,9 +156,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="scroll-grid-wrap">
           <div class="scroll-grid">
             <a href="/cook/gil-gamja-korean-chewy-potato-fries/" class="card" style="text-decoration:none;color:inherit;display:block;">
-              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Dolsot Garden</div></div>
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Placeholder</div></div>
               <div class="card-tag">Cook &middot; Recipe</div>
-              <h4>Dolsot Garden: Korean Chewy Potato Fries</h4>
+              <h4>Placeholder: Korean Chewy Potato Fries</h4>
               <div class="card-meta">2 min read</div>
             </a>
             <a href="/cook/gochujang-chili-oil-noodles/" class="card" style="text-decoration:none;color:inherit;display:block;">
@@ -340,3 +340,87 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .swipe-hint { display: none; }
   }
 </style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/search-index.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var eatArticles = data.filter(function(a) { return a.pillar === 'Eat'; });
+        var cookArticles = data.filter(function(a) { return a.pillar === 'Cook'; });
+
+        // === Korean Eats section: first .scroll-grid inside .main-col ===
+        var eatGrid = document.querySelector('.main-col .scroll-grid');
+        if (eatGrid) {
+          var eatCards = eatGrid.querySelectorAll('.card');
+          eatCards.forEach(function(card, i) {
+            if (i < eatArticles.length) {
+              var a = eatArticles[i];
+              card.setAttribute('href', a.url || '#');
+              var img = card.querySelector('.card-img .img-placeholder');
+              if (img && a.coverUrl) {
+                img.style.background = "url('" + a.coverUrl + "') center/cover";
+                img.textContent = '';
+              }
+              var tag = card.querySelector('.card-tag');
+              if (tag) tag.textContent = 'Eat \u00B7 ' + (a.postType || 'Review');
+              var h4 = card.querySelector('h4');
+              if (h4) h4.textContent = a.title || '';
+              var meta = card.querySelector('.card-meta');
+              if (meta) meta.textContent = a.date || '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        // === From the Kitchen section: .kitchen-band .scroll-grid ===
+        var kitchenGrid = document.querySelector('.kitchen-band .scroll-grid');
+        if (kitchenGrid) {
+          var cookCards = kitchenGrid.querySelectorAll('.card');
+          cookCards.forEach(function(card, i) {
+            if (i < cookArticles.length) {
+              var a = cookArticles[i];
+              card.setAttribute('href', a.url || '#');
+              var img = card.querySelector('.card-img .img-placeholder');
+              if (img && a.coverUrl) {
+                img.style.background = "url('" + a.coverUrl + "') center/cover";
+                img.textContent = '';
+              }
+              var tag = card.querySelector('.card-tag');
+              if (tag) tag.textContent = 'Cook \u00B7 ' + (a.postType || 'Recipe');
+              var h4 = card.querySelector('h4');
+              if (h4) h4.textContent = a.title || '';
+              var meta = card.querySelector('.card-meta');
+              if (meta) meta.textContent = a.date || '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        // === Hero section: use first Cook article ===
+        if (cookArticles.length > 0) {
+          var hero = cookArticles[0];
+          var heroLink = document.querySelector('.hero .hero-link');
+          if (heroLink) heroLink.setAttribute('href', hero.url || '#');
+          var heroTag = document.querySelector('.hero-text .pillar-tag');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 Cook \u00B7 ' + (hero.postType || 'Recipe');
+          var heroH2 = document.querySelector('.hero-text h2');
+          if (heroH2) heroH2.textContent = hero.title || '';
+          var heroP = document.querySelector('.hero-text p');
+          if (heroP) heroP.textContent = hero.excerpt || '';
+          var heroMeta = document.querySelector('.hero-text .meta');
+          if (heroMeta) heroMeta.textContent = hero.date || '';
+          var heroImg = document.querySelector('.hero-img .img-placeholder');
+          if (heroImg && hero.coverUrl) {
+            heroImg.style.background = "url('" + hero.coverUrl + "') center/cover";
+            heroImg.textContent = '';
+          }
+        }
+      })
+      .catch(function(err) {
+        console.error('Failed to load search-index.json:', err);
+      });
+  });
+</script>
