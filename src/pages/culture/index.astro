@@ -1,0 +1,677 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const pageAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Culture Leaderboard') : a.placement === 'Culture Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
+---
+
+<BaseLayout title="Culture" description="Culture — K-drama, K-pop, beauty, language, and Korean lifestyle for Singaporeans. The Hansang.">
+
+  <!-- ========== MOBILE ========== -->
+  <div class="mobile-only">
+
+    <div class="cat-hd">
+      <div class="cat-title">Culture</div>
+      <div class="cat-sub">K-drama, K-pop, beauty, language &amp; lifestyle</div>
+    </div>
+
+    <div class="filters-mobile">
+      <button class="pill on" onclick="filterCultureMobile('all', this)">All</button>
+      <button class="pill" onclick="filterCultureMobile('k-drama', this)">K-Drama</button>
+      <button class="pill" onclick="filterCultureMobile('k-pop', this)">K-Pop</button>
+      <button class="pill" onclick="filterCultureMobile('beauty', this)">Beauty</button>
+      <button class="pill" onclick="filterCultureMobile('language', this)">Language</button>
+      <button class="pill" onclick="filterCultureMobile('food-culture', this)">Food Culture</button>
+      <button class="pill" onclick="filterCultureMobile('lifestyle', this)">Lifestyle</button>
+    </div>
+
+    <!-- Hero card -->
+    <a class="ch1" href="#" data-mcat="k-drama">
+      <div>
+        <div class="ptag">Featured &middot; Culture</div>
+        <div class="ch1-title">Article Title Placeholder</div>
+        <div class="ch1-meta">Coming Soon</div>
+      </div>
+      <div class="ch1-img" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);"></div>
+    </a>
+
+    <!-- 2x2 grid -->
+    <div class="hgrid">
+      <a class="hgc" href="#" data-mcat="k-pop">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);"></div>
+        <div class="ptag">Culture &middot; K-Drama</div>
+        <div class="hgc-title">Article Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#" data-mcat="beauty">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#8c6b7a,#6b4a5a);"></div>
+        <div class="ptag">Culture &middot; K-Pop</div>
+        <div class="hgc-title">Article Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#" data-mcat="language">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#8c8a6b,#6b6a4a);"></div>
+        <div class="ptag">Culture &middot; Beauty</div>
+        <div class="hgc-title">Article Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#" data-mcat="lifestyle">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#7a8c6b,#5a6b4a);"></div>
+        <div class="ptag">Culture &middot; Language</div>
+        <div class="hgc-title">Article Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      {mobileInlineAd ? (
+        <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
+    </div>
+
+    <!-- List cards -->
+    <a class="lc" href="#" data-mcat="k-drama">
+      <div>
+        <div class="ptag">Culture &middot; K-Drama</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="food-culture">
+      <div>
+        <div class="ptag">Culture &middot; Food Culture</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="beauty">
+      <div>
+        <div class="ptag">Culture &middot; Lifestyle</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#d4a574,#a87b52);"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="lifestyle">
+      <div>
+        <div class="ptag">Culture &middot; K-Pop</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="k-pop">
+      <div>
+        <div class="ptag">Culture &middot; Beauty</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#a08070,#806050);"></div>
+    </a>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      {mobileAd ? (
+        <a href={mobileAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
+    </div>
+
+  </div>
+
+  <!-- ========== DESKTOP ========== -->
+  <div class="desktop-only">
+
+    <!-- ===== CATEGORY TITLE BAR ===== -->
+    <section class="category-title-bar">
+      <div class="container">
+        <h1>Culture</h1>
+        <div class="title-sub">All things Korean culture: language, food history &amp; lifestyle</div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY HERO (Featured Article) ===== -->
+    <section class="category-hero">
+      <a href="/culture/" class="container" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;cursor:pointer;">
+        <div class="category-hero-text">
+          <div class="pillar-tag">Featured &middot; Culture</div>
+          <h2>Article Title Placeholder</h2>
+          <p>Description placeholder text.</p>
+          <div class="meta">Coming Soon</div>
+        </div>
+        <div class="category-hero-img">
+          <div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c 0%,#4a5a6b 50%,#2e3a4a 100%);">Featured Image</div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ===== AD SLOT 1: Leaderboard ===== -->
+    <div class="ad-leaderboard">
+      <div class="container">
+        {pageAd ? (
+          pageAd.bannerImages?.[0] ? (
+            <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner" style="display:block;text-align:center;border:none;background:none;">
+              <img src={pageAd.bannerImages[0]} alt={pageAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+            </a>
+          ) : (
+            <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner ad-brand-banner" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+              <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{pageAd.sponsorName}</span>
+              <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
+            </a>
+          )
+        ) : (
+          <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
+        )}
+      </div>
+    </div>
+
+    <!-- ===== FILTER BAR ===== -->
+    <hr class="section-divider">
+    <section class="filter-bar">
+      <div class="container">
+        <div class="filter-row">
+          <span class="filter-row-label">Filter</span>
+          <button class="filter-btn active" onclick="filterCulture('all',this)">All</button>
+          <button class="filter-btn" onclick="filterCulture('kdrama',this)">K-Drama</button>
+          <button class="filter-btn" onclick="filterCulture('kpop',this)">K-Pop</button>
+          <button class="filter-btn" onclick="filterCulture('beauty',this)">Beauty</button>
+          <button class="filter-btn" onclick="filterCulture('language',this)">Language</button>
+          <button class="filter-btn" onclick="filterCulture('foodculture',this)">Food Culture</button>
+          <button class="filter-btn" onclick="filterCulture('lifestyle',this)">Lifestyle</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ARTICLE GRID ===== -->
+    <section>
+      <div class="container">
+        <div class="results-info">Showing 9 articles</div>
+
+        <div class="article-grid">
+
+          <!-- Card 1 -->
+          <a href="article-page.html" class="card" data-cat="kdrama" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">K-Drama Locations</div></div>
+            <div class="card-tag">Culture &middot; K-Drama</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 2 -->
+          <a href="article-page.html" class="card" data-cat="kpop" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c6b7a,#6b4a5a);">BLACKPINK</div></div>
+            <div class="card-tag">Culture &middot; K-Pop</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 3 -->
+          <a href="article-page.html" class="card" data-cat="beauty" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c8a6b,#6b6a4a);">Skincare</div></div>
+            <div class="card-tag">Culture &middot; Beauty</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- ===== CULTURE DEEP DIVE BAND ===== -->
+          <div class="culture-feature-band">
+            <div class="cf-inner">
+              <div class="cf-text">
+                <div class="cf-label">Culture Deep Dive</div>
+                <div class="cf-tag">Culture &middot; K-Drama</div>
+                <h3>Article Title Placeholder</h3>
+                <p>Description placeholder text.</p>
+                <div class="cf-meta">Coming Soon</div>
+                <a href="article-page.html" class="cf-cta">Read Article &rarr;</a>
+              </div>
+              <div class="cf-img">
+                <div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c 0%,#4a5a6b 50%,#2e3a4a 100%);height:100%;min-height:300px;">Culture Feature Image</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <a href="article-page.html" class="card" data-cat="language" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6b,#5a6b4a);">Language</div></div>
+            <div class="card-tag">Culture &middot; Language</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 5 -->
+          <a href="article-page.html" class="card" data-cat="kdrama" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">Slice of Life</div></div>
+            <div class="card-tag">Culture &middot; K-Drama</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 6 -->
+          <a href="article-page.html" class="card" data-cat="foodculture" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Ramyeon</div></div>
+            <div class="card-tag">Culture &middot; Food Culture</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- AD SLOT 2: Inline ad -->
+          <div class="inline-ad">Partner &middot; 970 x 90 &middot; Inline</div>
+
+          <!-- Card 7 -->
+          <a href="article-page.html" class="card" data-cat="lifestyle" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574,#a87b52);">Convenience Store</div></div>
+            <div class="card-tag">Culture &middot; Lifestyle</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 8 -->
+          <a href="article-page.html" class="card" data-cat="kpop" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);">4th Gen K-Pop</div></div>
+            <div class="card-tag">Culture &middot; K-Pop</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- Card 9 -->
+          <a href="article-page.html" class="card" data-cat="beauty" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Glass Skin</div></div>
+            <div class="card-tag">Culture &middot; Beauty</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+        </div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">Next &rarr;</a>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ===== CATEGORY TITLE BAR ===== */
+  .category-title-bar {
+    background: #FFFFFF;
+    padding: 16px 0;
+  }
+  .category-title-bar .container {
+    background: #1C1714;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  /* ===== SECTION DIVIDERS ===== */
+  .section-divider {
+    border: none;
+    border-top: 2px solid #eee;
+    max-width: 1020px;
+    margin: 0 auto;
+  }
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== CATEGORY HERO ===== */
+  .category-hero .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    align-items: center;
+  }
+  .category-hero-img {
+    border-radius: 4px;
+    height: 320px;
+    overflow: hidden;
+  }
+  .category-hero-text .pillar-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .category-hero-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .category-hero-text p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.65;
+  }
+  .category-hero-text .meta {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* ===== IN-PAGE AD PLACEMENTS ===== */
+  .ad-leaderboard {
+    padding: 16px 0;
+    background: #FFFFFF;
+  }
+  .ad-leaderboard-inner {
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .inline-ad {
+    grid-column: 1 / -1;
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 8px 0;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar .container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .filter-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 12px;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .filter-btn:hover { color: #1C1714; }
+  .filter-btn.active {
+    color: #1C1714;
+    border-bottom: 2px solid #B8432A;
+  }
+
+  /* ===== RESULTS INFO ===== */
+  .results-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #bbb;
+    padding: 24px 0 8px;
+  }
+
+  /* ===== ARTICLE GRID ===== */
+  .article-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 48px;
+  }
+
+  /* ===== CARDS ===== */
+  .card { cursor: pointer; }
+  .card-img {
+    border-radius: 4px;
+    height: 180px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card:hover .card-img .img-placeholder { transform: scale(1.03); }
+  .card-img .img-placeholder { transition: transform 0.4s ease; }
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 6px;
+  }
+  .card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .card .card-meta {
+    font-size: 11px;
+    color: #bbb;
+  }
+
+  /* ===== PAGINATION ===== */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0 48px;
+  }
+  .pagination a, .pagination span {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .pagination a:hover {
+    color: #1C1714;
+    border-color: #1C1714;
+  }
+  .pagination .active {
+    color: #1C1714;
+    border-color: #1C1714;
+    font-weight: 500;
+  }
+  .pagination .ellipsis {
+    border: none;
+    padding: 8px 4px;
+  }
+
+  /* ===== CULTURE DEEP DIVE BAND ===== */
+  .culture-feature-band {
+    grid-column: 1 / -1;
+    background: #1C1714;
+    border-radius: 3px;
+    padding: 0;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .culture-feature-band .cf-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  .cf-text {
+    padding: 48px 48px 48px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cf-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
+  .cf-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .cf-text h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #FFFFFF;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .cf-text p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .cf-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 20px;
+  }
+  .cf-cta {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.35);
+    padding-bottom: 2px;
+    align-self: flex-start;
+  }
+  .cf-img {
+    min-height: 300px;
+    overflow: hidden;
+  }
+  .cf-img .img-placeholder {
+    height: 100%;
+    min-height: 300px;
+  }
+</style>
+
+<script is:inline>
+  function filterCultureMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }
+
+  function filterCulture(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var cards = document.querySelectorAll('.card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    var info = document.querySelector('.results-info');
+    if (info) info.textContent = 'Showing ' + visible + ' article' + (visible !== 1 ? 's' : '');
+  }
+</script>

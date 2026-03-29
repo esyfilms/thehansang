@@ -1,0 +1,729 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const pageAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Travel Leaderboard') : a.placement === 'Travel Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
+---
+
+<BaseLayout title="Travel" description="Travel: Korea travel guides, neighbourhood itineraries, and food district maps for Singaporeans. The Hansang.">
+
+  <!-- ==================== MOBILE LAYOUT ==================== -->
+  <div class="mobile-only">
+
+    <!-- Category Header -->
+    <div class="cat-hd">
+      <div class="cat-title">Travel</div>
+      <div class="cat-sub">Korea travel guides written for Singaporeans</div>
+    </div>
+
+    <!-- Hero Card -->
+    <a class="ch1" href="/travel/seoul-5-days/">
+      <div>
+        <div class="ptag">Featured &middot; Travel</div>
+        <div class="ch1-title">Article Title Placeholder</div>
+        <div class="ch1-meta">Coming Soon</div>
+      </div>
+      <div class="ch1-img" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 50%,#1e3028 100%);"></div>
+    </a>
+
+    <!-- Korea Guides Section (cards = filters) -->
+    <div class="sh"><span class="sh-lbl">Korea Guides</span><a class="sh-lnk" href="#" onclick="filterTravelGuides('all'); return false;">Show All</a></div>
+
+    <div class="kg-scroll">
+      <!-- Seoul Eats -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-eats')" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);cursor:pointer;">
+        <div class="kg-dest-hd">
+          <div class="kg-dest-lbl">The Hansang Korea Guide</div>
+          <div class="kg-dest-rule"></div>
+          <div class="kg-dest-name">Seoul Eats</div>
+          <div class="kg-dest-desc">Best dishes, restaurants &amp; hidden eats in the city</div>
+        </div>
+        <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
+        <div class="kg-dest-ft">
+          <span class="kg-dest-cta">Explore &rarr;</span>
+          <span class="kg-dest-cnt">12 articles</span>
+        </div>
+      </div>
+
+      <!-- Seoul Cafe -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-cafe')" style="background:linear-gradient(145deg,#c4a882 0%,#8b7550 60%,#5a4a30 100%);cursor:pointer;">
+        <div class="kg-dest-hd">
+          <div class="kg-dest-lbl">The Hansang Korea Guide</div>
+          <div class="kg-dest-rule"></div>
+          <div class="kg-dest-name">Seoul Cafe</div>
+          <div class="kg-dest-desc">Coffee culture, themed cafes &amp; the best bingsu spots</div>
+        </div>
+        <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
+        <div class="kg-dest-ft">
+          <span class="kg-dest-cta">Explore &rarr;</span>
+          <span class="kg-dest-cnt">8 articles</span>
+        </div>
+      </div>
+
+      <!-- Seoul Visit -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-visit')" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 60%,#1e3028 100%);cursor:pointer;">
+        <div class="kg-dest-hd">
+          <div class="kg-dest-lbl">The Hansang Korea Guide</div>
+          <div class="kg-dest-rule"></div>
+          <div class="kg-dest-name">Seoul Visit</div>
+          <div class="kg-dest-desc">Neighbourhoods, temples &amp; the spots every visitor needs</div>
+        </div>
+        <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
+        <div class="kg-dest-ft">
+          <span class="kg-dest-cta">Explore &rarr;</span>
+          <span class="kg-dest-cnt">10 articles</span>
+        </div>
+      </div>
+
+      <!-- Seoul Shops -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-shops')" style="background:linear-gradient(145deg,#6b5a8c 0%,#4a3a6b 60%,#2e2448 100%);cursor:pointer;">
+        <div class="kg-dest-hd">
+          <div class="kg-dest-lbl">The Hansang Korea Guide</div>
+          <div class="kg-dest-rule"></div>
+          <div class="kg-dest-name">Seoul Shops</div>
+          <div class="kg-dest-desc">Street markets, Dongdaemun, local brands &amp; K-beauty hauls</div>
+        </div>
+        <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
+        <div class="kg-dest-ft">
+          <span class="kg-dest-cta">Explore &rarr;</span>
+          <span class="kg-dest-cnt">7 articles</span>
+        </div>
+      </div>
+
+      <!-- Seoul Nights -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-nights')" style="background:linear-gradient(145deg,#8c6b4a 0%,#6b4a2e 60%,#4a2e18 100%);cursor:pointer;">
+        <div class="kg-dest-hd">
+          <div class="kg-dest-lbl">The Hansang Korea Guide</div>
+          <div class="kg-dest-rule"></div>
+          <div class="kg-dest-name">Seoul Nights</div>
+          <div class="kg-dest-desc">Eric's personal picks: the places he keeps going back to</div>
+        </div>
+        <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
+        <div class="kg-dest-ft">
+          <span class="kg-dest-cta">Explore &rarr;</span>
+          <span class="kg-dest-cnt">9 articles</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest Section -->
+    <div class="sh"><span class="sh-lbl">Latest</span></div>
+    <div class="latest-rule"></div>
+
+    <!-- List Cards -->
+    <a class="lc" href="#" data-mcat="seoul-eats">
+      <div>
+        <div class="ptag">Travel &middot; Guide</div>
+        <div class="lc-title">Guide Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="seoul-cafe">
+      <div>
+        <div class="ptag">Travel &middot; Itinerary</div>
+        <div class="lc-title">Itinerary Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="seoul-visit">
+      <div>
+        <div class="ptag">Travel &middot; Food Map</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="seoul-shops">
+      <div>
+        <div class="ptag">Travel &middot; Guide</div>
+        <div class="lc-title">Guide Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="seoul-nights">
+      <div>
+        <div class="ptag">Travel &middot; Tips</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <a class="lc" href="#" data-mcat="seoul-eats">
+      <div>
+        <div class="ptag">Travel &middot; Itinerary</div>
+        <div class="lc-title">Itinerary Title Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <!-- Ad Rectangle -->
+    <div style="padding: 14px 18px;">
+      {mobileInlineAd ? (
+        <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
+    </div>
+
+  </div>
+
+  <!-- ==================== DESKTOP LAYOUT ==================== -->
+  <div class="desktop-only">
+
+  <!-- Category Title Bar (Monocle dark band) -->
+  <section class="category-title-bar">
+    <div class="dt-container">
+      <h1>Travel</h1>
+      <div class="title-sub">Korea travel guides written for Singaporeans</div>
+    </div>
+  </section>
+
+  <!-- Category Hero (Featured Article) -->
+  <section class="category-hero">
+    <a href="/travel/seoul-5-days/" class="dt-container" style="text-decoration:none;color:inherit;cursor:pointer;">
+      <div class="category-hero-text">
+        <div class="pillar-tag">Featured &middot; Travel</div>
+        <h2>Article Title Placeholder</h2>
+        <p>Description placeholder text.</p>
+        <div class="meta">Coming Soon</div>
+      </div>
+      <div class="category-hero-img">
+        <div class="img-placeholder" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 50%,#1e3028 100%);">Featured Image</div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Ad Leaderboard -->
+  <div class="ad-leaderboard">
+    <div class="dt-container">
+      {pageAd ? (
+        pageAd.bannerImages?.[0] ? (
+          <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner" style="display:block;text-align:center;border:none;background:none;">
+            <img src={pageAd.bannerImages[0]} alt={pageAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+          </a>
+        ) : (
+          <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner ad-brand-banner" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{pageAd.sponsorName}</span>
+            <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
+          </a>
+        )
+      ) : (
+        <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
+      )}
+    </div>
+  </div>
+
+  <!-- Korea Guide Destination Cards -->
+  <section class="korea-guide-section">
+    <div class="dt-container">
+      <div class="korea-guide-header">
+        <div>
+          <div class="korea-guide-header-title">Travel &middot; Korea Guides</div>
+          <div class="korea-guide-header-sub">Explore Seoul</div>
+        </div>
+        <a href="#" class="korea-guide-more" onclick="filterTravel('all'); return false;">Show All</a>
+      </div>
+
+      <div class="korea-guide-grid">
+
+        <!-- CARD 1: Seoul Eats -->
+        <a href="/travel/seoul-eats/" class="korea-guide-card">
+          <div class="kg-header">
+            <div class="kg-label">The Hansang Korea Guide</div>
+            <div class="kg-divider"></div>
+            <h4>Seoul Eats</h4>
+            <p class="kg-desc">Best dishes, restaurants &amp; hidden eats in the city</p>
+          </div>
+          <div class="kg-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);">Seoul Eats</div>
+          </div>
+          <div class="kg-footer">
+            <span class="kg-cta">Explore &rarr;</span>
+            <span class="kg-count">12 articles</span>
+          </div>
+        </a>
+
+        <!-- CARD 2: Seoul Cafe -->
+        <a href="/travel/seoul-cafe/" class="korea-guide-card">
+          <div class="kg-header">
+            <div class="kg-label">The Hansang Korea Guide</div>
+            <div class="kg-divider"></div>
+            <h4>Seoul Cafe</h4>
+            <p class="kg-desc">Coffee culture, themed cafes &amp; the best bingsu spots</p>
+          </div>
+          <div class="kg-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#c4a882 0%,#8b7550 60%,#5a4a30 100%);">Seoul Cafe</div>
+          </div>
+          <div class="kg-footer">
+            <span class="kg-cta">Explore &rarr;</span>
+            <span class="kg-count">8 articles</span>
+          </div>
+        </a>
+
+        <!-- CARD 3: Seoul Visit -->
+        <a href="/travel/seoul-visit/" class="korea-guide-card">
+          <div class="kg-header">
+            <div class="kg-label">The Hansang Korea Guide</div>
+            <div class="kg-divider"></div>
+            <h4>Seoul Visit</h4>
+            <p class="kg-desc">Neighbourhoods, temples &amp; the spots every visitor needs</p>
+          </div>
+          <div class="kg-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 60%,#1e3028 100%);">Seoul Visit</div>
+          </div>
+          <div class="kg-footer">
+            <span class="kg-cta">Explore &rarr;</span>
+            <span class="kg-count">10 articles</span>
+          </div>
+        </a>
+
+        <!-- CARD 4: Seoul Shops -->
+        <a href="/travel/seoul-shops/" class="korea-guide-card">
+          <div class="kg-header">
+            <div class="kg-label">The Hansang Korea Guide</div>
+            <div class="kg-divider"></div>
+            <h4>Seoul Shops</h4>
+            <p class="kg-desc">Street markets, Dongdaemun, local brands &amp; K-beauty hauls</p>
+          </div>
+          <div class="kg-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a8c 0%,#4a3a6b 60%,#2e2448 100%);">Seoul Shops</div>
+          </div>
+          <div class="kg-footer">
+            <span class="kg-cta">Explore &rarr;</span>
+            <span class="kg-count">7 articles</span>
+          </div>
+        </a>
+
+        <!-- CARD 5: Seoul Recommendation -->
+        <a href="/travel/seoul-nights/" class="korea-guide-card">
+          <div class="kg-header">
+            <div class="kg-label">The Hansang Korea Guide</div>
+            <div class="kg-divider"></div>
+            <h4>Seoul Recommendation</h4>
+            <p class="kg-desc">Eric's personal picks: the places he keeps going back to</p>
+          </div>
+          <div class="kg-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#8c6b4a 0%,#6b4a2e 60%,#4a2e18 100%);">Seoul Recs</div>
+          </div>
+          <div class="kg-footer">
+            <span class="kg-cta">Explore &rarr;</span>
+            <span class="kg-count">9 articles</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Divider -->
+  <hr class="section-divider">
+
+  <!-- Results Info -->
+  <div class="container"><div class="results-info" id="results-count">Showing 9 articles</div></div>
+
+  <!-- Article Grid -->
+  <section class="dt-container">
+    <div class="article-grid">
+
+      <a href="#" class="card" data-cat="seoul-eats" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-cafe" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4a882,#8b7550);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-visit" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#4a6b5a,#2e4a3a);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <!-- Inline Ad -->
+      <div class="inline-ad">Partner &middot; 728 x 90 &middot; Leaderboard</div>
+
+      <a href="#" class="card" data-cat="seoul-eats" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-cafe" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4a882,#8b7550);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-visit" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#4a6b5a,#2e4a3a);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-shops" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a8c,#4a3a6b);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-nights" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c6b4a,#6b4a2e);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+      <a href="#" class="card" data-cat="seoul-eats" style="text-decoration:none;color:inherit;">
+        <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Photo</div></div>
+        <div class="card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="card-meta">Coming Soon</div>
+      </a>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <span class="active">1</span>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <span class="ellipsis">...</span>
+      <a href="#">Next &rarr;</a>
+    </div>
+  </section>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ===== DESKTOP CONTENT CONTAINER ===== */
+  .dt-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== CATEGORY TITLE BAR (Monocle dark band) ===== */
+  .category-title-bar {
+    background: #FFFFFF;
+    padding: 16px 0;
+  }
+  .category-title-bar .dt-container {
+    background: var(--ink);
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  /* ===== CATEGORY HERO (featured article) ===== */
+  .category-hero .dt-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    align-items: center;
+  }
+  .category-hero-img {
+    border-radius: 4px;
+    height: 320px;
+    overflow: hidden;
+  }
+  .category-hero-text .pillar-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 14px;
+  }
+  .category-hero-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .category-hero-text p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.65;
+  }
+  .category-hero-text .meta {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* ===== AD LEADERBOARD ===== */
+  .ad-leaderboard {
+    padding: 16px 0;
+    background: #FFFFFF;
+  }
+  .ad-leaderboard-inner {
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ===== KOREA GUIDE SECTION HEADER ===== */
+  .korea-guide-section {
+    padding: 48px 0;
+  }
+  .korea-guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+  }
+  .korea-guide-header-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .korea-guide-header-sub {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-top: 6px;
+  }
+  .korea-guide-more {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ember);
+    text-decoration: none;
+  }
+
+  /* ===== KOREA GUIDE CARDS (6-col grid: 3 top, 2 centered bottom) ===== */
+  .korea-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 24px;
+    padding-bottom: 48px;
+  }
+  .korea-guide-card {
+    grid-column: span 2;
+    background: #6B8C7A;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    text-decoration: none;
+    border-radius: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .korea-guide-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  }
+  .korea-guide-card:nth-child(4) { grid-column: 2 / 4; }
+  .korea-guide-card:nth-child(5) { grid-column: 4 / 6; }
+  .kg-header {
+    padding: 20px 20px 16px;
+    flex-shrink: 0;
+  }
+  .kg-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 10px;
+  }
+  .kg-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.25);
+    margin-bottom: 13px;
+  }
+  .kg-header h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .kg-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 3em;
+  }
+  .kg-img {
+    height: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+  .kg-img .img-placeholder {
+    width: 100%;
+    height: 100%;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .kg-footer {
+    padding: 13px 20px;
+    background: rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    margin-top: auto;
+    border-radius: 0 0 14px 14px;
+  }
+  .kg-cta {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+  }
+  .kg-count {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ===== ARTICLE GRID & FILTERS ===== */
+  .section-divider { border: none; border-top: 2px solid #eee; max-width: 1020px; margin: 0 auto; }
+  .results-info { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; padding: 24px 0 8px; max-width: 1020px; margin: 0 auto; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .article-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding-bottom: 48px; }
+  .card { cursor: pointer; text-decoration: none; color: inherit; }
+  .card-img { border-radius: 4px; height: 180px; margin-bottom: 12px; overflow: hidden; }
+  .card-img .img-placeholder { transition: transform 0.4s ease; }
+  .card:hover .card-img .img-placeholder { transform: scale(1.03); }
+  .card-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8432A; margin-bottom: 6px; }
+  .card h4 { font-family: 'Source Serif 4', serif; font-size: 17px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 6px; }
+  .card .card-meta { font-size: 11px; color: #bbb; }
+  .inline-ad { grid-column: 1 / -1; height: 90px; border: 1px dashed #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin: 8px 0; }
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px 0 48px; }
+  .pagination a, .pagination span { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #999; text-decoration: none; padding: 8px 14px; border: 1px solid #eee; border-radius: 4px; transition: all 0.2s; }
+  .pagination a:hover { color: #1C1714; border-color: #1C1714; }
+  .pagination .active { color: #1C1714; border-color: #1C1714; font-weight: 500; }
+  .pagination .ellipsis { border: none; padding: 8px 4px; }
+  .korea-guide-card.active { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); outline: 2px solid #B8432A; }
+</style>
+
+<script is:inline>
+function filterTravel(cat) {
+  // Highlight active guide card
+  document.querySelectorAll('.korea-guide-card').forEach(function(c) { c.classList.remove('active'); });
+  if (cat !== 'all' && event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+  // Filter article grid
+  var cards = document.querySelectorAll('.article-grid .card');
+  var visible = 0;
+  cards.forEach(function(card) {
+    if (cat === 'all' || card.dataset.cat === cat) { card.style.display = ''; visible++; }
+    else { card.style.display = 'none'; }
+  });
+  var el = document.getElementById('results-count');
+  if (el) el.textContent = 'Showing ' + visible + ' article' + (visible !== 1 ? 's' : '');
+  // Scroll to grid
+  var grid = document.querySelector('.article-grid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Hide inline ad when filtered
+  var ad = document.querySelector('.inline-ad');
+  if (ad) ad.style.display = (cat === 'all') ? '' : 'none';
+}
+
+function filterTravelGuides(cat) {
+  // Highlight active guide card
+  document.querySelectorAll('.mobile-only .kg-dest').forEach(function(c) { c.style.outline = ''; c.style.opacity = ''; });
+  if (cat !== 'all' && event && event.currentTarget && event.currentTarget.classList.contains('kg-dest')) {
+    event.currentTarget.style.outline = '2px solid #B8432A';
+    // Dim other cards
+    document.querySelectorAll('.mobile-only .kg-dest').forEach(function(c) {
+      if (c !== event.currentTarget) c.style.opacity = '0.5';
+    });
+  }
+  // Filter list cards below
+  document.querySelectorAll('.mobile-only .lc').forEach(function(c) {
+    if (cat === 'all' || c.getAttribute('data-mcat') === cat) { c.style.display = ''; }
+    else { c.style.display = 'none'; }
+  });
+}
+</script>

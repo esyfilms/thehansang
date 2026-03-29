@@ -1,0 +1,839 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const pageAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Directory Leaderboard') : a.placement === 'Directory Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
+---
+
+<BaseLayout title="Directory" description="Korean restaurants, cafes, marts, and businesses in Singapore. The Hansang.">
+
+  <!-- ========== MOBILE ========== -->
+  <div class="mobile-only">
+
+    <div class="cat-hd">
+      <div class="cat-title">Directory</div>
+      <div class="cat-sub">Korean restaurants, marts &amp; businesses in Singapore</div>
+    </div>
+
+    <div class="filters-mobile">
+      <button class="pill on" onclick="filterDirMobile('all', this)">All</button>
+      <button class="pill" onclick="filterDirMobile('restaurants', this)">Restaurants</button>
+      <button class="pill" onclick="filterDirMobile('korean-marts', this)">Korean Marts</button>
+      <button class="pill" onclick="filterDirMobile('butchery', this)">Butchery</button>
+      <button class="pill" onclick="filterDirMobile('bakery', this)">Bakery</button>
+      <button class="pill" onclick="filterDirMobile('online-shops', this)">Online Shops</button>
+    </div>
+
+    <!-- Map -->
+    <div class="map-wrap-mobile"><div id="hansang-map-mobile" style="width:100%;height:220px;"></div></div>
+
+    <!-- Directory cards -->
+    <a class="dc" href="#" data-mcat="restaurants">
+      <div>
+        <div class="dc-type">Restaurant</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="restaurants">
+      <div>
+        <div class="dc-type">Restaurant</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#4a3a2a,#2e2418);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="restaurants">
+      <div>
+        <div class="dc-type">Restaurant</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#3a4a5a,#2a3a4a);"></div>
+    </a>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      {mobileInlineAd ? (
+        <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
+    </div>
+
+    <a class="dc" href="#" data-mcat="korean-marts">
+      <div>
+        <div class="dc-type">Korean Mart</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#6B4C3B,#4a3428);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="korean-marts">
+      <div>
+        <div class="dc-type">Korean Mart</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#5a4030,#3a2818);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="butchery">
+      <div>
+        <div class="dc-type">Butchery</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#3a5040,#2a3a2e);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="bakery">
+      <div>
+        <div class="dc-type">Bakery</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#8B6914,#6b5010);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="online-shops">
+      <div>
+        <div class="dc-type">Online Shop</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#3a5080,#2a3860);"></div>
+    </a>
+
+    <a class="dc" href="#" data-mcat="restaurants">
+      <div>
+        <div class="dc-type">Restaurant</div>
+        <div class="dc-name">Listing Placeholder</div>
+        <div class="dc-loc">Address placeholder</div>
+      </div>
+      <div class="dc-img" style="background:linear-gradient(145deg,#6b4a3a,#4a3028);"></div>
+    </a>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      {mobileAd ? (
+        <a href={mobileAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+          <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileAd.sponsorName}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileAd.displayText}</span>
+        </a>
+      ) : (
+        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+      )}
+    </div>
+
+  </div>
+
+  <!-- ========== DESKTOP ========== -->
+  <div class="desktop-only">
+
+    <!-- ===== CATEGORY TITLE BAR ===== -->
+    <section class="category-title-bar">
+      <div class="container">
+        <h1>Directory</h1>
+        <div class="title-sub">Curated list of Korean restaurants, marts &amp; more in Singapore</div>
+      </div>
+    </section>
+
+    <!-- ===== MAP SECTION ===== -->
+    <section class="map-section">
+      <div class="container">
+        <h2>Find Korean Spots Near You</h2>
+        <p class="map-sub">Tap a pin to explore, or filter by category below</p>
+        <div id="hansang-map"></div>
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#B8432A;"></div>
+            Restaurants
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#6B4C3B;"></div>
+            Korean Marts
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#4a7060;"></div>
+            Butchery
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#8B6914;"></div>
+            Bakery
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#3a5080;"></div>
+            Online Shops
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FILTER BAR ===== -->
+    <hr class="section-divider">
+    <section class="filter-bar">
+      <div class="container">
+        <div class="filter-row">
+          <span class="filter-row-label">Filter</span>
+          <button class="filter-btn active" onclick="filterDir('all', this)">All</button>
+          <button class="filter-btn" onclick="filterDir('restaurant', this)">Restaurants</button>
+          <button class="filter-btn" onclick="filterDir('mart', this)">Korean Marts</button>
+          <button class="filter-btn" onclick="filterDir('butchery', this)">Butchery</button>
+          <button class="filter-btn" onclick="filterDir('bakery', this)">Bakery</button>
+          <button class="filter-btn" onclick="filterDir('online', this)">Online Shops</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DIRECTORY GRID ===== -->
+    <section class="filter-section">
+      <div class="container">
+        <div class="results-info" id="results-count">Showing 9 listings</div>
+
+        <div class="directory-grid" id="dir-grid">
+
+          <!-- CARD 1 -->
+          <div class="biz-card" data-cat="restaurant">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-restaurant">Restaurant</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+              <span class="biz-halal">Halal Certified</span>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Bugis MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 2 -->
+          <div class="biz-card" data-cat="restaurant">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#4a3a2a 0%,#2e2418 60%,#1e180e 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-restaurant">Restaurant</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Tanjong Pagar MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 3 -->
+          <div class="biz-card" data-cat="restaurant">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#3a4a5a 0%,#2a3a4a 60%,#1a2a3a 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-restaurant">Restaurant</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Telok Ayer MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- AD SLOT between row 1 and row 2 -->
+          {pageAd ? (
+            pageAd.bannerImages?.[0] ? (
+              <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="inline-ad" id="dir-inline-ad" style="display:block;text-align:center;border:none;background:none;">
+                <img src={pageAd.bannerImages[0]} alt={pageAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+              </a>
+            ) : (
+              <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="inline-ad" id="dir-inline-ad" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+                <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{pageAd.sponsorName}</span>
+                <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
+              </a>
+            )
+          ) : (
+            <div class="inline-ad" id="dir-inline-ad">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
+          )}
+
+          <!-- CARD 4 -->
+          <div class="biz-card" data-cat="mart">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#6B4C3B 0%,#4a3428 60%,#2e1e14 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-mart">Korean Mart</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Orchard MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 5 -->
+          <div class="biz-card" data-cat="mart">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#5a4030 0%,#3a2818 60%,#2a180a 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-mart">Korean Mart</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Jurong East MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 6 -->
+          <div class="biz-card" data-cat="butchery">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#3a5040 0%,#2a3a2e 60%,#1a2a1e 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-butchery">Butchery</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Queenstown MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 7 -->
+          <div class="biz-card" data-cat="bakery">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#8B6914 0%,#6b5010 60%,#4a3808 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-bakery">Bakery</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Dhoby Ghaut MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 8 -->
+          <div class="biz-card" data-cat="online">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#3a5080 0%,#2a3860 60%,#1a2840 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-online">Online Shop</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                Website placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Ships islandwide</span>
+              <a class="biz-link" href="#" target="_blank">Visit Site &rarr;</a>
+            </div>
+          </div>
+
+          <!-- CARD 9 -->
+          <div class="biz-card" data-cat="restaurant">
+            <div class="biz-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#6b4a3a 0%,#4a3028 60%,#2e1e18 100%);">Photo</div>
+            </div>
+            <div class="biz-card-body">
+              <span class="biz-cat-badge badge-restaurant">Restaurant</span>
+              <h4>Listing Placeholder</h4>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address placeholder
+              </div>
+              <div class="biz-meta-row">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Hours placeholder
+              </div>
+            </div>
+            <div class="biz-card-footer">
+              <span class="biz-mrt">Clarke Quay MRT</span>
+              <a class="biz-link" href="#" target="_blank">View on Map &rarr;</a>
+            </div>
+          </div>
+
+        </div><!-- /directory-grid -->
+
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <span class="ellipsis">&hellip;</span>
+          <a href="#">5</a>
+          <a href="#">Next &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ===== CATEGORY TITLE BAR ===== */
+  .category-title-bar { background: #FFFFFF; padding: 16px 0; }
+  .category-title-bar .container { background: #1C1714; padding-top: 28px; padding-bottom: 28px; }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  /* ===== MAP SECTION ===== */
+  .map-section { padding: 32px 0 0; }
+  .map-section .container { position: relative; }
+  .map-section h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #1C1714;
+    margin-bottom: 6px;
+  }
+  .map-section .map-sub {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  #hansang-map {
+    width: 100%;
+    height: 440px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    z-index: 1;
+  }
+  .map-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #888;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-divider { border: none; border-top: 2px solid #eee; max-width: 1020px; margin: 0 auto; }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar { padding: 24px 0 0; }
+  .filter-bar .container { border-bottom: 1px solid #eee; padding-bottom: 16px; }
+  .filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .filter-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 12px;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .filter-btn:hover { color: #1C1714; }
+  .filter-btn.active { color: #1C1714; border-bottom: 2px solid #B8432A; }
+
+  /* ===== RESULTS INFO ===== */
+  .results-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #bbb;
+    padding: 24px 0 8px;
+  }
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.4s ease;
+  }
+
+  /* ===== DIRECTORY GRID ===== */
+  .directory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 56px;
+  }
+
+  /* ===== BUSINESS CARD ===== */
+  .biz-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .biz-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.08); border-color: #ddd; }
+  .biz-card-img {
+    height: 160px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .biz-card:hover .biz-card-img .img-placeholder { transform: scale(1.03); }
+  .biz-card-body { padding: 18px 18px 14px; flex: 1; }
+  .biz-cat-badge {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+  .badge-restaurant { background: #fdf0ed; color: #B8432A; }
+  .badge-mart { background: #f0ebe6; color: #6B4C3B; }
+  .badge-butchery { background: #f0f4f2; color: #4a7060; }
+  .badge-bakery { background: #f5f0e8; color: #8B6914; }
+  .badge-online { background: #eef0f8; color: #3a5080; }
+
+  .biz-card-body h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .biz-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+  .biz-meta-row svg { flex-shrink: 0; opacity: 0.5; }
+  .biz-halal {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4a7060;
+    border: 1px solid #4a7060;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 8px;
+  }
+  .biz-card-footer {
+    padding: 12px 18px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .biz-card-footer .biz-mrt {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+  .biz-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184,67,42,0.3);
+    padding-bottom: 1px;
+  }
+
+  /* ===== INLINE AD ===== */
+  .inline-ad {
+    grid-column: 1 / -1;
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 8px 0;
+  }
+
+  /* ===== LEAFLET CUSTOM PINS ===== */
+  .map-pin {
+    width: 28px;
+    height: 28px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    cursor: pointer;
+  }
+  .leaflet-popup-content-wrapper {
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+  }
+  .popup-name { font-family: 'Source Serif 4', serif; font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .popup-cat { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8432A; margin-bottom: 6px; }
+  .popup-addr { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .popup-mrt { font-size: 10px; color: #bbb; letter-spacing: 0.08em; text-transform: uppercase; }
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px 0 48px; }
+  .pagination a, .pagination span { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #999; text-decoration: none; padding: 8px 14px; border: 1px solid #eee; border-radius: 4px; transition: all 0.2s; }
+  .pagination a:hover { color: #1C1714; border-color: #1C1714; }
+  .pagination .active { color: #1C1714; border-color: #1C1714; font-weight: 500; }
+  .pagination .ellipsis { border: none; padding: 8px 4px; }
+</style>
+
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mobile map
+    var mobileEl = document.getElementById('hansang-map-mobile');
+    if (mobileEl && mobileEl.offsetParent !== null) {
+      var mapMobile = L.map('hansang-map-mobile', { zoomControl: true, scrollWheelZoom: false }).setView([1.3521, 103.8198], 11);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(mapMobile);
+    }
+
+    // Desktop map
+    var desktopEl = document.getElementById('hansang-map');
+    if (desktopEl && desktopEl.offsetParent !== null) {
+      var map = L.map('hansang-map', { zoomControl: true, scrollWheelZoom: false }).setView([1.3521, 103.8198], 12);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      // Category colours
+      var catColors = {
+        restaurant: '#B8432A',
+        mart:       '#6B4C3B',
+        butchery:   '#4a7060',
+        bakery:     '#8B6914',
+        online:     '#3a5080'
+      };
+
+      // Custom pin icon factory
+      function makePin(color) {
+        return L.divIcon({
+          className: '',
+          html: '<div style="width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:' + color + ';border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+          iconSize: [22, 22],
+          iconAnchor: [11, 22],
+          popupAnchor: [0, -24]
+        });
+      }
+
+      // Business data
+      var businesses = [
+        { name: 'Jinjja Chicken',          cat: 'restaurant', lat: 1.3007, lng: 103.8558, addr: '201 Victoria St, Bugis+',            mrt: 'Bugis MRT'          },
+        { name: 'Don Dae Bak Korean BBQ',  cat: 'restaurant', lat: 1.2762, lng: 103.8435, addr: '5 Wallich St, Tanjong Pagar City Mall', mrt: 'Tanjong Pagar MRT' },
+        { name: 'The Banchan Story',       cat: 'restaurant', lat: 1.2816, lng: 103.8474, addr: '3 Pickering St, China Square',       mrt: 'Telok Ayer MRT'     },
+        { name: 'Hanahreum Supermarket',   cat: 'mart',       lat: 1.3040, lng: 103.8318, addr: '304 Orchard Rd, Lucky Plaza',        mrt: 'Orchard MRT'        },
+        { name: 'Seoul Mart',              cat: 'mart',       lat: 1.3330, lng: 103.7437, addr: '1 Jurong West Central 2, Jurong Point', mrt: 'Jurong East MRT'  },
+        { name: 'Korean Butcher SG',       cat: 'butchery',   lat: 1.2894, lng: 103.8178, addr: 'Blk 159 Bukit Merah Central',       mrt: 'Queenstown MRT'     },
+        { name: 'Paris Baguette Singapore',cat: 'bakery',     lat: 1.2998, lng: 103.8453, addr: '68 Orchard Rd, Plaza Singapura',    mrt: 'Dhoby Ghaut MRT'   },
+        { name: 'Bornga Korean BBQ',       cat: 'restaurant', lat: 1.2890, lng: 103.8372, addr: '11 Unity St, Robertson Walk',       mrt: 'Clarke Quay MRT'   }
+      ];
+
+      // Render all pins
+      var allMarkers = [];
+      businesses.forEach(function(b) {
+        if (b.cat === 'online') return;
+        var marker = L.marker([b.lat, b.lng], { icon: makePin(catColors[b.cat]) })
+          .bindPopup(
+            '<div class="popup-name">' + b.name + '</div>' +
+            '<div class="popup-cat">' + b.cat.charAt(0).toUpperCase() + b.cat.slice(1) + '</div>' +
+            '<div class="popup-addr">' + b.addr + '</div>' +
+            '<div class="popup-mrt">' + b.mrt + '</div>'
+          )
+          .addTo(map);
+        marker.bizCat = b.cat;
+        allMarkers.push(marker);
+      });
+
+      // Make map and markers available to filter function
+      window._hansangMap = map;
+      window._hansangMarkers = allMarkers;
+    }
+  });
+
+  // Mobile filter logic
+  function filterDirMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .dc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }
+
+  // Filter logic
+  function filterDir(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    // Filter map pins
+    var map = window._hansangMap;
+    var allMarkers = window._hansangMarkers;
+    if (map && allMarkers) {
+      allMarkers.forEach(function(m) {
+        if (cat === 'all' || m.bizCat === cat) {
+          if (!map.hasLayer(m)) m.addTo(map);
+        } else {
+          if (map.hasLayer(m)) map.removeLayer(m);
+        }
+      });
+    }
+
+    // Filter card grid
+    var cards = document.querySelectorAll('.biz-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Hide inline ad if filtering
+    var ad = document.getElementById('dir-inline-ad');
+    if (ad) ad.style.display = (cat === 'all') ? '' : 'none';
+
+    // Update results count
+    var countEl = document.getElementById('results-count');
+    if (countEl) countEl.textContent = 'Showing ' + visible + ' listing' + (visible !== 1 ? 's' : '');
+  }
+</script>

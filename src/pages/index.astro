@@ -1,0 +1,459 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+---
+
+<BaseLayout title="The Hansang - Everything Korea, for Singapore" description="The definitive Korean food, culture and lifestyle authority in Singapore.">
+  <div class="homepage">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <a href="/cook/golden-ratios-korean-noodles/" class="hero-link">
+          <div class="hero-text">
+            <div class="pillar-tag">Featured &middot; Cook &middot; Recipe</div>
+            <h2>Golden Ratios Korean Noodles Pt.1</h2>
+            <p>Three golden ratio sauces that will transform any bowl of Korean noodles. Each ratio is dead simple to remember and endlessly adaptable.</p>
+            <div class="meta">11 October 2025 &middot; 2 min read</div>
+          </div>
+          <div class="hero-img">
+            <div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574 0%,#b8865a 50%,#8b6548 100%);">Hero Image</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION DIVIDER -->
+    <hr class="section-divider">
+
+    <!-- MAIN + SIDEBAR -->
+    <section class="main-with-sidebar">
+      <div class="container">
+        <div class="main-col">
+
+          <!-- Korean Eats -->
+          <div class="section-header">
+            <h3>Korean Eats</h3>
+            <a href="/eat/">View More</a>
+          </div>
+          <div class="scroll-grid">
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">KBBQ</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Best Korean BBQ in Singapore</h4>
+              <div class="card-meta">8 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574,#a87b52);">Budae</div></div>
+              <div class="card-tag">Eat &middot; Guide</div>
+              <h4>Where to Find Real Budae Jjigae</h4>
+              <div class="card-meta">5 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Placeholder</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Placeholder: Tanjong Pagar Gem</h4>
+              <div class="card-meta">4 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#b8865a,#8b6548);">Jjajang</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Jjajangmyeon Worth Queueing For</h4>
+              <div class="card-meta">6 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">Gukbap</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Best Gukbap Near Beauty World</h4>
+              <div class="card-meta">5 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);">KFC</div></div>
+              <div class="card-tag">Eat &middot; Guide</div>
+              <h4>Korean Fried Chicken Rankings</h4>
+              <div class="card-meta">10 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Placeholder</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Placeholder Korean BBQ Buffet - Clarke Quay</h4>
+              <div class="card-meta">7 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a6a5a,#5a4a3a);">Toast</div></div>
+              <div class="card-tag">Eat &middot; Review</div>
+              <h4>Korean Street Toast - Myeongdong Edition</h4>
+              <div class="card-meta">4 min read</div>
+            </a>
+            <a href="/eat/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Budget</div></div>
+              <div class="card-tag">Eat &middot; Guide</div>
+              <h4>Budget Korean in Tanjong Pagar Under $15</h4>
+              <div class="card-meta">5 min read</div>
+            </a>
+          </div>
+
+          <!-- Mobile Ad Strip -->
+          <div class="ad-strip mobile-only">
+            {mobileAd ? (
+              <a href={mobileAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-strip-box" style="text-decoration:none;background:#F7F3ED;border-color:#E0D8CE;">
+                <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{mobileAd.sponsorName}</span>
+                <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">{mobileAd.displayText}</span>
+              </a>
+            ) : (
+              <div class="ad-strip-box"><span>Partner &middot; 320&times;50</span></div>
+            )}
+          </div>
+
+          <!-- Editor's Pick -->
+          <div class="section-header">
+            <h3>Editor's Pick</h3>
+          </div>
+          <a href="/cook/gochujang-chili-oil-noodles/" class="featured-banner" style="text-decoration:none;color:inherit;display:grid;">
+            <div class="featured-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#e8c9a0 0%,#c4a47a 50%,#8b7560 100%);">Featured Image</div>
+            </div>
+            <div class="featured-body">
+              <div class="pillar-tag">Cook &middot; Recipe</div>
+              <h4>Gochujang Chili Oil Noodles</h4>
+              <p>Korean gochujang meets Sichuan chili oil in one punchy bowl. Comes together in 15 minutes.</p>
+              <div class="meta">22 January 2026 &middot; 3 min read</div>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div class="sidebar-ad">Ad &middot; 300&times;250</div>
+          <div class="sidebar-section">
+            <h4>Most Read</h4>
+            <a href="/cook/golden-ratios-korean-noodles/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
+              <div class="num">1</div>
+              <div><h5>Golden Ratios Korean Noodles</h5><div class="card-meta">2 min read</div></div>
+            </a>
+            <a href="/cook/gochujang-chili-oil-noodles/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
+              <div class="num">2</div>
+              <div><h5>Gochujang Chili Oil Noodles</h5><div class="card-meta">3 min read</div></div>
+            </a>
+            <a href="/cook/kimchi-pork-jowl-pasta/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
+              <div class="num">3</div>
+              <div><h5>Kimchi Pork Jowl Pasta</h5><div class="card-meta">4 min read</div></div>
+            </a>
+            <a href="/cook/jjajangmyeon-kdrama-style/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
+              <div class="num">4</div>
+              <div><h5>Jjajangmyeon (K-drama Style)</h5><div class="card-meta">3 min read</div></div>
+            </a>
+            <a href="/cook/ramyeon-risotto/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
+              <div class="num">5</div>
+              <div><h5>Ramyeon Risotto</h5><div class="card-meta">2 min read</div></div>
+            </a>
+          </div>
+          <div class="sidebar-ad sidebar-ad-tall" style="margin-top:24px;">Ad &middot; 300&times;600</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- FROM THE KITCHEN -->
+    <section class="kitchen-band">
+      <div class="container">
+        <div class="section-header">
+          <h3>From the Kitchen</h3>
+          <a href="/cook/">View All</a>
+        </div>
+        <div class="scroll-grid-wrap">
+          <div class="scroll-grid">
+            <a href="/cook/gil-gamja-korean-chewy-potato-fries/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Placeholder</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Placeholder: Korean Chewy Potato Fries</h4>
+              <div class="card-meta">2 min read</div>
+            </a>
+            <a href="/cook/gochujang-chili-oil-noodles/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a6a5e,#5a4e44);">Gochujang</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Gochujang Chili Oil Noodles</h4>
+              <div class="card-meta">3 min read</div>
+            </a>
+            <a href="/cook/jjajangmyeon-kdrama-style/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8a7a6e,#6a5e54);">Jjajang</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Jjajangmyeon (K-drama Style)</h4>
+              <div class="card-meta">3 min read</div>
+            </a>
+            <a href="/cook/kimchi-pork-jowl-pasta/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#5a6b4e,#3a4e34);">Kimchi</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Kimchi Pork Jowl Pasta</h4>
+              <div class="card-meta">4 min read</div>
+            </a>
+            <a href="/cook/ramyeon-risotto/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8b7560,#6b5a48);">Ramyeon</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Ramyeon Risotto</h4>
+              <div class="card-meta">2 min read</div>
+            </a>
+            <a href="/cook/tteokbokki-pizza/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b6050,#4a4438);">Tteokbokki</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Tteokbokki Pizza (4-3-3-2 Sauce)</h4>
+              <div class="card-meta">2 min read</div>
+            </a>
+            <a href="/cook/golden-ratios-korean-noodles/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a7060,#5a5048);">Noodles</div></div>
+              <div class="card-tag">Cook &middot; Recipe</div>
+              <h4>Golden Ratios Korean Noodles</h4>
+              <div class="card-meta">2 min read</div>
+            </a>
+            <a href="/cook/" class="card" style="text-decoration:none;color:inherit;display:block;">
+              <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8a806e,#6a6054);">Hotteok</div></div>
+              <div class="card-tag">Cook &middot; Snack</div>
+              <h4>Brown Sugar Hotteok</h4>
+              <div class="card-meta">3 min read</div>
+            </a>
+          </div>
+        </div>
+        <div class="swipe-hint">Swipe for more &rarr;</div>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  * { box-sizing: border-box; }
+  .homepage { width: 100%; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+  .section-header { display: flex; justify-content: space-between; align-items: center; padding: 32px 0 24px; }
+  .section-header h3 { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #1C1714; }
+  .section-header a { font-family: 'Inter', sans-serif; font-size: 11px; color: #B8432A; text-decoration: none; letter-spacing: 0.12em; text-transform: uppercase; }
+  .section-header a:hover { text-decoration: underline; }
+
+  /* SECTION DIVIDER */
+  .section-divider { border: none; border-top: 2px solid #eee; max-width: 1020px; margin: 0 auto; }
+
+  /* IMG PLACEHOLDER */
+  .img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* HERO */
+  .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding-top: 56px; padding-bottom: 56px; align-items: center; }
+  .hero-link { display: contents; text-decoration: none; color: inherit; }
+  .hero-text .pillar-tag { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8432A; margin-bottom: 14px; }
+  .hero-text h2 { font-family: 'Source Serif 4', serif; font-size: 26px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 14px; }
+  .hero-text p { font-size: 14px; color: #888; line-height: 1.65; }
+  .hero-text .meta { margin-top: 20px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb; }
+  .hero-img { border-radius: 4px; height: 320px; overflow: hidden; }
+
+  /* MAIN + SIDEBAR */
+  .main-with-sidebar .container { display: grid; grid-template-columns: 1fr 280px; gap: 48px; }
+  .main-col { min-width: 0; }
+  .sidebar { padding-top: 32px; border-left: 2px solid #eee; padding-left: 32px; }
+  .sidebar-ad { border: 1px dashed #ccc; border-radius: 4px; height: 250px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; }
+  .sidebar-ad-tall { height: 600px; }
+  .sidebar-section h4 { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #eee; color: #1C1714; }
+  .sidebar-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
+  .sidebar-item .num { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 500; color: #ddd; line-height: 1; flex-shrink: 0; width: 24px; }
+  .sidebar-item h5 { font-family: 'Source Serif 4', serif; font-size: 14px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 2px; }
+
+  /* CARDS */
+  .card { cursor: pointer; }
+  .card-img { border-radius: 4px; height: 180px; margin-bottom: 12px; overflow: hidden; }
+  .card-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8432A; margin-bottom: 6px; }
+  .card h4 { font-family: 'Source Serif 4', serif; font-size: 17px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 6px; }
+  .card .card-meta { font-size: 11px; color: #bbb; }
+  .scroll-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding-bottom: 48px; }
+
+  /* EDITOR'S PICK */
+  .featured-banner { grid-template-columns: 3fr 2fr; gap: 48px; padding-bottom: 48px; align-items: center; }
+  .featured-img { height: 320px; border-radius: 4px; overflow: hidden; }
+  .featured-body .pillar-tag { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8432A; margin-bottom: 12px; }
+  .featured-body h4 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 12px; }
+  .featured-body p { font-size: 13px; color: #888; line-height: 1.6; }
+  .featured-body .meta { margin-top: 16px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #bbb; }
+
+  /* FROM THE KITCHEN */
+  .kitchen-band { background: #6B4C3B; }
+  .kitchen-band .container { padding-bottom: 0; }
+  .kitchen-band .section-header h3 { color: #FFFFFF; }
+  .kitchen-band .section-header a { color: #B8432A; }
+  .kitchen-band .card-tag { color: #B8432A; }
+  .kitchen-band .card h4 { color: #FFFFFF; }
+  .kitchen-band .card .card-meta { color: rgba(255,255,255,0.5); }
+  .swipe-hint { text-align: center; padding: 12px 0 32px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .main-with-sidebar .container { grid-template-columns: 1fr; }
+    .sidebar { border-left: none; border-top: 2px solid #eee; padding-left: 0; padding-top: 32px; }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 18px; }
+
+    /* Hero: full-bleed image on top, text below — matching mockup .hero-img / .hero-txt */
+    .hero .container { grid-template-columns: 1fr; padding: 0; gap: 0; max-width: none; }
+    .hero-img { height: 200px; order: -1; border-radius: 0; }
+    .hero-text { padding: 16px 18px 20px; border-bottom: 2px solid #eee; }
+    .hero-text .pillar-tag { font-size: 10px; letter-spacing: 0.14em; margin-bottom: 5px; }
+    .hero-text h2 { font-size: 20px; font-weight: 500; line-height: 1.3; margin-bottom: 7px; }
+    .hero-text p { display: none; }
+    .hero-text .meta { margin-top: 0; font-size: 11px; }
+
+    /* Section divider hidden */
+    .section-divider { display: none; }
+
+    /* Sidebar hidden */
+    .sidebar { display: none; }
+    .main-with-sidebar .container { grid-template-columns: 1fr; gap: 0; }
+
+    /* Section headers — matching mockup .sh */
+    .section-header { padding: 18px 0 12px; }
+    .section-header h3 { font-size: 11px; }
+    .section-header a { font-size: 10px; letter-spacing: 0.09em; }
+
+    /* Scroll grids to horizontal carousel — matching mockup .carousel / .cc */
+    .scroll-grid {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      gap: 12px; padding-bottom: 16px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .scroll-grid::-webkit-scrollbar { display: none; }
+    .scroll-grid .card { flex: 0 0 70%; scroll-snap-align: start; min-width: 0; }
+    .card-img { height: auto; aspect-ratio: 3/2; border-radius: 3px; margin-bottom: 7px; }
+    .card h4 { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 3px; }
+    .card .card-meta { font-size: 10px; }
+
+    /* Editor's Pick — matching mockup .ep */
+    .featured-banner {
+      grid-template-columns: 1fr; gap: 0; padding-bottom: 0;
+      border: 1px solid #eee; border-radius: 3px; overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .featured-img { height: 150px; border-radius: 0; }
+    .featured-body { padding: 13px; }
+    .featured-body .pillar-tag { font-size: 9px; letter-spacing: 0.13em; margin-bottom: 4px; }
+    .featured-body h4 { font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 3px; }
+    .featured-body p { font-size: 11px; color: #888; line-height: 1.5; }
+    .featured-body .meta { margin-top: 0; }
+
+    /* Kitchen band — matching mockup .kitchen */
+    .kitchen-band { background: #2E2722; }
+    .kitchen-band .container { padding: 24px 18px 0; }
+    .kitchen-band .section-header { padding: 0 0 12px; }
+    .kitchen-band .section-header h3 { color: rgba(255,255,255,0.4); }
+    .kitchen-band .section-header a { color: rgba(255,255,255,0.3); }
+    .kitchen-band .card h4 { color: #fff; }
+    .kitchen-band .card-img .img-placeholder { background: rgba(255,255,255,0.07); }
+    .kitchen-band .card-tag { color: rgba(255,255,255,0.3); }
+    .swipe-hint { display: none; }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/search-index.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var eatArticles = data.filter(function(a) { return a.pillar === 'Eat'; });
+        var cookArticles = data.filter(function(a) { return a.pillar === 'Cook'; });
+
+        // === Korean Eats section: first .scroll-grid inside .main-col ===
+        var eatGrid = document.querySelector('.main-col .scroll-grid');
+        if (eatGrid) {
+          var eatCards = eatGrid.querySelectorAll('.card');
+          eatCards.forEach(function(card, i) {
+            if (i < eatArticles.length) {
+              var a = eatArticles[i];
+              card.setAttribute('href', a.url || '#');
+              var img = card.querySelector('.card-img .img-placeholder');
+              if (img && a.coverUrl) {
+                img.style.background = "url('" + a.coverUrl + "') center/cover";
+                img.textContent = '';
+              }
+              var tag = card.querySelector('.card-tag');
+              if (tag) tag.textContent = 'Eat \u00B7 ' + (a.postType || 'Review');
+              var h4 = card.querySelector('h4');
+              if (h4) h4.textContent = a.title || '';
+              var meta = card.querySelector('.card-meta');
+              if (meta) meta.textContent = a.date || '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        // === From the Kitchen section: .kitchen-band .scroll-grid ===
+        var kitchenGrid = document.querySelector('.kitchen-band .scroll-grid');
+        if (kitchenGrid) {
+          var cookCards = kitchenGrid.querySelectorAll('.card');
+          cookCards.forEach(function(card, i) {
+            if (i < cookArticles.length) {
+              var a = cookArticles[i];
+              card.setAttribute('href', a.url || '#');
+              var img = card.querySelector('.card-img .img-placeholder');
+              if (img && a.coverUrl) {
+                img.style.background = "url('" + a.coverUrl + "') center/cover";
+                img.textContent = '';
+              }
+              var tag = card.querySelector('.card-tag');
+              if (tag) tag.textContent = 'Cook \u00B7 ' + (a.postType || 'Recipe');
+              var h4 = card.querySelector('h4');
+              if (h4) h4.textContent = a.title || '';
+              var meta = card.querySelector('.card-meta');
+              if (meta) meta.textContent = a.date || '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        // === Hero section: use Homepage Position = "Hero" post, or fall back to first article ===
+        var heroPost = data.find(function(a) { return a.homepagePosition === 'Hero'; });
+        var hero = heroPost || cookArticles[0] || eatArticles[0];
+        if (hero) {
+          var heroLink = document.querySelector('.hero .hero-link');
+          if (heroLink) heroLink.setAttribute('href', hero.url || '#');
+          var heroTag = document.querySelector('.hero-text .pillar-tag');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 ' + (hero.pillar || 'Eat') + ' \u00B7 ' + (hero.postType || 'Review');
+          var heroH2 = document.querySelector('.hero-text h2');
+          if (heroH2) heroH2.textContent = hero.title || '';
+          var heroP = document.querySelector('.hero-text p');
+          if (heroP) heroP.textContent = hero.excerpt || '';
+          var heroMeta = document.querySelector('.hero-text .meta');
+          if (heroMeta) heroMeta.textContent = hero.date || '';
+          var heroImg = document.querySelector('.hero-img .img-placeholder');
+          if (heroImg && hero.coverUrl) {
+            heroImg.style.background = "url('" + hero.coverUrl + "') center/cover";
+            heroImg.textContent = '';
+          }
+        }
+
+        // === Editor's Pick section: use second Cook article (or first Eat) ===
+        var epArticle = cookArticles.length > 1 ? cookArticles[1] : (eatArticles.length > 0 ? eatArticles[0] : null);
+        if (epArticle) {
+          var epLink = document.querySelector('.featured-banner');
+          if (epLink) {
+            epLink.setAttribute('href', epArticle.url || '#');
+            var epImg = epLink.querySelector('.featured-img .img-placeholder');
+            if (epImg && epArticle.coverUrl) {
+              epImg.style.background = "url('" + epArticle.coverUrl + "') center/cover";
+              epImg.textContent = '';
+            }
+            var epTag = epLink.querySelector('.featured-body .pillar-tag');
+            if (epTag) epTag.textContent = (epArticle.pillar || 'Cook') + ' \u00B7 ' + (epArticle.postType || 'Recipe');
+            var epH4 = epLink.querySelector('.featured-body h4');
+            if (epH4) epH4.textContent = epArticle.title || '';
+            var epP = epLink.querySelector('.featured-body p');
+            if (epP) epP.textContent = epArticle.excerpt || '';
+            var epMeta = epLink.querySelector('.featured-body .meta');
+            if (epMeta) epMeta.textContent = epArticle.date || '';
+          }
+        }
+      })
+      .catch(function(err) {
+        console.error('Failed to load search-index.json:', err);
+      });
+  });
+</script>

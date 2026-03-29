@@ -1,0 +1,945 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const eatAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Eat Leaderboard') : a.placement === 'Eat Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
+---
+
+<BaseLayout title="Eat" description="Eat — Korean food reviews, KBBQ guides, new openings, and restaurant rankings in Singapore. The Hansang.">
+
+  <!-- ===== MOBILE LAYOUT ===== -->
+  <div class="mobile-only">
+    <div class="cat-hd">
+      <div class="cat-title">Eat</div>
+      <div class="cat-sub">Korean restaurants, guides &amp; reviews in Singapore</div>
+    </div>
+    <div class="filters-mobile">
+      <button class="pill on" onclick="filterEatMobile('all', this)">All</button>
+      <button class="pill" onclick="filterEatMobile('reviews', this)">Reviews</button>
+      <button class="pill" onclick="filterEatMobile('guides', this)">Guides</button>
+      <button class="pill" onclick="filterEatMobile('versus', this)">Versus</button>
+      <button class="pill" onclick="filterEatMobile('new-openings', this)">New Openings</button>
+      <button class="pill" onclick="filterEatMobile('upcoming', this)">Upcoming</button>
+    </div>
+    <div class="filters-2">
+      <select class="fsel"><option>Any Price</option><option>$ Under $15</option><option>$$ $15-30</option><option>$$$ $30-50</option><option>$$$$ $50+</option></select>
+      <select class="fsel"><option>Any MRT</option><option>Tanjong Pagar</option><option>Bugis</option><option>Somerset</option><option>Beauty World</option><option>Orchard</option></select>
+      <label class="ftog"><input type="checkbox"> Halal</label>
+    </div>
+
+    <!-- Hero card -->
+    <a href="/eat/design-preview/" class="ch1" data-mcat="reviews">
+      <div>
+        <div class="ptag">Review &middot; Featured</div>
+        <div class="ch1-title">Featured Article Title Placeholder</div>
+        <div class="ch1-meta">Coming Soon</div>
+      </div>
+      <div class="ch1-img" style="background:var(--stone);"></div>
+    </a>
+
+    <!-- 2x2 grid -->
+    <div class="hgrid">
+      <a href="/eat/design-preview/" class="hgc" data-mcat="reviews">
+        <div class="hgc-img" style="background:var(--stone);"></div>
+        <div class="ptag">Review</div>
+        <div class="hgc-title">Article Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/eat/design-preview/" class="hgc" data-mcat="guides">
+        <div class="hgc-img" style="background:var(--stone);"></div>
+        <div class="ptag">Guide</div>
+        <div class="hgc-title">Guide Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/eat/design-preview/" class="hgc" data-mcat="versus">
+        <div class="hgc-img" style="background:var(--stone);"></div>
+        <div class="ptag">Versus</div>
+        <div class="hgc-title">Comparison Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/eat/design-preview/" class="hgc" data-mcat="reviews">
+        <div class="hgc-img" style="background:var(--stone);"></div>
+        <div class="ptag">Review</div>
+        <div class="hgc-title">Review Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
+
+    <!-- List cards -->
+    <a href="/eat/design-preview/" class="lc" data-mcat="new-openings">
+      <div>
+        <div class="ptag">New Opening</div>
+        <div class="lc-title">Article Title Placeholder</div>
+        <div class="lc-sub">Description placeholder text goes here.</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:var(--stone);"></div>
+    </a>
+    <a href="/eat/design-preview/" class="lc" data-mcat="guides">
+      <div>
+        <div class="ptag">Guide</div>
+        <div class="lc-title">Guide Title Placeholder</div>
+        <div class="lc-sub">Description placeholder text goes here.</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:var(--stone);"></div>
+    </a>
+
+    <!-- Ad placement -->
+    {mobileInlineAd ? (
+      <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+        <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+        <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+      </a>
+    ) : (
+      <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+    )}
+  </div>
+
+  <!-- ===== DESKTOP LAYOUT ===== -->
+  <div class="desktop-only">
+
+    <!-- ===== CATEGORY TITLE BAR (Monocle dark band) ===== -->
+    <section class="category-title-bar">
+      <div class="container">
+        <h1>Eat</h1>
+        <div class="title-sub">Restaurants, KBBQ &amp; where to eat Korean in Singapore</div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY HERO (Featured Article) ===== -->
+    <section class="category-hero">
+      <a href="/eat/test-article/" class="container" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;cursor:pointer;">
+        <div class="category-hero-text">
+          <div class="pillar-tag">Featured &middot; Eat &middot; Review</div>
+          <h2>Article Title Placeholder</h2>
+          <p>Description placeholder text.</p>
+          <div class="meta">Coming Soon</div>
+        </div>
+        <div class="category-hero-img">
+          <div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 50%,#5a2820 100%);">Featured Image</div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ===== AD SLOT 1: Leaderboard (CMS-managed) ===== -->
+    <div class="ad-leaderboard">
+      <div class="container">
+        {eatAd ? (
+          eatAd.bannerImages?.[0] ? (
+            <a href={eatAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner" style="display:block;text-align:center;border:none;background:none;">
+              <img src={eatAd.bannerImages[0]} alt={eatAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+            </a>
+          ) : (
+            <a href={eatAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner ad-brand-banner" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+              <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{eatAd.sponsorName}</span>
+              <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{eatAd.displayText}</span>
+            </a>
+          )
+        ) : (
+          <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
+        )}
+      </div>
+    </div>
+
+    <!-- ===== GUIDE ARTICLES ===== -->
+    <section class="guide-articles">
+      <div class="container">
+        <div class="guide-section-header">
+          <span class="guide-section-title">Guide Articles</span>
+          <a href="#" class="guide-view-all">View All Guides &rarr;</a>
+        </div>
+        <div class="guide-card-grid">
+          <!-- GUIDE CARD 1 -->
+          <a href="/eat/design-preview/" class="guide-card">
+            <div class="guide-card-header">
+              <div class="guide-card-label">The Hansang Guide</div>
+              <div class="guide-card-divider"></div>
+              <h4>Article Title Placeholder</h4>
+            </div>
+            <div class="guide-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#b8865a,#8b6548);">KFC Guide</div>
+            </div>
+            <div class="guide-card-footer">
+              <span class="guide-card-tag">Eat &middot; Guide</span>
+              <span class="guide-card-footer-dot">&middot;</span>
+              <span class="guide-card-meta">Coming Soon</span>
+            </div>
+          </a>
+          <!-- GUIDE CARD 2 -->
+          <a href="/eat/design-preview/" class="guide-card">
+            <div class="guide-card-header">
+              <div class="guide-card-label">The Hansang Guide</div>
+              <div class="guide-card-divider"></div>
+              <h4>Article Title Placeholder</h4>
+            </div>
+            <div class="guide-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Budget Guide</div>
+            </div>
+            <div class="guide-card-footer">
+              <span class="guide-card-tag">Eat &middot; Guide</span>
+              <span class="guide-card-footer-dot">&middot;</span>
+              <span class="guide-card-meta">Coming Soon</span>
+            </div>
+          </a>
+          <!-- GUIDE CARD 3 -->
+          <a href="/eat/design-preview/" class="guide-card">
+            <div class="guide-card-header">
+              <div class="guide-card-label">The Hansang Guide</div>
+              <div class="guide-card-divider"></div>
+              <h4>Article Title Placeholder</h4>
+            </div>
+            <div class="guide-card-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#8b7560,#6b5a48);">Dessert Guide</div>
+            </div>
+            <div class="guide-card-footer">
+              <span class="guide-card-tag">Eat &middot; Guide</span>
+              <span class="guide-card-footer-dot">&middot;</span>
+              <span class="guide-card-meta">Coming Soon</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FILTER BAR ===== -->
+    <hr class="section-divider">
+    <section class="filter-bar">
+      <div class="container">
+        <div class="filter-row">
+          <span class="filter-row-label">Filter</span>
+          <button class="filter-btn active" onclick="filterEat('all',this)">All</button>
+          <button class="filter-btn" onclick="filterEat('kbbq',this)">KBBQ</button>
+          <button class="filter-btn" onclick="filterEat('noodles',this)">Korean Noodles</button>
+          <button class="filter-btn" onclick="filterEat('budget',this)">Budget Friendly</button>
+          <button class="filter-btn" onclick="filterEat('buffet',this)">Korean Buffet</button>
+          <button class="filter-btn" onclick="filterEat('dessert',this)">Korean Dessert</button>
+          <button class="filter-btn" onclick="filterEat('alacarte',this)">Korean A La Carte</button>
+          <button class="filter-btn" onclick="filterEat('guide',this)">Guide</button>
+          <button class="filter-btn" onclick="filterEat('upcoming',this)">Upcoming</button>
+        </div>
+        <div class="secondary-filters">
+          <select class="filter-select">
+            <option>Any Price</option>
+            <option>$ (Under $15)</option>
+            <option>$$ ($15-30)</option>
+            <option>$$$ ($30-50)</option>
+            <option>$$$$ ($50+)</option>
+          </select>
+          <select class="filter-select">
+            <option>Any MRT</option>
+            <option>Tanjong Pagar</option>
+            <option>Bugis</option>
+            <option>Somerset</option>
+            <option>Beauty World</option>
+            <option>Clarke Quay</option>
+            <option>Novena</option>
+            <option>Orchard</option>
+          </select>
+          <label class="filter-toggle">
+            <input type="checkbox"> Halal
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ARTICLE GRID ===== -->
+    <section>
+      <div class="container">
+        <div class="results-info">Showing 12 articles</div>
+
+        <div class="article-grid">
+          <a href="/eat/design-preview/" class="card" data-cat="kbbq" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">KBBQ</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="kbbq" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574,#a87b52);">Budae</div></div>
+            <div class="card-tag">Eat &middot; Guide</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="alacarte" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Gil-Gamja</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#b8865a,#8b6548);">Jjajang</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">Gukbap</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="guide" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);">KFC</div></div>
+            <div class="card-tag">Eat &middot; Guide</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="buffet" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Sopoong</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="alacarte" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a6a5a,#5a4a3a);">Toast</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="budget" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Budget</div></div>
+            <div class="card-tag">Eat &middot; Guide</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- AD SLOT 2: Inline ad -->
+          <div class="inline-ad">Partner &middot; 970 &times; 90 &middot; Inline</div>
+
+          <a href="/eat/design-preview/" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#5a6b4e,#3a4e34);">Noodles</div></div>
+            <div class="card-tag">Eat &middot; Listicle</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="dessert" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8b7560,#6b5a48);">Dessert</div></div>
+            <div class="card-tag">Eat &middot; Guide</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="/eat/design-preview/" class="card" data-cat="buffet" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b6050,#4a4438);">Buffet</div></div>
+            <div class="card-tag">Eat &middot; Review</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+        </div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <span class="ellipsis">&hellip;</span>
+          <a href="#">5</a>
+          <a href="#">Next &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ===== CONTENT CONTAINER ===== */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ===== SECTION DIVIDERS ===== */
+  .section-divider {
+    border: none;
+    border-top: 2px solid #eee;
+    max-width: 1020px;
+    margin: 0 auto;
+  }
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== CATEGORY TITLE BAR ===== */
+  .category-title-bar {
+    background: #FFFFFF;
+    padding: 16px 0;
+  }
+  .category-title-bar .container {
+    background: #1C1714;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  /* ===== GUIDE ARTICLES SECTION ===== */
+  .guide-articles {
+    padding: 48px 0 0;
+  }
+  .guide-articles .container {
+    padding-bottom: 48px;
+  }
+  .guide-articles .guide-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+  }
+  .guide-articles .guide-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1C1714;
+  }
+  .guide-articles .guide-view-all {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    text-decoration: none;
+  }
+  .guide-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .guide-card {
+    background: #A8C4B8;
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+  .guide-card-header {
+    padding: 18px 18px 16px;
+  }
+  .guide-card-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 10px;
+  }
+  .guide-card-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.28);
+    margin-bottom: 13px;
+  }
+  .guide-card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.3;
+  }
+  .guide-card-img {
+    height: 200px;
+    overflow: hidden;
+  }
+  .guide-card-img .img-placeholder {
+    height: 100%;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+  .guide-card-footer {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.1);
+  }
+  .guide-card-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .guide-card-footer-dot {
+    color: rgba(255,255,255,0.3);
+    font-size: 9px;
+  }
+  .guide-card-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ===== IN-PAGE AD PLACEMENTS ===== */
+  .ad-leaderboard {
+    padding: 16px 0;
+    background: #FFFFFF;
+  }
+  .ad-leaderboard-inner {
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .inline-ad {
+    grid-column: 1 / -1;
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 8px 0;
+  }
+
+  /* ===== CATEGORY HERO (featured article) ===== */
+  .category-hero .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    align-items: center;
+  }
+  .category-hero-img {
+    border-radius: 4px;
+    height: 320px;
+    overflow: hidden;
+  }
+  .category-hero-text .pillar-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .category-hero-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .category-hero-text p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.65;
+  }
+  .category-hero-text .meta {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar .container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .filter-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 12px;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .filter-btn:hover { color: #1C1714; }
+  .filter-btn.active {
+    color: #1C1714;
+    border-bottom: 2px solid #B8432A;
+  }
+
+  /* Secondary filters (Eat-specific: Price, MRT, Halal) */
+  .secondary-filters {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f5f5f5;
+  }
+  .filter-select {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #999;
+    background: #FFFFFF;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 6px 28px 6px 12px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .filter-select:focus {
+    border-color: #B8432A;
+    outline: none;
+  }
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #999;
+    cursor: pointer;
+  }
+  .filter-toggle input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: #B8432A;
+    cursor: pointer;
+  }
+
+  /* ===== RESULTS INFO ===== */
+  .results-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #bbb;
+    padding: 24px 0 8px;
+  }
+
+  /* ===== ARTICLE GRID (3-column) ===== */
+  .article-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 48px;
+  }
+
+  /* ===== CARDS ===== */
+  .card { cursor: pointer; }
+  .card-img {
+    border-radius: 4px;
+    height: 180px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card:hover .card-img .img-placeholder { transform: scale(1.03); }
+  .card-img .img-placeholder { transition: transform 0.4s ease; }
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 6px;
+  }
+  .card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .card .card-meta {
+    font-size: 11px;
+    color: #bbb;
+  }
+
+  /* ===== PAGINATION ===== */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0 48px;
+  }
+  .pagination a, .pagination span {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .pagination a:hover {
+    color: #1C1714;
+    border-color: #1C1714;
+  }
+  .pagination .active {
+    color: #1C1714;
+    border-color: #1C1714;
+    font-weight: 500;
+  }
+  .pagination .ellipsis {
+    border: none;
+    padding: 8px 4px;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/search-index.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var articles = data.filter(function(a) { return a.pillar === 'Eat'; });
+        if (!articles.length) return;
+
+        // === Helper: derive data-cat from article tags/postType ===
+        function deriveCat(article) {
+          var tags = (article.tags || []).map(function(t) { return t.toLowerCase(); });
+          var pt = (article.postType || '').toLowerCase();
+          if (pt === 'guide') return 'guide';
+          if (tags.indexOf('kbbq') !== -1 || tags.indexOf('korean bbq') !== -1) return 'kbbq';
+          if (tags.indexOf('noodles') !== -1 || tags.indexOf('korean noodles') !== -1) return 'noodles';
+          if (tags.indexOf('budget') !== -1 || tags.indexOf('budget friendly') !== -1) return 'budget';
+          if (tags.indexOf('buffet') !== -1 || tags.indexOf('korean buffet') !== -1) return 'buffet';
+          if (tags.indexOf('dessert') !== -1 || tags.indexOf('korean dessert') !== -1) return 'dessert';
+          if (tags.indexOf('alacarte') !== -1 || tags.indexOf('a la carte') !== -1) return 'alacarte';
+          return pt || 'review';
+        }
+
+        // === DESKTOP: article-grid cards ===
+        var desktopCards = document.querySelectorAll('.desktop-only .article-grid .card');
+        desktopCards.forEach(function(card, i) {
+          if (i < articles.length) {
+            var a = articles[i];
+            card.setAttribute('href', a.url || '#');
+            card.setAttribute('data-cat', deriveCat(a));
+            var img = card.querySelector('.card-img .img-placeholder');
+            if (img && a.coverUrl) {
+              img.style.background = "url('" + a.coverUrl + "') center/cover";
+              img.textContent = '';
+            }
+            var tag = card.querySelector('.card-tag');
+            if (tag) tag.textContent = 'Eat \u00B7 ' + (a.postType || 'Review');
+            var h4 = card.querySelector('h4');
+            if (h4) h4.textContent = a.title || '';
+            var meta = card.querySelector('.card-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === DESKTOP: hero section ===
+        if (articles.length > 0) {
+          var hero = articles[0];
+          var heroLink = document.querySelector('.desktop-only .category-hero .container');
+          if (heroLink) heroLink.setAttribute('href', hero.url || '#');
+          var heroTag = document.querySelector('.desktop-only .category-hero-text .pillar-tag');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 Eat \u00B7 ' + (hero.postType || 'Review');
+          var heroH2 = document.querySelector('.desktop-only .category-hero-text h2');
+          if (heroH2) heroH2.textContent = hero.title || '';
+          var heroP = document.querySelector('.desktop-only .category-hero-text p');
+          if (heroP) heroP.textContent = hero.excerpt || '';
+          var heroMeta = document.querySelector('.desktop-only .category-hero-text .meta');
+          if (heroMeta) heroMeta.textContent = hero.date || '';
+          var heroImg = document.querySelector('.desktop-only .category-hero-img .img-placeholder');
+          if (heroImg && hero.coverUrl) {
+            heroImg.style.background = "url('" + hero.coverUrl + "') center/cover";
+            heroImg.textContent = '';
+          }
+        }
+
+        // === DESKTOP: guide cards ===
+        var guideArticles = articles.filter(function(a) { return a.postType === 'Guide'; });
+        var guideCards = document.querySelectorAll('.desktop-only .guide-card');
+        guideCards.forEach(function(card, i) {
+          if (i < guideArticles.length) {
+            var a = guideArticles[i];
+            card.setAttribute('href', a.url || '#');
+            var h4 = card.querySelector('h4');
+            if (h4) h4.textContent = a.title || '';
+            var img = card.querySelector('.guide-card-img .img-placeholder');
+            if (img && a.coverUrl) {
+              img.style.background = "url('" + a.coverUrl + "') center/cover";
+              img.textContent = '';
+            }
+            var tag = card.querySelector('.guide-card-tag');
+            if (tag) tag.textContent = 'Eat \u00B7 Guide';
+            var meta = card.querySelector('.guide-card-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === DESKTOP: results-info ===
+        var info = document.querySelector('.desktop-only .results-info');
+        if (info) info.textContent = 'Showing ' + articles.length + ' article' + (articles.length !== 1 ? 's' : '');
+
+        // === MOBILE: hero card (.ch1) ===
+        var mobileHero = document.querySelector('.mobile-only .ch1');
+        if (mobileHero && articles.length > 0) {
+          var mh = articles[0];
+          mobileHero.setAttribute('href', mh.url || '#');
+          var mhTag = mobileHero.querySelector('.ptag');
+          if (mhTag) mhTag.textContent = (mh.postType || 'Review') + ' \u00B7 Featured';
+          var mhTitle = mobileHero.querySelector('.ch1-title');
+          if (mhTitle) mhTitle.textContent = mh.title || '';
+          var mhMeta = mobileHero.querySelector('.ch1-meta');
+          if (mhMeta) mhMeta.textContent = mh.date || '';
+          var mhImg = mobileHero.querySelector('.ch1-img');
+          if (mhImg && mh.coverUrl) mhImg.style.background = "url('" + mh.coverUrl + "') center/cover";
+        }
+
+        // === MOBILE: 2x2 grid cards (.hgc) ===
+        var mobileGrid = document.querySelectorAll('.mobile-only .hgc');
+        mobileGrid.forEach(function(card, i) {
+          var idx = i + 1;
+          if (idx < articles.length) {
+            var a = articles[idx];
+            card.setAttribute('href', a.url || '#');
+            var img = card.querySelector('.hgc-img');
+            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
+            var tag = card.querySelector('.ptag');
+            if (tag) tag.textContent = a.postType || 'Review';
+            var title = card.querySelector('.hgc-title');
+            if (title) title.textContent = a.title || '';
+            var meta = card.querySelector('.hgc-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === MOBILE: list cards (.lc) ===
+        var mobileList = document.querySelectorAll('.mobile-only .lc');
+        mobileList.forEach(function(card, i) {
+          var idx = i + 5;
+          if (idx < articles.length) {
+            var a = articles[idx];
+            card.setAttribute('href', a.url || '#');
+            var tag = card.querySelector('.ptag');
+            if (tag) tag.textContent = a.postType || 'Review';
+            var title = card.querySelector('.lc-title');
+            if (title) title.textContent = a.title || '';
+            var sub = card.querySelector('.lc-sub');
+            if (sub) sub.textContent = a.excerpt || '';
+            var meta = card.querySelector('.lc-meta');
+            if (meta) meta.textContent = a.date || '';
+            var img = card.querySelector('.lc-img');
+            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      })
+      .catch(function(err) {
+        console.error('Failed to load search-index.json:', err);
+      });
+  });
+</script>
+
+<script>
+  function filterEat(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var cards = document.querySelectorAll('.card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    var info = document.querySelector('.results-info');
+    if (info) info.textContent = 'Showing ' + visible + ' article' + (visible !== 1 ? 's' : '');
+  }
+</script>
+
+<script is:inline>
+  function filterEatMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }
+</script>

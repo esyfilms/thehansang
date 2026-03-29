@@ -1,0 +1,713 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const pageAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Cook Leaderboard') : a.placement === 'Cook Leaderboard');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Inline') : a.placement === 'Mobile Inline');
+---
+
+<BaseLayout title="Cook" description="Cook - Korean recipes adapted for Singapore kitchens. The Hansang.">
+
+  <!-- ===== MOBILE LAYOUT ===== -->
+  <div class="mobile-only">
+    <div class="cat-hd">
+      <div class="cat-title">Cook</div>
+      <div class="cat-sub">Korean recipes adapted for Singapore kitchens</div>
+    </div>
+
+    <div class="filters-mobile">
+      <button class="pill on" onclick="filterCookMobile('all', this)">All</button>
+      <button class="pill" onclick="filterCookMobile('meats', this)">Meats</button>
+      <button class="pill" onclick="filterCookMobile('soup-broth', this)">Soup Broth</button>
+      <button class="pill" onclick="filterCookMobile('banchan', this)">Banchan</button>
+      <button class="pill" onclick="filterCookMobile('hacks-tips', this)">Hacks Tips</button>
+      <button class="pill" onclick="filterCookMobile('noodles', this)">Noodles</button>
+      <button class="pill" onclick="filterCookMobile('rice', this)">Rice</button>
+      <button class="pill" onclick="filterCookMobile('viral-trend', this)">Viral Trend</button>
+    </div>
+
+    <!-- Hero Card -->
+    <a href="/cook/design-preview/" class="ch1" data-mcat="meats">
+      <div>
+        <div class="ptag">Cook &middot; Featured</div>
+        <div class="ch1-title">Featured Recipe Title Placeholder</div>
+        <div class="ch1-meta">Coming Soon</div>
+      </div>
+      <div class="ch1-img" style="background:#E0D8CE;"></div>
+    </a>
+
+    <!-- 2x2 Grid -->
+    <div class="hgrid">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="meats">
+        <div class="hgc-img" style="background:#E0D8CE;"></div>
+        <div class="ptag">Main</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/cook/design-preview/" class="hgc" data-mcat="banchan">
+        <div class="hgc-img" style="background:#E0D8CE;"></div>
+        <div class="ptag">Side</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/cook/design-preview/" class="hgc" data-mcat="soup-broth">
+        <div class="hgc-img" style="background:#E0D8CE;"></div>
+        <div class="ptag">Soup</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/cook/design-preview/" class="hgc" data-mcat="hacks-tips">
+        <div class="hgc-img" style="background:#E0D8CE;"></div>
+        <div class="ptag">Snack</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
+
+    {mobileInlineAd ? (
+      <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
+        <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
+        <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
+      </a>
+    ) : (
+      <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
+    )}
+
+    <!-- 2x1 Grid -->
+    <div class="hgrid">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="noodles">
+        <div class="hgc-img" style="background:linear-gradient(135deg,#C8BEB5,#A89880);"></div>
+        <div class="ptag">COOK &middot; RECIPE</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/cook/design-preview/" class="hgc" data-mcat="rice">
+        <div class="hgc-img" style="background:linear-gradient(135deg,#C8BEB5,#A89880);"></div>
+        <div class="ptag">COOK &middot; RECIPE</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== DESKTOP LAYOUT ===== -->
+  <div class="desktop-only">
+
+    <!-- ===== CATEGORY TITLE BAR (Monocle dark band) ===== -->
+    <section class="category-title-bar">
+      <div class="container">
+        <h1>Cook</h1>
+        <div class="title-sub">Making Korean cooking easy, one recipe at a time</div>
+      </div>
+    </section>
+
+    <!-- ===== CATEGORY HERO (Featured Recipe) ===== -->
+    <section class="category-hero">
+      <a href="/cook/golden-ratios-korean-noodles/" class="container" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;cursor:pointer;">
+        <div class="category-hero-text">
+          <div class="pillar-tag">Featured &middot; Cook &middot; Recipe</div>
+          <h2>Article Title Placeholder</h2>
+          <p>Description placeholder text.</p>
+          <div class="meta">Coming Soon</div>
+        </div>
+        <div class="category-hero-img">
+          <div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 50%,#5a2820 100%);">Featured Image</div>
+        </div>
+      </a>
+    </section>
+
+    <!-- ===== AD SLOT 1: Leaderboard ===== -->
+    <div class="ad-leaderboard">
+      <div class="container">
+        {pageAd ? (
+          pageAd.bannerImages?.[0] ? (
+            <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner" style="display:block;text-align:center;border:none;background:none;">
+              <img src={pageAd.bannerImages[0]} alt={pageAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+            </a>
+          ) : (
+            <a href={pageAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-leaderboard-inner ad-brand-banner" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+              <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{pageAd.sponsorName}</span>
+              <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
+            </a>
+          )
+        ) : (
+          <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
+        )}
+      </div>
+    </div>
+
+    <!-- ===== FILTER BAR ===== -->
+    <hr class="section-divider">
+    <section class="filter-bar">
+      <div class="container">
+        <div class="filter-row">
+          <span class="filter-row-label">Filter</span>
+          <button class="filter-btn active" onclick="filterCook('all',this)">All</button>
+          <button class="filter-btn" onclick="filterCook('meats',this)">Meats</button>
+          <button class="filter-btn" onclick="filterCook('soup',this)">Soup / Broth</button>
+          <button class="filter-btn" onclick="filterCook('banchan',this)">Banchan</button>
+          <button class="filter-btn" onclick="filterCook('hacks',this)">Hacks / Tips</button>
+          <button class="filter-btn" onclick="filterCook('noodles',this)">Noodles</button>
+          <button class="filter-btn" onclick="filterCook('rice',this)">Rice</button>
+          <button class="filter-btn" onclick="filterCook('viral',this)">Viral / Trend</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ARTICLE GRID ===== -->
+    <section>
+      <div class="container">
+        <div class="results-info">Showing 9 recipes</div>
+
+        <div class="article-grid">
+          <a href="cook-article.html" class="card" data-cat="soup" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Kimchi Jjigae</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574,#a87b52);">Noodles</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Japchae</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="meats" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#b8865a,#8b6548);">KFC</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="banchan" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">Oi Sobagi</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="soup" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);">Budae</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <!-- AD SLOT 2: Inline ad between row 2 and row 3 -->
+          <div class="inline-ad">Partner &middot; 970 &times; 90 &middot; Inline</div>
+
+          <a href="cook-article.html" class="card" data-cat="rice" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Bibimbap</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="viral" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a6a5a,#5a4a3a);">Tteokbokki</div></div>
+            <div class="card-tag">Cook &middot; Recipe</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+
+          <a href="cook-article.html" class="card" data-cat="hacks" style="text-decoration:none;color:inherit;display:block;">
+            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Toast</div></div>
+            <div class="card-tag">Cook &middot; Hack</div>
+            <h4>Article Title Placeholder</h4>
+            <div class="card-meta">Coming Soon</div>
+          </a>
+        </div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <a href="#">Next &rarr;</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== EDITOR'S PICK BAND ===== -->
+    <section class="editors-pick-band">
+      <div class="container">
+        <div class="ep-text">
+          <div class="ep-label">Editor's Pick</div>
+          <div class="ep-tag">Cook &middot; Recipe</div>
+          <h2>Article Title Placeholder</h2>
+          <p>Description placeholder text.</p>
+          <div class="ep-meta">Coming Soon</div>
+          <a href="cook-article.html" class="ep-cta">Read Recipe &rarr;</a>
+        </div>
+        <div class="ep-img">
+          <div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 50%,#5a2820 100%);height:100%;">Editor's Pick Image</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ===== CONTENT CONTAINER ===== */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ===== SECTION DIVIDERS ===== */
+  .section-divider {
+    border: none;
+    border-top: 2px solid #eee;
+    max-width: 1020px;
+    margin: 0 auto;
+  }
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== CATEGORY TITLE BAR (Monocle dark band - contained to content width) ===== */
+  .category-title-bar {
+    background: #FFFFFF;
+    padding: 16px 0;
+  }
+  .category-title-bar .container {
+    background: #1C1714;
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 300;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  /* ===== IN-PAGE AD PLACEMENTS ===== */
+  .ad-leaderboard {
+    padding: 16px 0;
+    background: #FFFFFF;
+  }
+  .ad-leaderboard-inner {
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .inline-ad {
+    grid-column: 1 / -1;
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 8px 0;
+  }
+
+  /* ===== EDITOR'S PICK BAND ===== */
+  .editors-pick-band {
+    background: #1C1714;
+    padding: 64px 0;
+  }
+  .editors-pick-band .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .ep-text .ep-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
+  .ep-text .ep-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .ep-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: #FFFFFF;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .ep-text p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+  }
+  .ep-text .ep-meta {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .ep-text .ep-cta {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.4);
+    padding-bottom: 2px;
+  }
+  .ep-img {
+    height: 320px;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* ===== CATEGORY HERO (featured article) ===== */
+  .category-hero .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+    align-items: center;
+  }
+  .category-hero-img {
+    border-radius: 4px;
+    height: 320px;
+    overflow: hidden;
+  }
+  .category-hero-text .pillar-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 14px;
+  }
+  .category-hero-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+  .category-hero-text p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.65;
+  }
+  .category-hero-text .meta {
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar .container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .filter-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 12px;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .filter-btn:hover { color: #1C1714; }
+  .filter-btn.active {
+    color: #1C1714;
+    border-bottom: 2px solid #B8432A;
+  }
+
+  /* ===== RESULTS INFO ===== */
+  .results-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #bbb;
+    padding: 24px 0 8px;
+  }
+
+  /* ===== ARTICLE GRID (3-column) ===== */
+  .article-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 48px;
+  }
+
+  /* ===== CARDS ===== */
+  .card { cursor: pointer; }
+  .card-img {
+    border-radius: 4px;
+    height: 180px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card:hover .card-img .img-placeholder { transform: scale(1.03); }
+  .card-img .img-placeholder { transition: transform 0.4s ease; }
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 6px;
+  }
+  .card h4 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .card .card-meta {
+    font-size: 11px;
+    color: #bbb;
+  }
+
+  /* ===== PAGINATION ===== */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0 48px;
+  }
+  .pagination a, .pagination span {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .pagination a:hover {
+    color: #1C1714;
+    border-color: #1C1714;
+  }
+  .pagination .active {
+    color: #1C1714;
+    border-color: #1C1714;
+    font-weight: 500;
+  }
+  .pagination .ellipsis {
+    border: none;
+    padding: 8px 4px;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/search-index.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var articles = data.filter(function(a) { return a.pillar === 'Cook'; });
+        if (!articles.length) return;
+
+        // === DESKTOP: article-grid cards ===
+        var desktopCards = document.querySelectorAll('.desktop-only .article-grid .card');
+        desktopCards.forEach(function(card, i) {
+          if (i < articles.length) {
+            var a = articles[i];
+            card.setAttribute('href', a.url || '#');
+            var img = card.querySelector('.card-img .img-placeholder');
+            if (img && a.coverUrl) {
+              img.style.background = "url('" + a.coverUrl + "') center/cover";
+              img.textContent = '';
+            }
+            var tag = card.querySelector('.card-tag');
+            if (tag) tag.textContent = 'Cook \u00B7 ' + (a.postType || 'Recipe');
+            var h4 = card.querySelector('h4');
+            if (h4) h4.textContent = a.title || '';
+            var meta = card.querySelector('.card-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // === DESKTOP: hero section ===
+        if (articles.length > 0) {
+          var hero = articles[0];
+          var heroLink = document.querySelector('.desktop-only .category-hero .container');
+          if (heroLink) heroLink.setAttribute('href', hero.url || '#');
+          var heroTag = document.querySelector('.desktop-only .category-hero-text .pillar-tag');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 Cook \u00B7 ' + (hero.postType || 'Recipe');
+          var heroH2 = document.querySelector('.desktop-only .category-hero-text h2');
+          if (heroH2) heroH2.textContent = hero.title || '';
+          var heroP = document.querySelector('.desktop-only .category-hero-text p');
+          if (heroP) heroP.textContent = hero.excerpt || '';
+          var heroMeta = document.querySelector('.desktop-only .category-hero-text .meta');
+          if (heroMeta) heroMeta.textContent = hero.date || '';
+          var heroImg = document.querySelector('.desktop-only .category-hero-img .img-placeholder');
+          if (heroImg && hero.coverUrl) {
+            heroImg.style.background = "url('" + hero.coverUrl + "') center/cover";
+            heroImg.textContent = '';
+          }
+        }
+
+        // === DESKTOP: results-info ===
+        var info = document.querySelector('.desktop-only .results-info');
+        if (info) info.textContent = 'Showing ' + articles.length + ' recipe' + (articles.length !== 1 ? 's' : '');
+
+        // === MOBILE: hero card (.ch1) ===
+        var mobileHero = document.querySelector('.mobile-only .ch1');
+        if (mobileHero && articles.length > 0) {
+          var mh = articles[0];
+          mobileHero.setAttribute('href', mh.url || '#');
+          var mhTag = mobileHero.querySelector('.ptag');
+          if (mhTag) mhTag.textContent = 'Cook \u00B7 Featured';
+          var mhTitle = mobileHero.querySelector('.ch1-title');
+          if (mhTitle) mhTitle.textContent = mh.title || '';
+          var mhMeta = mobileHero.querySelector('.ch1-meta');
+          if (mhMeta) mhMeta.textContent = mh.date || '';
+          var mhImg = mobileHero.querySelector('.ch1-img');
+          if (mhImg && mh.coverUrl) mhImg.style.background = "url('" + mh.coverUrl + "') center/cover";
+        }
+
+        // === MOBILE: 2x2 grid cards (.hgc) ===
+        var mobileGrid = document.querySelectorAll('.mobile-only .hgc');
+        mobileGrid.forEach(function(card, i) {
+          var idx = i + 1;
+          if (idx < articles.length) {
+            var a = articles[idx];
+            card.setAttribute('href', a.url || '#');
+            var img = card.querySelector('.hgc-img');
+            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
+            var tag = card.querySelector('.ptag');
+            if (tag) tag.textContent = a.postType || 'Recipe';
+            var title = card.querySelector('.hgc-title');
+            if (title) title.textContent = a.title || '';
+            var meta = card.querySelector('.hgc-meta');
+            if (meta) meta.textContent = a.date || '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // (list cards removed — noodles/rice now use .hgc in second grid)
+      })
+      .catch(function(err) {
+        console.error('Failed to load search-index.json:', err);
+      });
+  });
+</script>
+
+<script is:inline>
+  function filterCook(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var cards = document.querySelectorAll('.card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    var info = document.querySelector('.results-info');
+    if (info) info.textContent = 'Showing ' + visible + ' recipe' + (visible !== 1 ? 's' : '');
+  }
+</script>
+
+<script is:inline>
+  function filterCookMobile(cat, btn) {
+    document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
+    btn.classList.add('on');
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .ad-rect').forEach(function(c) {
+      if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
+        c.style.display = '';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  }
+</script>
