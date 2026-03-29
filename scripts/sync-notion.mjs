@@ -401,6 +401,7 @@ async function extractPostData(page) {
     contributor: getProperty(page, 'Contributor'),
     affiliateLink: getProperty(page, 'Affiliate Link'),
     recipeCategory: getProperty(page, 'Recipe Category') || [],
+    tags: getProperty(page, 'Tags') || [],
     coverImages: getProperty(page, 'Cover Image') || [],
     videoThumbnail: getProperty(page, 'Video Thumbnail') || '',
     googleMapsUrl: getProperty(page, 'Google Maps URL') || '',
@@ -575,8 +576,10 @@ function generateArticlePage(post, bodyHtml, plainText, allPosts = [], ads = [])
       </div>`;
   }
 
-  // Tags
-  const tagsArray = Array.isArray(post.recipeCategory) ? post.recipeCategory : [];
+  // Tags - merge Recipe Category and Tags fields, deduplicate
+  const rc = Array.isArray(post.recipeCategory) ? post.recipeCategory : [];
+  const tg = Array.isArray(post.tags) ? post.tags : [];
+  const tagsArray = [...new Set([...rc, ...tg])];
   let tagsBlock = '';
   if (tagsArray.length > 0) {
     tagsBlock = `
@@ -1416,7 +1419,7 @@ async function main() {
     excerpt: (p.excerpt || '').substring(0, 200),
     coverUrl: p.coverUrl || '',
     url: `/${(p.pillar || 'eat').toLowerCase()}/${p.slug}/`,
-    tags: p.recipeCategory || [],
+    tags: [...new Set([...(p.recipeCategory || []), ...(p.tags || [])])],
     homepagePosition: p.homepagePosition || ''
   }));
   const searchIndexPath = path.join(process.cwd(), 'public', 'search-index.json');

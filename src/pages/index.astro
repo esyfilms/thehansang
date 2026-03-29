@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 let ads: any[] = [];
 try { const m = await import('../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
 const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
+const sidebarAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Sidebar') : a.placement === 'Sidebar');
+const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Category Inline') : a.placement === 'Category Inline');
 ---
 
 <BaseLayout title="The Hansang - Everything Korea, for Singapore" description="The definitive Korean food, culture and lifestyle authority in Singapore.">
@@ -127,7 +129,14 @@ const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
 
         <!-- SIDEBAR -->
         <aside class="sidebar">
-          <div class="sidebar-ad">Ad &middot; 300&times;250</div>
+          {sidebarAd ? (
+            <a href={sidebarAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="sidebar-ad" style={`text-decoration:none;background:#F7F3ED;border-color:#E0D8CE;flex-direction:column;gap:4px;`}>
+              <span style="font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{sidebarAd.sponsorName}</span>
+              <span style="font-size:11px;color:#1C1714;text-align:center;">{sidebarAd.displayText}</span>
+            </a>
+          ) : (
+            <div class="sidebar-ad">Ad &middot; 300&times;250</div>
+          )}
           <div class="sidebar-section">
             <h4>Most Read</h4>
             <a href="/cook/golden-ratios-korean-noodles/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
@@ -151,7 +160,14 @@ const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
               <div><h5>Ramyeon Risotto</h5><div class="card-meta">2 min read</div></div>
             </a>
           </div>
-          <div class="sidebar-ad sidebar-ad-tall" style="margin-top:24px;">Ad &middot; 300&times;600</div>
+          {sidebarAd ? (
+            <a href={sidebarAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="sidebar-ad sidebar-ad-tall" style={`margin-top:24px;text-decoration:none;background:#F7F3ED;border-color:#E0D8CE;flex-direction:column;gap:4px;`}>
+              <span style="font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{sidebarAd.sponsorName}</span>
+              <span style="font-size:11px;color:#1C1714;text-align:center;">{sidebarAd.displayText}</span>
+            </a>
+          ) : (
+            <div class="sidebar-ad sidebar-ad-tall" style="margin-top:24px;">Ad &middot; 300&times;600</div>
+          )}
         </aside>
       </div>
     </section>
@@ -248,9 +264,9 @@ const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
   .hero-img { border-radius: 4px; height: 320px; overflow: hidden; }
 
   /* MAIN + SIDEBAR */
-  .main-with-sidebar .container { display: grid; grid-template-columns: 1fr 280px; gap: 48px; }
+  .main-with-sidebar .container { display: grid; grid-template-columns: 1fr 280px; gap: 48px; align-items: start; }
   .main-col { min-width: 0; }
-  .sidebar { padding-top: 32px; border-left: 2px solid #eee; padding-left: 32px; }
+  .sidebar { padding-top: 32px; border-left: 2px solid #eee; padding-left: 32px; position: sticky; top: 24px; }
   .sidebar-ad { border: 1px dashed #ccc; border-radius: 4px; height: 250px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; }
   .sidebar-ad-tall { height: 600px; }
   .sidebar-section h4 { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #eee; color: #1C1714; }
@@ -260,7 +276,7 @@ const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
 
   /* CARDS */
   .card { cursor: pointer; }
-  .card-img { border-radius: 4px; height: 180px; margin-bottom: 12px; overflow: hidden; }
+  .card-img { border-radius: 4px; height: 180px; margin-bottom: 12px; overflow: hidden; background: #1C1714; }
   .card-tag { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8432A; margin-bottom: 6px; }
   .card h4 { font-family: 'Source Serif 4', serif; font-size: 17px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 6px; }
   .card .card-meta { font-size: 11px; color: #bbb; }
