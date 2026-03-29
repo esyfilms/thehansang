@@ -6,5 +6,13 @@
     "linkUrl": "/",
     "bannerImages": [],
     "active": true
+  },
+  {
+    "sponsorName": "Korea Tourism Organization",
+    "displayText": "Visit Korea Year 2025-2026. Discover the beauty of Korea.",
+    "placement": "Eat Leaderboard",
+    "linkUrl": "https://english.visitkorea.or.kr",
+    "bannerImages": [],
+    "active": true
   }
 ]
