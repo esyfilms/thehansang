@@ -409,13 +409,14 @@ const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           });
         }
 
-        // === Hero section: use first Cook article ===
-        if (cookArticles.length > 0) {
-          var hero = cookArticles[0];
+        // === Hero section: use Homepage Position = "Hero" post, or fall back to first article ===
+        var heroPost = data.find(function(a) { return a.homepagePosition === 'Hero'; });
+        var hero = heroPost || cookArticles[0] || eatArticles[0];
+        if (hero) {
           var heroLink = document.querySelector('.hero .hero-link');
           if (heroLink) heroLink.setAttribute('href', hero.url || '#');
           var heroTag = document.querySelector('.hero-text .pillar-tag');
-          if (heroTag) heroTag.textContent = 'Featured \u00B7 Cook \u00B7 ' + (hero.postType || 'Recipe');
+          if (heroTag) heroTag.textContent = 'Featured \u00B7 ' + (hero.pillar || 'Eat') + ' \u00B7 ' + (hero.postType || 'Review');
           var heroH2 = document.querySelector('.hero-text h2');
           if (heroH2) heroH2.textContent = hero.title || '';
           var heroP = document.querySelector('.hero-text p');

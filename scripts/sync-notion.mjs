@@ -2601,7 +2601,8 @@ async function main() {
     excerpt: (p.excerpt || '').substring(0, 200),
     coverUrl: p.coverUrl || '',
     url: `/${(p.pillar || 'eat').toLowerCase()}/${p.slug}/`,
-    tags: p.recipeCategory || []
+    tags: p.recipeCategory || [],
+    homepagePosition: p.homepagePosition || ''
   }));
   const searchIndexPath = path.join(process.cwd(), 'public', 'search-index.json');
   fs.writeFileSync(searchIndexPath, JSON.stringify(searchIndex, null, 2));
