@@ -346,7 +346,7 @@ function buildIgEmbed(url) {
   }
   return `
     <div class="article-video">
-      <iframe src="${embedUrl}" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true" style="border:none;overflow:hidden;max-width:100%;"></iframe>
+      <iframe src="${embedUrl}" frameborder="0" scrolling="no" allowtransparency="true" style="border:none;overflow:hidden;width:100%;min-height:500px;"></iframe>
       <p class="article-video-caption">Watch the full video on Instagram @thehansang.sg</p>
     </div>`;
 }
@@ -940,7 +940,9 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
   .article-video iframe {
     display: block;
     margin: 0 auto;
-    max-width: 100%;
+    width: 100%;
+    max-width: 540px;
+    min-height: 500px;
     border-radius: 6px;
   }
   .article-video-caption {
