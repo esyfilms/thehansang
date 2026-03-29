@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+let ads: any[] = [];
+try { const m = await import('../data/ads.json'); ads = m.default || []; } catch(e) { ads = []; }
+const mobileAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.includes('Mobile Banner') : a.placement === 'Mobile Banner');
 ---
 
 <BaseLayout title="The Hansang - Everything Korea, for Singapore" description="The definitive Korean food, culture and lifestyle authority in Singapore.">
@@ -94,7 +97,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
           <!-- Mobile Ad Strip -->
           <div class="ad-strip mobile-only">
-            <div class="ad-strip-box"><span>Partner &middot; 320&times;50</span></div>
+            {mobileAd ? (
+              <a href={mobileAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-strip-box" style="text-decoration:none;background:#F7F3ED;border-color:#E0D8CE;">
+                <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{mobileAd.sponsorName}</span>
+                <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">{mobileAd.displayText}</span>
+              </a>
+            ) : (
+              <div class="ad-strip-box"><span>Partner &middot; 320&times;50</span></div>
+            )}
           </div>
 
           <!-- Editor's Pick -->
@@ -335,7 +345,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .kitchen-band .section-header h3 { color: rgba(255,255,255,0.4); }
     .kitchen-band .section-header a { color: rgba(255,255,255,0.3); }
     .kitchen-band .card h4 { color: #fff; }
-    .kitchen-band .card-img .img-placeholder { background: rgba(255,255,255,0.07) !important; }
+    .kitchen-band .card-img .img-placeholder { background: rgba(255,255,255,0.07); }
     .kitchen-band .card-tag { color: rgba(255,255,255,0.3); }
     .swipe-hint { display: none; }
   }
