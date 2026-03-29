@@ -66,17 +66,6 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       </a>
     </div>
 
-    <!-- List Cards -->
-    <a href="/cook/design-preview/" class="lc" data-mcat="noodles">
-      <div>
-        <div class="ptag">Main</div>
-        <div class="lc-title">Recipe Title Placeholder</div>
-        <div class="lc-sub">Description placeholder text goes here.</div>
-        <div class="lc-meta">Coming Soon</div>
-      </div>
-      <div class="lc-img" style="background:#E0D8CE;"></div>
-    </a>
-
     {mobileInlineAd ? (
       <a href={mobileInlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="ad-rect" style="display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;">
         <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
@@ -86,15 +75,21 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
     )}
 
-    <a href="/cook/design-preview/" class="lc" data-mcat="rice">
-      <div>
-        <div class="ptag">Drink</div>
-        <div class="lc-title">Recipe Title Placeholder</div>
-        <div class="lc-sub">Description placeholder text goes here.</div>
-        <div class="lc-meta">Coming Soon</div>
-      </div>
-      <div class="lc-img" style="background:#E0D8CE;"></div>
-    </a>
+    <!-- 2x1 Grid -->
+    <div class="hgrid">
+      <a href="/cook/design-preview/" class="hgc" data-mcat="noodles">
+        <div class="hgc-img" style="background:linear-gradient(135deg,#C8BEB5,#A89880);"></div>
+        <div class="ptag">COOK &middot; RECIPE</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a href="/cook/design-preview/" class="hgc" data-mcat="rice">
+        <div class="hgc-img" style="background:linear-gradient(135deg,#C8BEB5,#A89880);"></div>
+        <div class="ptag">COOK &middot; RECIPE</div>
+        <div class="hgc-title">Recipe Title Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
   </div>
 
   <!-- ===== DESKTOP LAYOUT ===== -->
@@ -676,27 +671,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           }
         });
 
-        // === MOBILE: list cards (.lc) ===
-        var mobileList = document.querySelectorAll('.mobile-only .lc');
-        mobileList.forEach(function(card, i) {
-          var idx = i + 5;
-          if (idx < articles.length) {
-            var a = articles[idx];
-            card.setAttribute('href', a.url || '#');
-            var tag = card.querySelector('.ptag');
-            if (tag) tag.textContent = a.postType || 'Recipe';
-            var title = card.querySelector('.lc-title');
-            if (title) title.textContent = a.title || '';
-            var sub = card.querySelector('.lc-sub');
-            if (sub) sub.textContent = a.excerpt || '';
-            var meta = card.querySelector('.lc-meta');
-            if (meta) meta.textContent = a.date || '';
-            var img = card.querySelector('.lc-img');
-            if (img && a.coverUrl) img.style.background = "url('" + a.coverUrl + "') center/cover";
-          } else {
-            card.style.display = 'none';
-          }
-        });
+        // (list cards removed — noodles/rice now use .hgc in second grid)
       })
       .catch(function(err) {
         console.error('Failed to load search-index.json:', err);
@@ -727,7 +702,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
   function filterCookMobile(cat, btn) {
     document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
     btn.classList.add('on');
-    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .lc, .mobile-only .ad-rect').forEach(function(c) {
+    document.querySelectorAll('.mobile-only .ch1, .mobile-only .hgc, .mobile-only .ad-rect').forEach(function(c) {
       if (cat === 'all' || c.getAttribute('data-mcat') === cat) {
         c.style.display = '';
       } else {
