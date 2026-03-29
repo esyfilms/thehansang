@@ -2518,84 +2518,12 @@ async function main() {
   }
 
   // -----------------------------------------------------------------------
-  // 2. Generate category listing pages
-  //    SKIP if the existing file has mobile-only content (hand-built design)
+  // 2-4. SKIPPED: Category pages, homepage, travel sub-pages, pantry page
+  //      These are hand-built with the locked design system and must NEVER
+  //      be overwritten by the sync. They consume search-index.json and
+  //      ads.json at runtime via client-side JS.
   // -----------------------------------------------------------------------
-  for (const [pillar, cfg] of Object.entries(PILLAR_CONFIG)) {
-    const pillarPosts = allPosts.filter(p => p.pillar === pillar);
-    const categoryPage = generateCategoryPage(pillar, pillarPosts);
-    if (!categoryPage) continue;
-
-    const dir = path.join(PAGES_DIR, cfg.folder);
-    fs.mkdirSync(dir, { recursive: true });
-    const catPath = path.join(dir, 'index.astro');
-    if (fs.existsSync(catPath) && fs.readFileSync(catPath, 'utf-8').includes('mobile-only')) {
-      console.log(`  SKIPPED: src/pages/${cfg.folder}/index.astro (has mobile layout - will not overwrite)`);
-      continue;
-    }
-    fs.writeFileSync(catPath, categoryPage);
-    console.log(`  Written: src/pages/${cfg.folder}/index.astro (${pillarPosts.length} posts)`);
-  }
-
-  // -----------------------------------------------------------------------
-  // 3. Generate homepage
-  //    SKIP if the existing file has mobile-only content (hand-built design)
-  // -----------------------------------------------------------------------
-  const homepagePath = path.join(PAGES_DIR, 'index.astro');
-  if (fs.existsSync(homepagePath) && fs.readFileSync(homepagePath, 'utf-8').includes('mobile-only')) {
-    console.log('  SKIPPED: src/pages/index.astro (has mobile layout - will not overwrite)');
-  } else {
-    if (fs.existsSync(homepagePath)) {
-      fs.unlinkSync(homepagePath);
-      console.log('  Deleted existing: src/pages/index.astro');
-    }
-    const homepageSrc = generateHomepage(allPosts);
-    fs.writeFileSync(homepagePath, homepageSrc);
-    console.log('  Written: src/pages/index.astro');
-  }
-
-  // -----------------------------------------------------------------------
-  // 3a. Generate Travel sub-pages (Korea Guide theme pages)
-  //     SKIP if existing file has guide-hero (hand-built design)
-  // -----------------------------------------------------------------------
-  const travelSubPages = {
-    'Seoul Eats': 'seoul-eats',
-    'Seoul Cafe': 'seoul-cafe',
-    'Seoul Visit': 'seoul-visit',
-    'Seoul Shops': 'seoul-shops',
-    'Seoul Nights': 'seoul-nights',
-  };
-  const travelPosts = allPosts.filter(p => p.pillar === 'Travel');
-  for (const [category, subSlug] of Object.entries(travelSubPages)) {
-    const subDir = path.join(PAGES_DIR, 'travel', subSlug);
-    const subPath = path.join(subDir, 'index.astro');
-    if (fs.existsSync(subPath) && fs.readFileSync(subPath, 'utf-8').includes('guide-hero')) {
-      console.log(`  SKIPPED: src/pages/travel/${subSlug}/index.astro (has hand-built design)`);
-      continue;
-    }
-    // Only generate if we have posts for this category
-    const postsInCat = travelPosts.filter(p =>
-      Array.isArray(p.recipeCategory) && p.recipeCategory.includes(category)
-    );
-    console.log(`  Travel sub-page: ${category} (${postsInCat.length} posts) -> /travel/${subSlug}/`);
-  }
-
-  // -----------------------------------------------------------------------
-  // 4. Generate Pantry page
-  // -----------------------------------------------------------------------
-  console.log('Fetching Pantry Items from Notion...');
-  const pantryPages = await fetchPantryItems();
-  console.log(`Found ${pantryPages.length} pantry item(s).`);
-  const pantryItems = pantryPages.map(extractPantryItem);
-  const pantryDir = path.join(PAGES_DIR, 'my-pantry');
-  fs.mkdirSync(pantryDir, { recursive: true });
-  const pantryPath = path.join(pantryDir, 'index.astro');
-  if (fs.existsSync(pantryPath) && fs.readFileSync(pantryPath, 'utf-8').includes('mobile-only')) {
-    console.log('  SKIPPED: src/pages/my-pantry/index.astro (has mobile layout - will not overwrite)');
-  } else {
-    fs.writeFileSync(pantryPath, generatePantryPage(pantryItems));
-    console.log('  Written: src/pages/my-pantry/index.astro');
-  }
+  console.log('  Hand-built pages (homepage, category, pantry, travel) are never overwritten by sync.');
 
   // -----------------------------------------------------------------------
   // 5. Generate search index
