@@ -19,16 +19,6 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="cat-sub">Korea travel guides written for Singaporeans</div>
     </div>
 
-    <!-- Filter Pills -->
-    <div class="filters-mobile">
-      <button class="pill on" onclick="filterTravelMobile('all', this)">All</button>
-      <button class="pill" onclick="filterTravelMobile('seoul', this)">Seoul</button>
-      <button class="pill" onclick="filterTravelMobile('busan', this)">Busan</button>
-      <button class="pill" onclick="filterTravelMobile('jeju', this)">Jeju</button>
-      <button class="pill" onclick="filterTravelMobile('day-trips', this)">Day Trips</button>
-      <button class="pill" onclick="filterTravelMobile('planning', this)">Planning</button>
-    </div>
-
     <!-- Hero Card -->
     <a class="ch1" href="/travel/seoul-5-days/">
       <div>
@@ -39,12 +29,12 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       <div class="ch1-img" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 50%,#1e3028 100%);"></div>
     </a>
 
-    <!-- Korea Guides Section -->
-    <div class="sh"><span class="sh-lbl">Korea Guides</span><a class="sh-lnk" href="#">More &rarr;</a></div>
+    <!-- Korea Guides Section (cards = filters) -->
+    <div class="sh"><span class="sh-lbl">Korea Guides</span><a class="sh-lnk" href="#" onclick="filterTravelGuides('all'); return false;">Show All</a></div>
 
     <div class="kg-scroll">
       <!-- Seoul Eats -->
-      <a class="kg-dest" href="/travel/seoul-eats/" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);">
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-eats')" style="background:linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);cursor:pointer;">
         <div class="kg-dest-hd">
           <div class="kg-dest-lbl">The Hansang Korea Guide</div>
           <div class="kg-dest-rule"></div>
@@ -56,10 +46,10 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span class="kg-dest-cta">Explore &rarr;</span>
           <span class="kg-dest-cnt">12 articles</span>
         </div>
-      </a>
+      </div>
 
       <!-- Seoul Cafe -->
-      <a class="kg-dest" href="/travel/seoul-cafe/" style="background:linear-gradient(145deg,#c4a882 0%,#8b7550 60%,#5a4a30 100%);">
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-cafe')" style="background:linear-gradient(145deg,#c4a882 0%,#8b7550 60%,#5a4a30 100%);cursor:pointer;">
         <div class="kg-dest-hd">
           <div class="kg-dest-lbl">The Hansang Korea Guide</div>
           <div class="kg-dest-rule"></div>
@@ -71,10 +61,10 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span class="kg-dest-cta">Explore &rarr;</span>
           <span class="kg-dest-cnt">8 articles</span>
         </div>
-      </a>
+      </div>
 
       <!-- Seoul Visit -->
-      <a class="kg-dest" href="/travel/seoul-visit/" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 60%,#1e3028 100%);">
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-visit')" style="background:linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 60%,#1e3028 100%);cursor:pointer;">
         <div class="kg-dest-hd">
           <div class="kg-dest-lbl">The Hansang Korea Guide</div>
           <div class="kg-dest-rule"></div>
@@ -86,10 +76,10 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span class="kg-dest-cta">Explore &rarr;</span>
           <span class="kg-dest-cnt">10 articles</span>
         </div>
-      </a>
+      </div>
 
       <!-- Seoul Shops -->
-      <a class="kg-dest" href="/travel/seoul-shops/" style="background:linear-gradient(145deg,#6b5a8c 0%,#4a3a6b 60%,#2e2448 100%);">
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-shops')" style="background:linear-gradient(145deg,#6b5a8c 0%,#4a3a6b 60%,#2e2448 100%);cursor:pointer;">
         <div class="kg-dest-hd">
           <div class="kg-dest-lbl">The Hansang Korea Guide</div>
           <div class="kg-dest-rule"></div>
@@ -101,14 +91,14 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span class="kg-dest-cta">Explore &rarr;</span>
           <span class="kg-dest-cnt">7 articles</span>
         </div>
-      </a>
+      </div>
 
-      <!-- Seoul Recommendation -->
-      <a class="kg-dest" href="/travel/seoul-nights/" style="background:linear-gradient(145deg,#8c6b4a 0%,#6b4a2e 60%,#4a2e18 100%);">
+      <!-- Seoul Nights -->
+      <div class="kg-dest" onclick="filterTravelGuides('seoul-nights')" style="background:linear-gradient(145deg,#8c6b4a 0%,#6b4a2e 60%,#4a2e18 100%);cursor:pointer;">
         <div class="kg-dest-hd">
           <div class="kg-dest-lbl">The Hansang Korea Guide</div>
           <div class="kg-dest-rule"></div>
-          <div class="kg-dest-name">Seoul Recommendation</div>
+          <div class="kg-dest-name">Seoul Nights</div>
           <div class="kg-dest-desc">Eric's personal picks: the places he keeps going back to</div>
         </div>
         <div class="kg-dest-img" style="background:linear-gradient(180deg,transparent,rgba(0,0,0,0.2));"></div>
@@ -116,7 +106,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span class="kg-dest-cta">Explore &rarr;</span>
           <span class="kg-dest-cnt">9 articles</span>
         </div>
-      </a>
+      </div>
     </div>
 
     <!-- Latest Section -->
@@ -720,10 +710,18 @@ function filterTravel(cat) {
   if (ad) ad.style.display = (cat === 'all') ? '' : 'none';
 }
 
-function filterTravelMobile(cat, btn) {
-  document.querySelectorAll('.mobile-only .pill').forEach(function(p) { p.classList.remove('on'); });
-  btn.classList.add('on');
-  document.querySelectorAll('.mobile-only .ch1, .mobile-only .lc, .mobile-only .kg-dest').forEach(function(c) {
+function filterTravelGuides(cat) {
+  // Highlight active guide card
+  document.querySelectorAll('.mobile-only .kg-dest').forEach(function(c) { c.style.outline = ''; c.style.opacity = ''; });
+  if (cat !== 'all' && event && event.currentTarget && event.currentTarget.classList.contains('kg-dest')) {
+    event.currentTarget.style.outline = '2px solid #B8432A';
+    // Dim other cards
+    document.querySelectorAll('.mobile-only .kg-dest').forEach(function(c) {
+      if (c !== event.currentTarget) c.style.opacity = '0.5';
+    });
+  }
+  // Filter list cards below
+  document.querySelectorAll('.mobile-only .lc').forEach(function(c) {
     if (cat === 'all' || c.getAttribute('data-mcat') === cat) { c.style.display = ''; }
     else { c.style.display = 'none'; }
   });
