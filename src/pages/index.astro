@@ -113,7 +113,7 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           <div class="section-header">
             <h3>Editor's Pick</h3>
           </div>
-          <a href="/cook/gochujang-chili-oil-noodles/" class="featured-banner" style="text-decoration:none;color:inherit;display:grid;">
+          <a href="/cook/gochujang-chili-oil-noodles/" class="featured-banner ep-1" style="text-decoration:none;color:inherit;display:grid;">
             <div class="featured-img">
               <div class="img-placeholder" style="background:linear-gradient(145deg,#e8c9a0 0%,#c4a47a 50%,#8b7560 100%);">Featured Image</div>
             </div>
@@ -122,6 +122,29 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
               <h4>Gochujang Chili Oil Noodles</h4>
               <p>Korean gochujang meets Sichuan chili oil in one punchy bowl. Comes together in 15 minutes.</p>
               <div class="meta">22 January 2026 &middot; 3 min read</div>
+            </div>
+          </a>
+
+          <!-- Inline Ad -->
+          {inlineAd ? (
+            <a href={inlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="inline-ad-slot" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;background:#F7F3ED;border:1px solid #E0D8CE;border-radius:6px;padding:16px 24px;margin:32px 0;">
+              <span style="font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{inlineAd.sponsorName}</span>
+              <span style="font-size:11px;color:#1C1714;">{inlineAd.displayText}</span>
+            </a>
+          ) : (
+            <div class="inline-ad-slot" style="border:1px dashed #ccc;border-radius:6px;padding:16px;text-align:center;color:#bbb;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;margin:32px 0;">Partner &middot; 970 &times; 90 &middot; Inline</div>
+          )}
+
+          <!-- Editor's Pick 2 -->
+          <a href="#" class="featured-banner ep-2" style="text-decoration:none;color:inherit;display:grid;">
+            <div class="featured-img">
+              <div class="img-placeholder" style="background:linear-gradient(145deg,#c4a47a 0%,#8b7560 50%,#6b5a48 100%);">Featured Image</div>
+            </div>
+            <div class="featured-body">
+              <div class="pillar-tag">Cook &middot; Recipe</div>
+              <h4>Editor's Pick 2</h4>
+              <p>Loading...</p>
+              <div class="meta"></div>
             </div>
           </a>
 
@@ -385,7 +408,9 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
               card.setAttribute('href', a.url || '#');
               var img = card.querySelector('.card-img .img-placeholder');
               if (img && a.coverUrl) {
-                img.style.background = "url('" + a.coverUrl + "') center/cover";
+                var isThumb = a.coverUrl.indexOf('-thumb.') > -1;
+                img.style.background = "url('" + a.coverUrl + "') center/" + (isThumb ? 'contain no-repeat' : 'cover');
+                if (isThumb) img.style.backgroundColor = '#1C1714';
                 img.textContent = '';
               }
               var tag = card.querySelector('.card-tag');
@@ -400,28 +425,24 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           });
         }
 
-        // === From the Kitchen section: .kitchen-band .scroll-grid ===
+        // === From the Kitchen section: dynamically generate all cook cards ===
         var kitchenGrid = document.querySelector('.kitchen-band .scroll-grid');
-        if (kitchenGrid) {
-          var cookCards = kitchenGrid.querySelectorAll('.card');
-          cookCards.forEach(function(card, i) {
-            if (i < cookArticles.length) {
-              var a = cookArticles[i];
-              card.setAttribute('href', a.url || '#');
-              var img = card.querySelector('.card-img .img-placeholder');
-              if (img && a.coverUrl) {
-                img.style.background = "url('" + a.coverUrl + "') center/cover";
-                img.textContent = '';
-              }
-              var tag = card.querySelector('.card-tag');
-              if (tag) tag.textContent = 'Cook \u00B7 ' + (a.postType || 'Recipe');
-              var h4 = card.querySelector('h4');
-              if (h4) h4.textContent = a.title || '';
-              var meta = card.querySelector('.card-meta');
-              if (meta) meta.textContent = a.date || '';
-            } else {
-              card.style.display = 'none';
-            }
+        if (kitchenGrid && cookArticles.length > 0) {
+          kitchenGrid.innerHTML = '';
+          cookArticles.forEach(function(a) {
+            var card = document.createElement('a');
+            card.href = a.url || '#';
+            card.className = 'card';
+            card.style.cssText = 'text-decoration:none;color:inherit;display:block;';
+            var isIgThumb = a.coverUrl && a.coverUrl.indexOf('-thumb.') > -1;
+            var coverBg = a.coverUrl
+              ? "url('" + a.coverUrl + "') center/" + (isIgThumb ? 'contain no-repeat; background-color:#1C1714' : 'cover')
+              : 'linear-gradient(145deg,#6b5a4e,#4a3e34)';
+            card.innerHTML = '<div class="card-img"><div class="img-placeholder" style="background:' + coverBg + ';"></div></div>'
+              + '<div class="card-tag">Cook \u00B7 ' + (a.postType || 'Recipe') + '</div>'
+              + '<h4>' + (a.title || '') + '</h4>'
+              + '<div class="card-meta">' + (a.date || '') + '</div>';
+            kitchenGrid.appendChild(card);
           });
         }
 
@@ -446,27 +467,30 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           }
         }
 
-        // === Editor's Pick section: use second Cook article (or first Eat) ===
-        var epArticle = cookArticles.length > 1 ? cookArticles[1] : (eatArticles.length > 0 ? eatArticles[0] : null);
-        if (epArticle) {
-          var epLink = document.querySelector('.featured-banner');
-          if (epLink) {
-            epLink.setAttribute('href', epArticle.url || '#');
-            var epImg = epLink.querySelector('.featured-img .img-placeholder');
-            if (epImg && epArticle.coverUrl) {
-              epImg.style.background = "url('" + epArticle.coverUrl + "') center/cover";
-              epImg.textContent = '';
-            }
-            var epTag = epLink.querySelector('.featured-body .pillar-tag');
-            if (epTag) epTag.textContent = (epArticle.pillar || 'Cook') + ' \u00B7 ' + (epArticle.postType || 'Recipe');
-            var epH4 = epLink.querySelector('.featured-body h4');
-            if (epH4) epH4.textContent = epArticle.title || '';
-            var epP = epLink.querySelector('.featured-body p');
-            if (epP) epP.textContent = epArticle.excerpt || '';
-            var epMeta = epLink.querySelector('.featured-body .meta');
-            if (epMeta) epMeta.textContent = epArticle.date || '';
+        // === Editor's Pick section: populate both EP slots ===
+        function populateEP(selector, article) {
+          if (!article) return;
+          var el = document.querySelector(selector);
+          if (!el) return;
+          el.setAttribute('href', article.url || '#');
+          var img = el.querySelector('.featured-img .img-placeholder');
+          if (img && article.coverUrl) {
+            img.style.background = "url('" + article.coverUrl + "') center/cover";
+            img.textContent = '';
           }
+          var tag = el.querySelector('.featured-body .pillar-tag');
+          if (tag) tag.textContent = (article.pillar || 'Cook') + ' \u00B7 ' + (article.postType || 'Recipe');
+          var h4 = el.querySelector('.featured-body h4');
+          if (h4) h4.textContent = article.title || '';
+          var p = el.querySelector('.featured-body p');
+          if (p) p.textContent = article.excerpt || '';
+          var meta = el.querySelector('.featured-body .meta');
+          if (meta) meta.textContent = article.date || '';
         }
+        var ep1 = data.find(function(a) { return a.homepagePosition === 'Editors Pick'; }) || cookArticles[1] || eatArticles[0];
+        var ep2 = cookArticles[2] || eatArticles[1] || cookArticles[0];
+        populateEP('.ep-1', ep1);
+        populateEP('.ep-2', ep2);
       })
       .catch(function(err) {
         console.error('Failed to load search-index.json:', err);
