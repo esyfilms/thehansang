@@ -4,154 +4,755 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 <BaseLayout title="My Pantry" description="My Pantry — Stock your Korean kitchen without leaving Singapore. Essential ingredients, tools, and where to shop.">
 
-  <!-- Launch Banner -->
-  <div class="launch-banner">
-    We're launching soon — this is a design preview
+  <!-- ========== MOBILE ========== -->
+  <div class="mobile-only">
+
+    <div class="cat-hd">
+      <div class="cat-title">My Pantry</div>
+      <div class="cat-sub">Stock your Korean kitchen without leaving Singapore</div>
+    </div>
+
+    <div class="filters-mobile">
+      <button class="pill on">All</button>
+      <button class="pill">Ingredients</button>
+      <button class="pill">Kitchen Accessories</button>
+      <button class="pill">Ceramics/Pottery</button>
+      <button class="pill">Pots &amp; Pans</button>
+      <button class="pill">Ramyeon</button>
+      <button class="pill">Knives &amp; Chopping Boards</button>
+    </div>
+
+    <!-- Hero card (Eric's Top Pick) -->
+    <a class="ch1" href="#">
+      <div>
+        <div class="ptag">Eric's Pick &middot; Kitchen</div>
+        <div class="ch1-title">Product Placeholder</div>
+        <div class="ch1-meta">Coming Soon</div>
+      </div>
+      <div class="ch1-img" style="background:linear-gradient(145deg,#d4a574,#a87b52);"></div>
+    </a>
+
+    <!-- 2x2 grid -->
+    <div class="hgrid">
+      <a class="hgc" href="#">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
+        <div class="ptag">Ingredient</div>
+        <div class="hgc-title">Product Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#4a6b5a,#2e4a3a);"></div>
+        <div class="ptag">Kitchen</div>
+        <div class="hgc-title">Product Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#6b4c3b,#4a3428);"></div>
+        <div class="ptag">Kitchen</div>
+        <div class="hgc-title">Product Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+      <a class="hgc" href="#">
+        <div class="hgc-img" style="background:linear-gradient(145deg,#8B6914,#6b5010);"></div>
+        <div class="ptag">Ingredient</div>
+        <div class="hgc-title">Product Placeholder</div>
+        <div class="hgc-meta">Coming Soon</div>
+      </a>
+    </div>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      <div class="ad-rect">Ad &middot; 300 x 250</div>
+    </div>
+
+    <!-- List cards -->
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Instant</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#c4564a,#8b3d34);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Kitchen</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#4a4a5a,#2a2a3a);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Ingredient</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#3a5040,#1e3028);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Instant</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Ingredient</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#c4a882,#8b7550);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Kitchen</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#5a5a5a,#2a2a2a);"></div>
+    </a>
+
+    <a class="lc" href="#">
+      <div>
+        <div class="ptag">Instant</div>
+        <div class="lc-title">Product Placeholder</div>
+        <div class="lc-meta">Coming Soon</div>
+      </div>
+      <div class="lc-img" style="background:linear-gradient(145deg,#a87b52,#7a5530);"></div>
+    </a>
+
+    <!-- Ad -->
+    <div style="padding:12px 18px;">
+      <div class="ad-rect">Ad &middot; 300 x 250</div>
+    </div>
+
   </div>
 
-  <header class="page-header">
-    <div class="page-header-korean" lang="ko">나의 식료품장</div>
-    <h1>My Pantry</h1>
-    <p class="page-header-desc">Stock your Korean kitchen without leaving Singapore.</p>
-  </header>
+  <!-- ========== DESKTOP ========== -->
+  <div class="desktop-only">
 
-  <!-- Category Grid -->
-  <section class="pantry-grid-section">
-    <div class="pantry-grid">
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Sauces &amp; Pastes</div>
-        <div class="pantry-card-count">Coming Soon</div>
-      </a>
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Rice &amp; Grains</div>
-        <div class="pantry-card-count">Coming Soon</div>
-      </a>
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Noodles &amp; Dried Goods</div>
-        <div class="pantry-card-count">Coming Soon</div>
-      </a>
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Kimchi &amp; Fermented</div>
-        <div class="pantry-card-count">Coming Soon</div>
-      </a>
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Snacks &amp; Drinks</div>
-        <div class="pantry-card-count">Coming Soon</div>
-      </a>
-      <div class="pantry-card">
-        <div class="pantry-card-image">[ Image ]</div>
-        <div class="pantry-card-title">Kitchen Tools</div>
-        <div class="pantry-card-count">Coming Soon</div>
+    <!-- ===== CATEGORY TITLE BAR ===== -->
+    <section class="category-title-bar">
+      <div class="container">
+        <h1>My Pantry</h1>
+        <div class="title-sub">The Hansang Picks for your Pantry.</div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURED PICKS ===== -->
+    <section style="padding: 0;">
+      <div class="container">
+        <div class="section-header">
+          <h3>Eric's Top Picks</h3>
+          <a href="javascript:void(0)" onclick="filterPantry('all', document.querySelector('.filter-btn'))">View All &rarr;</a>
+        </div>
+
+        <div class="featured-grid">
+
+          <!-- FEATURED 1 -->
+          <a href="#" target="_blank" class="featured-product">
+            <div class="fp-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#d4a574 0%,#a87b52 60%,#7a5530 100%);">Product Photo</div>
+              <span class="featured-badge">Eric's Pick</span>
+            </div>
+            <div class="fp-body">
+              <div class="fp-brand">Brand Placeholder</div>
+              <div class="fp-name">Product Placeholder</div>
+              <div class="fp-desc">Description placeholder text.</div>
+            </div>
+            <div class="fp-footer">
+              <div class="fp-price">Coming Soon</div>
+              <span class="fp-cta">Shop Now &rarr;</span>
+            </div>
+          </a>
+
+          <!-- FEATURED 2 -->
+          <a href="#" target="_blank" class="featured-product">
+            <div class="fp-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#c4564a 0%,#8b3d34 60%,#5a2820 100%);">Product Photo</div>
+              <span class="featured-badge">Eric's Pick</span>
+            </div>
+            <div class="fp-body">
+              <div class="fp-brand">Brand Placeholder</div>
+              <div class="fp-name">Product Placeholder</div>
+              <div class="fp-desc">Description placeholder text.</div>
+            </div>
+            <div class="fp-footer">
+              <div class="fp-price">Coming Soon</div>
+              <span class="fp-cta">Shop Now &rarr;</span>
+            </div>
+          </a>
+
+          <!-- FEATURED 3 -->
+          <a href="#" target="_blank" class="featured-product">
+            <div class="fp-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#4a6b5a 0%,#2e4a3a 60%,#1e3028 100%);">Product Photo</div>
+              <span class="featured-badge">Eric's Pick</span>
+            </div>
+            <div class="fp-body">
+              <div class="fp-brand">Brand Placeholder</div>
+              <div class="fp-name">Product Placeholder</div>
+              <div class="fp-desc">Description placeholder text.</div>
+            </div>
+            <div class="fp-footer">
+              <div class="fp-price">Coming Soon</div>
+              <span class="fp-cta">Shop Now &rarr;</span>
+            </div>
+          </a>
+
+        </div><!-- /featured-grid -->
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ===== AD SLOT ===== -->
+    <div class="container">
+      <div class="inline-ad-wrap">
+        <div class="inline-ad">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
       </div>
     </div>
-  </section>
 
-  <!-- Where to Shop -->
-  <section class="shop-bar">
-    <div class="shop-bar-inner">
-      <h2 class="shop-bar-title">Where to Shop</h2>
-      <p class="shop-bar-desc">A guide to Korean grocery stores, online shops, and supermarket aisles in Singapore. Coming soon.</p>
+    <!-- ===== FILTER BAR ===== -->
+    <section class="filter-bar">
+      <div class="container">
+        <div class="filter-row">
+          <span class="filter-row-label">Category</span>
+          <button class="filter-btn active" onclick="filterPantry('all', this)">All</button>
+          <button class="filter-btn" onclick="filterPantry('tools', this)">Kitchen Tools</button>
+          <button class="filter-btn" onclick="filterPantry('ingredients', this)">Ingredients</button>
+          <button class="filter-btn" onclick="filterPantry('instant', this)">Instant &amp; Packaged</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRODUCT GRID ===== -->
+    <section>
+      <div class="container">
+        <div class="results-info" id="pantry-count">Showing 9 products</div>
+
+        <div class="product-grid" id="pantry-grid">
+
+          <!-- PRODUCT 1 - Kitchen Tools -->
+          <a href="#" target="_blank" class="product-card" data-cat="tools">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#6b4c3b 0%,#4a3428 100%);">Photo</div>
+              <span class="pc-cat-tag tag-tools">Kitchen</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 2 - Ingredients -->
+          <a href="#" target="_blank" class="product-card" data-cat="ingredients">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#8B6914 0%,#6b5010 100%);">Photo</div>
+              <span class="pc-cat-tag tag-ingredients">Ingredient</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 3 - Instant & Packaged -->
+          <a href="#" target="_blank" class="product-card" data-cat="instant">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#c4564a 0%,#8b3d34 100%);">Photo</div>
+              <span class="pc-cat-tag tag-instant">Instant</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 4 - Kitchen Tools -->
+          <a href="#" target="_blank" class="product-card" data-cat="tools">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#4a4a5a 0%,#2a2a3a 100%);">Photo</div>
+              <span class="pc-cat-tag tag-tools">Kitchen</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 5 - Ingredients -->
+          <a href="#" target="_blank" class="product-card" data-cat="ingredients">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#3a5040 0%,#1e3028 100%);">Photo</div>
+              <span class="pc-cat-tag tag-ingredients">Ingredient</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 6 - Instant & Packaged -->
+          <a href="#" target="_blank" class="product-card" data-cat="instant">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#6b7a8c 0%,#4a5a6b 100%);">Photo</div>
+              <span class="pc-cat-tag tag-instant">Instant</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 7 - Ingredients -->
+          <a href="#" target="_blank" class="product-card" data-cat="ingredients">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#c4a882 0%,#8b7550 100%);">Photo</div>
+              <span class="pc-cat-tag tag-ingredients">Ingredient</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 8 - Kitchen Tools -->
+          <a href="#" target="_blank" class="product-card" data-cat="tools">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#5a5a5a 0%,#2a2a2a 100%);">Photo</div>
+              <span class="pc-cat-tag tag-tools">Kitchen</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+          <!-- PRODUCT 9 - Instant & Packaged -->
+          <a href="#" target="_blank" class="product-card" data-cat="instant">
+            <div class="pc-img">
+              <div class="img-placeholder" style="background: linear-gradient(145deg,#a87b52 0%,#7a5530 100%);">Photo</div>
+              <span class="pc-cat-tag tag-instant">Instant</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-brand">Brand Placeholder</div>
+              <div class="pc-name">Product Placeholder</div>
+              <div class="pc-desc">Description placeholder text.</div>
+            </div>
+            <div class="pc-footer">
+              <span class="pc-price">Coming Soon</span>
+              <span class="pc-shop">Shop &rarr;</span>
+            </div>
+          </a>
+
+        </div><!-- /product-grid -->
+
+        <div class="pagination">
+          <span class="active">1</span>
+          <a href="#">2</a>
+          <a href="#">3</a>
+          <span class="ellipsis">&hellip;</span>
+          <a href="#">5</a>
+          <a href="#">Next &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DIGITAL DOWNLOADS PLACEHOLDER ===== -->
+    <div class="container">
+      <div class="inline-ad" style="height:120px;margin-bottom:48px;">
+        Digital Downloads &middot; Coming Soon
+      </div>
     </div>
-  </section>
+
+    <!-- ===== AFFILIATE NOTICE ===== -->
+    <div class="affiliate-notice">
+      * Some links on this page are affiliate links. The Hansang may earn a small commission if you purchase through them, at no extra cost to you.
+    </div>
+
+  </div>
 
 </BaseLayout>
 
 <style>
-  .launch-banner { background: var(--ink); color: var(--cream); text-align: center; padding: 10px 24px; font-size: 13px; letter-spacing: 0.05em; }
-
-  .page-header { padding: 80px 48px 72px; text-align: center; animation: fadeUp 0.6s ease-out 0.1s both; }
-  .page-header-korean { font-family: 'Noto Serif KR', serif; font-size: 32px; font-weight: 200; color: var(--stone); margin-bottom: 4px; letter-spacing: 0.05em; }
-  .page-header h1 { font-family: 'Source Serif 4', serif; font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; }
-  .page-header-desc { font-size: 16px; color: var(--gray-500); line-height: 1.7; max-width: 400px; margin: 0 auto; }
-
-  /* Pantry Grid */
-  .pantry-grid-section {
-    padding: 48px;
-    border-top: 1px solid var(--stone);
-    animation: fadeUp 0.6s ease-out 0.2s both;
+  /* ===== CATEGORY TITLE BAR ===== */
+  .category-title-bar { background: #FFFFFF; padding: 16px 0; }
+  .category-title-bar .container { background: #1C1714; padding-top: 28px; padding-bottom: 28px; }
+  .category-title-bar h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
-  .pantry-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 960px;
-    margin: 0 auto;
+  .category-title-bar .title-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
   }
-  .pantry-card {
-    display: block;
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-divider { border: none; border-top: 2px solid #eee; max-width: 1020px; margin: 0 auto; }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 32px 0 16px;
+  }
+  .section-header h3 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #1C1714;
+  }
+  .section-header a {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
     text-decoration: none;
-    color: var(--ink);
-    border: 1px solid var(--stone);
-    transition: all 0.2s;
-    text-align: center;
   }
-  .pantry-card:hover {
-    border-color: var(--ink);
-    background: var(--linen);
-  }
-  .pantry-card-image {
+
+  /* ===== PLACEHOLDER IMAGES ===== */
+  .img-placeholder {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    background: var(--stone);
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
-    color: var(--gray-400);
-  }
-  .pantry-card-title {
-    font-family: 'Source Serif 4', serif;
-    font-size: 18px;
-    font-weight: 600;
-    padding: 20px 16px 4px;
-  }
-  .pantry-card-count {
-    font-size: 12px;
-    color: var(--gray-400);
-    letter-spacing: 0.06em;
+    color: rgba(0,0,0,0.15);
+    font-size: 10px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 0 16px 20px;
+    transition: transform 0.4s ease;
   }
 
-  /* Where to Shop Bar */
-  .shop-bar {
-    padding: 48px;
-    background: var(--linen);
-    border-top: 1px solid var(--stone);
-    border-bottom: 1px solid var(--stone);
-    text-align: center;
-    animation: fadeUp 0.6s ease-out 0.3s both;
+  /* ===== FEATURED PICKS ===== */
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    padding-bottom: 40px;
   }
-  .shop-bar-inner {
-    max-width: 520px;
-    margin: 0 auto;
+  .featured-product {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    position: relative;
   }
-  .shop-bar-title {
+  .featured-product:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); border-color: #ddd; }
+  .featured-product .fp-img {
+    height: 220px;
+    overflow: hidden;
+    background: #f7f3ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .featured-product:hover .fp-img .img-placeholder { transform: scale(1.03); }
+  .featured-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: #B8432A;
+    color: #FFFFFF;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .fp-body { padding: 18px 18px 14px; }
+  .fp-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 6px;
+  }
+  .fp-name {
     font-family: 'Source Serif 4', serif;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 12px;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 6px;
   }
-  .shop-bar-desc {
+  .fp-desc { font-size: 12px; color: #888; line-height: 1.6; margin-bottom: 12px; }
+  .fp-footer {
+    padding: 12px 18px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .fp-price {
+    font-family: 'Source Serif 4', serif;
     font-size: 15px;
-    color: var(--gray-500);
-    line-height: 1.65;
+    font-weight: 500;
+    color: #1C1714;
+  }
+  .fp-price .fp-price-note { font-size: 10px; color: #bbb; font-family: 'Inter'; font-weight: 300; }
+  .fp-cta {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #1C1714;
+    color: #FFFFFF;
+    padding: 8px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .fp-cta:hover { background: #B8432A; }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar { padding: 8px 0 0; }
+  .filter-bar .container { border-bottom: 1px solid #eee; padding-bottom: 16px; padding-top: 8px; }
+  .filter-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .filter-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin-right: 12px;
+  }
+  .filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999;
+    background: none;
+    border: none;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .filter-btn:hover { color: #1C1714; }
+  .filter-btn.active { color: #1C1714; border-bottom: 2px solid #B8432A; }
+
+  /* ===== RESULTS INFO ===== */
+  .results-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #bbb;
+    padding: 24px 0 8px;
   }
 
-  @media (max-width: 768px) {
-    .page-header { padding: 56px 24px 48px; }
-    .page-header-korean { font-size: 26px; }
-    .page-header h1 { font-size: 32px; }
-    .pantry-grid-section { padding: 32px 24px; }
-    .pantry-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .shop-bar { padding: 36px 24px; }
+  /* ===== PRODUCT GRID ===== */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding-bottom: 56px;
   }
-  @media (max-width: 480px) {
-    .pantry-grid { grid-template-columns: 1fr; }
+
+  /* ===== PRODUCT CARD ===== */
+  .product-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
   }
+  .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #ddd; }
+  .pc-img {
+    height: 160px;
+    background: #f7f3ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .product-card:hover .pc-img .img-placeholder { transform: scale(1.03); }
+  .pc-cat-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
+  .tag-tools    { background: #fdf0ed; color: #B8432A; }
+  .tag-ingredients { background: #f0ebe6; color: #6B4C3B; }
+  .tag-instant  { background: #f0f4f2; color: #4a7060; }
+  .tag-books    { background: #f5f0e8; color: #8B6914; }
+  .tag-digital  { background: #eef0f8; color: #3a5080; }
+
+  .pc-body { padding: 14px 14px 10px; }
+  .pc-brand {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B8432A;
+    margin-bottom: 4px;
+  }
+  .pc-name {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1714;
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+  .pc-desc { font-size: 11px; color: #999; line-height: 1.55; margin-bottom: 0; }
+  .pc-footer {
+    padding: 10px 14px;
+    border-top: 1px solid #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pc-price {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1714;
+  }
+  .pc-shop {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B8432A;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184,67,42,0.3);
+    padding-bottom: 1px;
+  }
+
+  /* ===== INLINE AD ===== */
+  .inline-ad-wrap { padding: 8px 0 24px; }
+  .inline-ad {
+    height: 90px;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ===== AFFILIATE NOTICE ===== */
+  .affiliate-notice {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 40px;
+    font-size: 10px;
+    color: #bbb;
+    letter-spacing: 0.04em;
+    border-top: 1px solid #f5f5f5;
+  }
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px 0 48px; }
+  .pagination a, .pagination span { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #999; text-decoration: none; padding: 8px 14px; border: 1px solid #eee; border-radius: 4px; transition: all 0.2s; }
+  .pagination a:hover { color: #1C1714; border-color: #1C1714; }
+  .pagination .active { color: #1C1714; border-color: #1C1714; font-weight: 500; }
+  .pagination .ellipsis { border: none; padding: 8px 4px; }
 </style>
+
+<script is:inline>
+  function filterPantry(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    var cards = document.querySelectorAll('.product-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    var countEl = document.getElementById('pantry-count');
+    if (countEl) countEl.textContent = 'Showing ' + visible + ' product' + (visible !== 1 ? 's' : '');
+  }
+</script>

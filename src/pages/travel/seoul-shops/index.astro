@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Seoul Shops - Korea Travel Guide" description="Street markets, Dongdaemun, local brands and K-beauty hauls in Seoul. The Hansang Korea Guide.">
+
+  <!-- Page Header - contained like category title bar -->
+  <section class="guide-hero-wrap">
+    <div class="guide-hero" style="background:linear-gradient(145deg,#4a5580 0%,#343e60 60%,#1e2038 100%);">
+      <div class="guide-label">The Hansang Korea Guide</div>
+      <h1>Seoul Shops</h1>
+      <p class="guide-desc">Street markets, Dongdaemun, local brands and K-beauty hauls</p>
+      <a href="/travel/" class="guide-back">&larr; Back to Travel</a>
+    </div>
+  </section>
+
+  <!-- Article Grid -->
+  <div class="guide-content">
+    <div class="guide-results">Showing 6 articles</div>
+    <div class="guide-grid">
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#4a5580,#343e60);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#3a4570,#2a3450);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#5a6590,#4a5580);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#343e60,#1e2038);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#4a5580,#2a3450);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+      <a href="/travel/seoul-5-days/" class="guide-card">
+        <div class="guide-card-img" style="background:linear-gradient(135deg,#3a4570,#1e2038);"></div>
+        <div class="guide-card-tag">Travel &middot; Guide</div>
+        <h4>Article Title Placeholder</h4>
+        <div class="guide-card-meta">Coming Soon</div>
+      </a>
+    </div>
+    <div class="guide-pagination">
+      <span class="active">1</span>
+      <a href="#">2</a>
+      <a href="#">Next &rarr;</a>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* Guide Hero */
+  .guide-hero-wrap { background: #FFFFFF; padding: 16px 0; }
+  .guide-hero { max-width: 1020px; margin: 0 auto; padding: 40px 40px 36px; border-radius: 0; }
+  .guide-label { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+  .guide-hero h1 { font-family: 'Source Serif 4', serif; font-size: 42px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  .guide-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; max-width: 500px; }
+  .guide-back { display: inline-block; margin-top: 24px; font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; }
+  .guide-back:hover { color: #fff; }
+
+  /* Content */
+  .guide-content { max-width: 1100px; margin: 0 auto; padding: 32px 40px 60px; }
+  .guide-results { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; margin-bottom: 24px; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .guide-card { text-decoration: none; color: inherit; cursor: pointer; }
+  .guide-card-img { height: 180px; border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+  .guide-card-tag { font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #B8432A; margin-bottom: 6px; }
+  .guide-card h4 { font-family: 'Source Serif 4', serif; font-size: 17px; font-weight: 500; color: #1C1714; line-height: 1.3; margin-bottom: 6px; }
+  .guide-card-meta { font-size: 11px; color: #bbb; }
+  .guide-pagination { display: flex; justify-content: center; gap: 8px; padding: 16px 0; }
+  .guide-pagination a, .guide-pagination span { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #999; text-decoration: none; padding: 8px 14px; border: 1px solid #eee; border-radius: 4px; }
+  .guide-pagination .active { color: #1C1714; border-color: #1C1714; font-weight: 500; }
+
+  @media (max-width: 768px) {
+    .guide-hero { padding: 48px 18px 36px; }
+    .guide-hero h1 { font-size: 28px; }
+    .guide-content { padding: 24px 18px 40px; }
+    .guide-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+</style>

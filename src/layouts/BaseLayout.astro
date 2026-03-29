@@ -22,6 +22,9 @@ const links = {
 
 import '../styles/global.css';
 import siteAlert from '../data/site-alert.json';
+
+const currentPath = Astro.url.pathname || '/';
+const activeStyle = "color:#B8432A;";
 ---
 
 <!DOCTYPE html>
@@ -44,6 +47,9 @@ import siteAlert from '../data/site-alert.json';
   <meta property="og:type" content="website">
   {image && <meta property="og:image" content={new URL(image, Astro.url)} />}
 
+  <!-- Leaflet CSS (for Directory map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,35 +70,39 @@ import siteAlert from '../data/site-alert.json';
     </div>
   )}
 
+  <!-- Ad Header (hidden on mobile via global.css) -->
+  <div class="ad-header">
+    <div class="ad-header-inner">Ad &middot; 728&times;90 Leaderboard</div>
+  </div>
+
   <!-- Header - Three-row editorial header -->
   <header class="site-header">
     <!-- Row 1: Utility bar -->
     <div class="util-bar"><div class="container">
       <span>Everything Korea, for Singapore</span>
-      <span><a href="#" id="searchOpen">Search</a> &nbsp;&bull;&nbsp; <a href="#newsletter">Newsletter</a></span>
+      <span><a href="#" id="searchOpen">Search</a> &nbsp;&bull;&nbsp; <a href="#newsletter">Newsletter</a> &nbsp;&bull;&nbsp; <a href={links.contact}>Contact Us</a></span>
     </div></div>
 
     <!-- Row 2: Wordmark row -->
     <div class="wordmark-row"><div class="container">
-      <a href="/"><img src={logo} alt="The Hansang" class="logo-icon" /></a>
-      <a href="/" class="wordmark">THE HANSANG</a>
+      <a href="/" style="display:contents;"><img src={logo} alt="The Hansang" class="logo-icon" /></a>
+      <a href="/" class="wordmark">The Hansang</a>
+      <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
     </div></div>
 
     <!-- Row 3: Navigation -->
     <div class="nav-row"><div class="container">
-      <a href={links.eat}>Eat</a><span class="pipe">|</span>
-      <a href={links.cook}>Cook</a><span class="pipe">|</span>
-      <a href={links.travel}>Travel</a><span class="pipe">|</span>
-      <a href={links.culture}>Culture</a><span class="pipe">|</span>
-      <a href={links.directory}>Directory</a><span class="pipe">|</span>
-      <a href={links.pantry}>My Pantry</a>
+      <a href={links.eat} style={currentPath.startsWith('/eat') ? activeStyle : undefined}>Eat</a><span class="pipe">|</span>
+      <a href={links.cook} style={currentPath.startsWith('/cook') ? activeStyle : undefined}>Cook</a><span class="pipe">|</span>
+      <a href={links.travel} style={currentPath.startsWith('/travel') ? activeStyle : undefined}>Travel</a><span class="pipe">|</span>
+      <a href={links.culture} style={currentPath.startsWith('/culture') ? activeStyle : undefined}>Culture</a><span class="pipe">|</span>
+      <a href={links.directory} style={currentPath.startsWith('/directory') ? activeStyle : undefined}>Directory</a><span class="pipe">|</span>
+      <a href={links.pantry} style={currentPath.startsWith('/my-pantry') ? activeStyle : undefined}>My Pantry</a>
     </div></div>
 
     <!-- Row 4: Chestnut border -->
     <div class="nav-bottom-rule"></div>
 
-    <!-- Mobile hamburger (hidden on desktop) -->
-    <button type="button" class="nav-hamburger" id="menuOpen" aria-label="Open menu">&#9776;</button>
   </header>
 
   <!-- Mobile Menu -->
@@ -107,6 +117,7 @@ import siteAlert from '../data/site-alert.json';
       <li><a href={links.pantry}>My Pantry</a></li>
       <li><a href="/search/">Search</a></li>
     </ul>
+    <p class="mobile-menu-tagline">Everything Korea, for Singapore</p>
   </div>
 
   <!-- Search Overlay -->
@@ -124,51 +135,60 @@ import siteAlert from '../data/site-alert.json';
   </main>
 
   <!-- Newsletter -->
-  <section class="newsletter" id="newsletter" aria-label="Newsletter">
-    <h2>The Weekly Hansang</h2>
-    <p class="newsletter-sub">New reviews, recipes, and guides — delivered to your inbox.</p>
-    <p style="font-size: 14px; color: var(--stone); margin-top: 16px; letter-spacing: 0.05em; text-transform: uppercase;">Coming Soon — Under Construction</p>
-  </section>
+  <div class="newsletter-section" id="newsletter">
+    <h3>The Weekly Hansang</h3>
+    <p>New reviews, recipes, and guides straight to your inbox.</p>
+    <div class="coming-soon">Coming Soon &middot; Under Construction</div>
+  </div>
 
   <!-- Footer -->
-  <footer>
-    <div class="footer-col">
-      <div class="footer-logo">
-        <img src={logo} alt="The Hansang" style="height: 26px; width: auto;">
-        <span class="footer-logo-text">THE HANSANG</span>
+  <div class="footer-wrap">
+    <div class="footer">
+      <div class="footer-brand">
+        <div class="logo-text">THE HANSANG</div>
+        <div class="tagline">Everything Korea, for Singapore.</div>
       </div>
-      <div class="footer-tagline">Everything Korea, for Singapore.</div>
+      <div>
+        <h5>Explore</h5>
+        <a href={links.eat}>Eat</a>
+        <a href={links.cook}>Cook</a>
+        <a href={links.travel}>Travel</a>
+        <a href={links.culture}>Culture</a>
+        <a href={links.directory}>Directory</a>
+      </div>
+      <div>
+        <h5>More</h5>
+        <a href={links.pantry}>My Pantry</a>
+        <a href={links.about}>About</a>
+        <a href={links.contact}>Contact Us</a>
+        <a href="#newsletter">Newsletter</a>
+      </div>
+      <div>
+        <h5>Follow</h5>
+        <a href="https://www.instagram.com/thehansang.sg/" target="_blank" rel="noopener">Instagram</a>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Explore</h4>
-      <a href={links.eat}>Eat</a>
-      <a href={links.cook}>Cook</a>
-      <a href={links.travel}>Travel</a>
-      <a href={links.culture}>Culture</a>
-      <a href={links.directory}>Directory</a>
+  </div>
+  <div class="footer-bottom-wrap">
+    <div class="footer-bottom">
+      <span>&copy; 2026 The Hansang. All rights reserved.</span>
+      <span>Built with care in Singapore.</span>
     </div>
-    <div class="footer-col">
-      <h4>More</h4>
-      <a href={links.pantry}>My Pantry</a>
-      <a href={links.about}>About</a>
-      <a href={links.contact}>Contact</a>
-      <a href="#newsletter">Newsletter</a>
-    </div>
-    <div class="footer-col">
-      <h4>Follow</h4>
-      <a href="https://www.instagram.com/thehansang.sg/" target="_blank" rel="noopener">Instagram</a>
-    </div>
-    <div class="footer-col">
-      <h4>&nbsp;</h4>
-      <a href={links.contact}>Contact Us</a>
-    </div>
-  </footer>
-  <div class="footer-bottom">
-    <span>&copy; 2026 The Hansang. All rights reserved.</span>
-    <span>Built with care in Singapore.</span>
   </div>
 
   <!-- All styles handled by global.css — no scoped styles here to avoid specificity conflicts -->
+
+  <!-- Global pill filter click handler -->
+  <script is:inline>
+    document.addEventListener('click', function(e) {
+      var t = e.target;
+      if (t && t.classList && t.classList.contains('pill')) {
+        var pills = t.parentElement ? t.parentElement.querySelectorAll('.pill') : [];
+        pills.forEach(function(p) { p.classList.remove('on'); });
+        t.classList.add('on');
+      }
+    });
+  </script>
 
   <script>
     // Mobile menu
@@ -229,14 +249,17 @@ import siteAlert from '../data/site-alert.json';
           (p.tags || []).some((t: string) => t.toLowerCase().includes(q))
         ).slice(0, 5);
 
+        // Sanitize to prevent XSS
+        function esc(s: string) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
         if (matches.length === 0) {
-          if (searchResults) searchResults.innerHTML = `<p class="search-hint">No articles found for "${searchInput.value}"</p>`;
+          if (searchResults) searchResults.innerHTML = `<p class="search-hint">No articles found for "${esc(searchInput.value)}"</p>`;
           if (searchViewAll) searchViewAll.style.display = 'none';
         } else {
           if (searchResults) searchResults.innerHTML = matches.map((m: any) => `
-            <a href="${m.url}" class="search-result-item">
-              <span class="search-result-pillar">${m.pillar || ''}</span>
-              <span class="search-result-title">${m.title}</span>
+            <a href="${esc(m.url)}" class="search-result-item">
+              <span class="search-result-pillar">${esc(m.pillar || '')}</span>
+              <span class="search-result-title">${esc(m.title)}</span>
             </a>
           `).join('');
           if (searchViewAll) {
