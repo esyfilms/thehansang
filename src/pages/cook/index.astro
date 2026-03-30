@@ -71,9 +71,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
         <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
         <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
       </a>
-    ) : (
-      <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
-    )}
+    ) : null}
 
     <!-- 2x1 Grid -->
     <div class="hgrid">
@@ -132,9 +130,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
               <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
             </a>
           )
-        ) : (
-          <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
-        )}
+        ) : null}
       </div>
     </div>
 
@@ -162,71 +158,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
         <div class="results-info">Showing 9 recipes</div>
 
         <div class="article-grid">
-          <a href="cook-article.html" class="card" data-cat="soup" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Kimchi Jjigae</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#d4a574,#a87b52);">Noodles</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="noodles" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a8c6e,#5a6b4e);">Japchae</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="meats" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#b8865a,#8b6548);">KFC</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="banchan" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b7a8c,#4a5a6b);">Oi Sobagi</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="soup" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#8c7a6b,#6b5a4a);">Budae</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <!-- AD SLOT 2: Inline ad between row 2 and row 3 -->
-          <div class="inline-ad">Partner &middot; 970 &times; 90 &middot; Inline</div>
-
-          <a href="cook-article.html" class="card" data-cat="rice" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#a08070,#806050);">Bibimbap</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="viral" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#7a6a5a,#5a4a3a);">Tteokbokki</div></div>
-            <div class="card-tag">Cook &middot; Recipe</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
-
-          <a href="cook-article.html" class="card" data-cat="hacks" style="text-decoration:none;color:inherit;display:block;">
-            <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#6b5a4e,#4a3e34);">Toast</div></div>
-            <div class="card-tag">Cook &middot; Hack</div>
-            <h4>Article Title Placeholder</h4>
-            <div class="card-meta">Coming Soon</div>
-          </a>
+          <!-- Cards populated dynamically from search-index.json -->
         </div>
 
         <!-- ===== PAGINATION ===== -->
@@ -590,27 +522,27 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
         var articles = data.filter(function(a) { return a.pillar === 'Cook'; });
         if (!articles.length) return;
 
-        // === DESKTOP: article-grid cards ===
-        var desktopCards = document.querySelectorAll('.desktop-only .article-grid .card');
-        desktopCards.forEach(function(card, i) {
-          if (i < articles.length) {
-            var a = articles[i];
-            card.setAttribute('href', a.url || '#');
-            var img = card.querySelector('.card-img .img-placeholder');
-            if (img && a.coverUrl) {
-              img.style.background = "url('" + a.coverUrl + "') center/cover";
-              img.textContent = '';
-            }
-            var tag = card.querySelector('.card-tag');
-            if (tag) tag.textContent = 'Cook \u00B7 ' + (a.postType || 'Recipe');
-            var h4 = card.querySelector('h4');
-            if (h4) h4.textContent = a.title || '';
-            var meta = card.querySelector('.card-meta');
-            if (meta) meta.textContent = a.date || '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
+        // === DESKTOP: article-grid cards (dynamic creation) ===
+        var desktopGrid = document.querySelector('.desktop-only .article-grid');
+        if (desktopGrid) {
+          desktopGrid.innerHTML = '';
+          articles.forEach(function(a) {
+            var card = document.createElement('a');
+            card.href = a.url || '#';
+            card.className = 'card';
+            card.style.cssText = 'text-decoration:none;color:inherit;display:block;';
+            if (a.tags && a.tags.length) card.setAttribute('data-cat', a.tags[0].toLowerCase());
+            var isThumb = a.coverUrl && a.coverUrl.indexOf('-thumb.') > -1;
+            var coverBg = a.coverUrl
+              ? "url('" + a.coverUrl + "') center/" + (isThumb ? 'contain no-repeat; background-color:#1C1714' : 'cover')
+              : 'linear-gradient(145deg,#6b5a4e,#4a3e34)';
+            card.innerHTML = '<div class="card-img"><div class="img-placeholder" style="background:' + coverBg + ';"></div></div>'
+              + '<div class="card-tag">Cook \u00B7 ' + (a.postType || 'Recipe') + '</div>'
+              + '<h4>' + (a.title || '') + '</h4>'
+              + '<div class="card-meta">' + (a.date || '') + '</div>';
+            desktopGrid.appendChild(card);
+          });
+        }
 
         // === DESKTOP: hero section ===
         if (articles.length > 0) {

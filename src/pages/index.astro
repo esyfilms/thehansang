@@ -155,40 +155,16 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
               <span style="font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{sidebarAd.sponsorName}</span>
               <span style="font-size:11px;color:#1C1714;text-align:center;">{sidebarAd.displayText}</span>
             </a>
-          ) : (
-            <div class="sidebar-ad">Ad &middot; 300&times;250</div>
-          )}
-          <div class="sidebar-section">
+          ) : null}
+          <div class="sidebar-section most-read-section">
             <h4>Most Read</h4>
-            <a href="/cook/golden-ratios-korean-noodles/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
-              <div class="num">1</div>
-              <div><h5>Golden Ratios Korean Noodles</h5><div class="card-meta">2 min read</div></div>
-            </a>
-            <a href="/cook/gochujang-chili-oil-noodles/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
-              <div class="num">2</div>
-              <div><h5>Gochujang Chili Oil Noodles</h5><div class="card-meta">3 min read</div></div>
-            </a>
-            <a href="/cook/kimchi-pork-jowl-pasta/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
-              <div class="num">3</div>
-              <div><h5>Kimchi Pork Jowl Pasta</h5><div class="card-meta">4 min read</div></div>
-            </a>
-            <a href="/cook/jjajangmyeon-kdrama-style/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
-              <div class="num">4</div>
-              <div><h5>Jjajangmyeon (K-drama Style)</h5><div class="card-meta">3 min read</div></div>
-            </a>
-            <a href="/cook/ramyeon-risotto/" class="sidebar-item" style="text-decoration:none;color:inherit;display:flex;">
-              <div class="num">5</div>
-              <div><h5>Ramyeon Risotto</h5><div class="card-meta">2 min read</div></div>
-            </a>
           </div>
           {sidebarAd ? (
             <a href={sidebarAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="sidebar-ad sidebar-ad-tall" style={`margin-top:24px;text-decoration:none;background:#F7F3ED;border-color:#E0D8CE;flex-direction:column;gap:4px;`}>
               <span style="font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{sidebarAd.sponsorName}</span>
               <span style="font-size:11px;color:#1C1714;text-align:center;">{sidebarAd.displayText}</span>
             </a>
-          ) : (
-            <div class="sidebar-ad sidebar-ad-tall" style="margin-top:24px;">Ad &middot; 300&times;600</div>
-          )}
+          ) : null}
         </aside>
       </div>
     </section>
@@ -490,6 +466,21 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
         var ep2 = epPosts[1] || cookArticles[2] || eatArticles[1] || cookArticles[0];
         populateEP('.ep-1', ep1);
         populateEP('.ep-2', ep2);
+
+        // === Most Read section: populate dynamically ===
+        var mostReadSection = document.querySelector('.most-read-section');
+        if (mostReadSection) {
+          var allPosts = data.slice(0, 5);
+          allPosts.forEach(function(a, i) {
+            var item = document.createElement('a');
+            item.href = a.url || '#';
+            item.className = 'sidebar-item';
+            item.style.cssText = 'text-decoration:none;color:inherit;display:flex;';
+            item.innerHTML = '<div class="num">' + (i + 1) + '</div>'
+              + '<div><h5>' + (a.title || '') + '</h5><div class="card-meta">' + (a.date || '') + '</div></div>';
+            mostReadSection.appendChild(item);
+          });
+        }
       })
       .catch(function(err) {
         console.error('Failed to load search-index.json:', err);

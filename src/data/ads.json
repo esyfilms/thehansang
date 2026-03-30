@@ -2,7 +2,7 @@
   {
     "sponsorName": "The Hansang",
     "displayText": "The Hansang Officially Opening Soon - Eat and Cook are live!",
-    "placement": ["Header Strip"],
+    "placement": ["Header Strip", "Sidebar", "Category Inline", "Mobile Banner"],
     "linkUrl": "/",
     "bannerImages": [],
     "active": true
