@@ -104,9 +104,7 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
                 <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#B8432A;">{mobileAd.sponsorName}</span>
                 <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">{mobileAd.displayText}</span>
               </a>
-            ) : (
-              <div class="ad-strip-box"><span>Partner &middot; 320&times;50</span></div>
-            )}
+            ) : null}
           </div>
 
           <!-- Editor's Pick -->
@@ -474,9 +472,21 @@ const inlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.placement.i
           allPosts.forEach(function(a, i) {
             var item = document.createElement('a');
             item.href = a.url || '#';
-            item.style.cssText = 'text-decoration:none;color:inherit;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;';
-            item.innerHTML = '<div style="font-family:EB Garamond,serif;font-size:28px;font-weight:500;color:#ddd;line-height:1;flex-shrink:0;min-width:28px;text-align:right;">' + (i + 1) + '</div>'
-              + '<div><h5 style="font-family:Source Serif 4,serif;font-size:14px;font-weight:500;color:#1C1714;line-height:1.3;margin:0 0 2px;">' + (a.title || '') + '</h5><div style="font-size:11px;color:#bbb;">' + (a.date || '') + '</div></div>';
+            item.style.cssText = 'text-decoration:none;display:flex;gap:14px;align-items:flex-start;margin-bottom:18px;';
+            var numDiv = document.createElement('div');
+            numDiv.textContent = String(i + 1);
+            numDiv.style.cssText = 'font-family:EB Garamond,serif;font-size:32px;font-weight:400;color:#ccc;line-height:0.9;flex-shrink:0;width:24px;';
+            var contentDiv = document.createElement('div');
+            var h5 = document.createElement('h5');
+            h5.textContent = a.title || '';
+            h5.style.cssText = 'font-family:Source Serif 4,serif;font-size:14px;font-weight:500;color:#1C1714;line-height:1.3;margin:0 0 2px;';
+            var metaDiv = document.createElement('div');
+            metaDiv.textContent = a.date || '';
+            metaDiv.style.cssText = 'font-size:11px;color:#bbb;';
+            contentDiv.appendChild(h5);
+            contentDiv.appendChild(metaDiv);
+            item.appendChild(numDiv);
+            item.appendChild(contentDiv);
             mostReadSection.appendChild(item);
           });
         }

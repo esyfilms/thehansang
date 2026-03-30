@@ -175,9 +175,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
           <span style="font-family:'Inter',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#B8432A;">{mobileInlineAd.sponsorName}</span>
           <span style="font-family:'Inter',sans-serif;font-size:10px;color:#1C1714;">{mobileInlineAd.displayText}</span>
         </a>
-      ) : (
-        <div class="ad-rect"><span>Partner &middot; 320&times;100</span></div>
-      )}
+      ) : null}
     </div>
 
   </div>
@@ -222,9 +220,7 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
             <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{pageAd.displayText}</span>
           </a>
         )
-      ) : (
-        <div class="ad-leaderboard-inner">Partner &middot; 728 &times; 90 &middot; Leaderboard</div>
-      )}
+      ) : null}
     </div>
   </div>
 
@@ -362,7 +358,18 @@ const mobileInlineAd = ads.find((a: any) => Array.isArray(a.placement) ? a.place
       </a>
 
       <!-- Inline Ad -->
-      <div class="inline-ad">Partner &middot; 728 x 90 &middot; Leaderboard</div>
+      {inlineAd ? (
+        inlineAd.bannerImages?.[0] ? (
+          <a href={inlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="inline-ad" style="display:block;text-align:center;border:none;background:none;">
+            <img src={inlineAd.bannerImages[0]} alt={inlineAd.sponsorName || 'Partner'} style="max-width:728px;width:100%;height:auto;display:block;margin:0 auto;" />
+          </a>
+        ) : (
+          <a href={inlineAd.linkUrl || '#'} target="_blank" rel="noopener sponsored" class="inline-ad" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;background:#F7F3ED;border:1px solid #E0D8CE;padding:14px 24px;border-radius:4px;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#B8432A;">{inlineAd.sponsorName}</span>
+            <span style="font-family:'Inter',sans-serif;font-size:12px;color:#1C1714;letter-spacing:0.02em;">{inlineAd.displayText}</span>
+          </a>
+        )
+      ) : null}
 
       <a href="#" class="card" data-cat="seoul-eats" style="text-decoration:none;color:inherit;">
         <div class="card-img"><div class="img-placeholder" style="background:linear-gradient(145deg,#c4564a,#8b3d34);">Photo</div></div>
